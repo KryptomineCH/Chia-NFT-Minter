@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="Minter_UI.Metadata_Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Minter_UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!-- <WebBrowser x:Name="imageDisplay" Grid.Column="0" Grid.Row="0" ></WebBrowser> -->
+        <MediaElement x:Name="imageDisplay" Grid.Column="0" Grid.Row="0" ></MediaElement>
+        <StackPanel Grid.Column="1" Grid.RowSpan="2">
+            <Label Content="Name"></Label>
+            <TextBox x:Name="NftName_TextBox"></TextBox>
+            <CheckBox x:Name="SensitiveContent_Checkbox" Content="Sensitive Content (18+)"></CheckBox>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Series Number"></Label>
+                <Label Content="Series Total" Grid.Column="1"></Label>
+                <TextBox x:Name="SeriesNumber_TextBox" Text="0"></TextBox>
+                <TextBox x:Name="SeriesTotal_TextBox" Text="10000"></TextBox>
+            </Grid>
+            <Label Content="Description"></Label>
+            <TextBox x:Name="Description_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
+            <Label Content="Collection Name"></Label>
+            <TextBox x:Name="CollectionName_TextBox"></TextBox>
+            <StackPanel x:Name="CollectionAttributes_StackPanel" Orientation="Vertical">
+                <Button x:Name="CollectionAttributes_AddButton" Content="+" Background="LightGreen" Click="CollectionAttributes_AddButton_Click"></Button>
+            </StackPanel>
+        </StackPanel>
+        <WrapPanel x:Name="Attributes_StackPanel" Grid.Row="1" Orientation="Horizontal">
+            <Button x:Name="PrimarySubject_TagTanel_AddButton" Content="+" Background="LightGreen" Click="PrimarySubject_TagTanel_AddButton_Click"></Button>
+        </WrapPanel>
+        <Grid Grid.Row="3" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="PreviousExisting_Button" Content="prev. Existing" Grid.Column="0"></Button>
+            <Button x:Name="PreviousMissing_Button" Content="prev. Missing" Grid.Column="1"></Button>
+            <Button x:Name="Save_Button" Content="Save" Grid.Column="2"></Button>
+            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Column="3"></Button>
+            <Button x:Name="NextExisting_Button" Content="next. Existing" Grid.Column="4"></Button>
+            <Button x:Name="NextMissing_Button" Content="next. Missing" Grid.Column="5"></Button>
+        </Grid>
+    </Grid>
+</UserControl>

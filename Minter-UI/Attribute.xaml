@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="Minter_UI.Attribute"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Minter_UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Padding="0.1cm, 0.1cm, 0, 0">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="1cm"></ColumnDefinition>
+            <ColumnDefinition Width="0.5cm"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <ComboBox x:Name="TraitType_ComboBox" IsEditable="True" Text="TraitType" SelectionChanged="TraitType_ComboBox_SelectionChanged"></ComboBox>
+            <ComboBox x:Name="Value_ComboBox" IsEditable="True" Text="Value"></ComboBox>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Label Content="MinValue" Grid.Column="0"></Label>
+                <Label Content="MaxValue" Grid.Column="1"></Label>
+                <TextBox x:Name="MinValue_TextBox" Grid.Row="1" Grid.Column="0"></TextBox>
+                <TextBox x:Name="MaxValue_TextBox" Grid.Row="1" Grid.Column="1"></TextBox>
+            </Grid>
+            
+        </StackPanel>
+        
+        <Button x:Name="Delete_Button" Content="X" Background="LightCoral" Grid.Column="1" Click="Delete_Button_Click"></Button>
+    </Grid>
+</UserControl>
