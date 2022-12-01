@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Chia_NFT_Minter</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,6 +11,10 @@
 
   <ItemGroup>
     <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Chia-Metadata\Chia-Metadata\Chia-Metadata.csproj" />
   </ItemGroup>
 
 </Project>
