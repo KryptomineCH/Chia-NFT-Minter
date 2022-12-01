@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chia-NFT-Minter", "Chia-NFT-Minter\Chia-NFT-Minter.csproj", "{30C6A1E4-6D64-4861-A2A8-B5DD0380CCE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chia-NFT-Minter", "Chia-NFT-Minter\Chia-NFT-Minter.csproj", "{30C6A1E4-6D64-4861-A2A8-B5DD0380CCE2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CHIA-RPC", "..\CHIA-RPC\CHIA-RPC\CHIA-RPC.csproj", "{A04FA9FC-4F88-410C-83F6-FC8A16808F3F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chia-Metadata", "..\Chia-Metadata\Chia-Metadata\Chia-Metadata.csproj", "{C793DED7-C7C8-419B-A338-FEB4D0D2EADF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFT.Storage.Net", "..\NFT.Storage.Net\NFT.Storage.Net\NFT.Storage.Net.csproj", "{13BA5D2E-5C1C-4ED9-B443-9D9A062497D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Minter-UI", "Minter-UI\Minter-UI.csproj", "{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{13BA5D2E-5C1C-4ED9-B443-9D9A062497D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13BA5D2E-5C1C-4ED9-B443-9D9A062497D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13BA5D2E-5C1C-4ED9-B443-9D9A062497D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
