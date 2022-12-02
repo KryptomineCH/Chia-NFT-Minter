@@ -1,8 +1,9 @@
 ﻿using Chia_Metadata_CHIP_0007_std;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Media;
 
 namespace Minter_UI
 {
@@ -46,6 +47,38 @@ namespace Minter_UI
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
             ((Panel)this.Parent).Children.Remove(this);
+        }
+        private bool LastValueTextBoxStateWasValid = true;
+        private void Value_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (this.Value_TextBox.Text == "" ||this.Type_ComboBox.Text == "")
+            {
+                this.Value_TextBox.Background = null;
+                LastValueTextBoxStateWasValid = true;
+                return;
+            }
+            if (this.Type_ComboBox.Text == "banner"|| this.Type_ComboBox.Text == "icon"  
+                || this.Type_ComboBox.Text == "website" || this.Type_ComboBox.Text == "discord")
+            {
+                try
+                { // textbox content is valid
+                    new Uri(this.Value_TextBox.Text);
+                    if (!LastValueTextBoxStateWasValid)
+                    {
+                        this.Value_TextBox.Background = null;
+                        LastValueTextBoxStateWasValid = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (LastValueTextBoxStateWasValid)
+                    {
+                        this.Value_TextBox.Background = Brushes.LightCoral;
+                        LastValueTextBoxStateWasValid = false;
+                    }
+                }
+
+            }
         }
     }
 }

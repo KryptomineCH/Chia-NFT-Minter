@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chia-Metadata", "..\Chia-Me
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFT.Storage.Net", "..\NFT.Storage.Net\NFT.Storage.Net\NFT.Storage.Net.csproj", "{13BA5D2E-5C1C-4ED9-B443-9D9A062497D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Minter-UI", "Minter-UI\Minter-UI.csproj", "{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minter-UI", "Minter-UI\Minter-UI.csproj", "{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

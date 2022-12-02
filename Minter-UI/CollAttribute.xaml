@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Grid.Row="0">
             <ComboBox x:Name="Type_ComboBox" Text="Type" IsEditable="True"></ComboBox>
-            <TextBox x:Name="Value_TextBox" Text="Value"></TextBox>
+            <TextBox x:Name="Value_TextBox" Text="Value" TextChanged="Value_TextBox_TextChanged"></TextBox>
         </StackPanel>
         <Button x:Name="Delete_Button" Content="X" Background="LightCoral" Grid.Column="1" Click="Delete_Button_Click"></Button>
     </Grid>

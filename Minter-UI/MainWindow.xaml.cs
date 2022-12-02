@@ -1,6 +1,7 @@
 ﻿using Chia_Metadata;
 using Chia_Metadata_CHIP_0007_std;
 using Chia_NFT_Minter;
+using NFT.Storage.Net.API;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,8 +28,6 @@ namespace Minter_UI
         public MainWindow()
         {
             InitializeComponent();
-            
         }
-        
     }
 }

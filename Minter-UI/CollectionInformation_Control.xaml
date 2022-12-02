@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Minter_UI"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Background="#201E11" Foreground="#998826">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -19,11 +19,11 @@
         <MediaElement x:Name="logoImageDisplay" Grid.Column="0" Grid.Row="1" ></MediaElement>
         <MediaElement x:Name="headerImageDisplay" Grid.Column="0" Grid.Row="0" ></MediaElement>
         <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
-            <Label Content="Collection Name"></Label>
+            <Label Content="Collection Name" Foreground="#998826"></Label>
             <TextBox x:Name="CollectionName_TextBox"></TextBox>
-            <Label Content="Description"></Label>
+            <Label Content="Description" Foreground="#998826"></Label>
             <TextBox x:Name="Description_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
-            <Label Content="Collection ID"></Label>
+            <Label Content="Collection ID" Foreground="#998826"></Label>
             <TextBox x:Name="CollectionID_TextBox"></TextBox>
             <Grid>
                 <Grid.ColumnDefinitions>

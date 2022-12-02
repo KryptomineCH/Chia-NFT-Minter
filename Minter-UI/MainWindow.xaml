@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minter_UI"
         mc:Ignorable="d"
-        Title="KryptoMine NftMinter" Height="450" Width="800" Icon="/favicon.ico">
+        Title="KryptoMine NftMinter" Height="450" Width="800" Icon="/Resources/Application_Icon.png" Background="#201E11">
     <Grid>
         <TabControl>
             <TabItem Header="Collection Information">
@@ -13,6 +13,9 @@
             </TabItem>
             <TabItem Header="Metadata">
                 <local:Metadata_Control></local:Metadata_Control>
+            </TabItem>
+            <TabItem Header="Settings">
+                <local:Settings_Control></local:Settings_Control>
             </TabItem>
         </TabControl>
     </Grid>

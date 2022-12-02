@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Chia_NFT_Minter;
+using NFT.Storage.Net.API;
+using System;
+using System.IO;
 
-namespace Chia_NFT_Minter
+
+namespace Minter_UI
 {
     internal static class NftStorageAccount
     {
         static NftStorageAccount()
         {
-            LoadApiKey();
+            TryLoadApiKey();
         }
         internal static string ApiKey {
             get
@@ -20,29 +20,33 @@ namespace Chia_NFT_Minter
             set
             {
                 _ApiKeyEncrypted = Cipher.Encrypt(value,Environment.UserName);
+                Client = new NFT_Storage_API(ApiKey);
+                File.WriteAllText(_ApiKeyFile.FullName, _ApiKeyEncrypted);
+                File.SetAttributes(_ApiKeyFile.FullName, FileAttributes.Hidden);
             }
         }
         internal static string _ApiKeyEncrypted { get; set; }
         private static FileInfo _ApiKeyFile = new FileInfo("api.id");
-        internal static void LoadApiKey()
+        public static NFT_Storage_API Client;
+        public static bool TryLoadApiKey()
         {
             if (_ApiKeyEncrypted == null || _ApiKeyEncrypted == "")
             {
                 // try loading file
                 if (_ApiKeyFile.Exists)
                 {
-                    _ApiKeyEncrypted = File.ReadAllText("api");
+                    _ApiKeyEncrypted = File.ReadAllText(_ApiKeyFile.FullName);
+                    Client = new NFT_Storage_API(ApiKey);
+                    return true;
                 }
                 else
                 {
-                    Console.WriteLine("No api key defined!");
-                    Console.WriteLine("please specify api key to nft.storage:");
-                    ApiKey = Console.ReadLine();
-                    File.WriteAllText("api", _ApiKeyFile.FullName);
-                    File.SetAttributes(_ApiKeyFile.FullName, FileAttributes.Hidden);
+                    return false;
                 }
                 // test api key
             }
+            return false;
         }
+
     }
 }
