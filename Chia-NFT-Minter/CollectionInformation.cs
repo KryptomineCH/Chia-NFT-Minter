@@ -27,7 +27,7 @@ namespace Chia_NFT_Minter
         public static int ReserveNextFreeCollectionNumber()
         {
             // TODO: Add Unit test
-            if (CollectionNumbers.Last() == CollectionNumbers.Count)
+            if (CollectionNumbers.Count == 0 || CollectionNumbers.Last() == CollectionNumbers.Count)
             {
                 CollectionNumbersIndex = CollectionNumbers.Count;
                 CollectionNumbers.Add(CollectionNumbers.Count+1);
@@ -63,6 +63,11 @@ namespace Chia_NFT_Minter
             MetadataFiles.Clear();
             foreach (FileInfo metadataFile in metadataFiles)
             {
+                if (metadataFile.Name == "CollectionInfo.json")
+                {
+                    // skip collection information
+                    continue;
+                }
                 string key = Path.GetFileNameWithoutExtension(metadataFile.FullName);
                 MetadataFiles.Add(key, metadataFile);
                 Metadata meta = IO.Load(metadataFile.FullName);
@@ -111,6 +116,11 @@ namespace Chia_NFT_Minter
             Dictionary<string,int> keyValuePairs = new Dictionary<string,int>();
             foreach (FileInfo fi in MetadataFiles.Values)
             {
+                if (fi.Name == "CollectionInfo.json")
+                {
+                    // skip collection information
+                    continue;
+                }
                 Metadata data = IO.Load(fi.FullName);
                 foreach (MetadataAttribute attr in data.attributes)
                 {
