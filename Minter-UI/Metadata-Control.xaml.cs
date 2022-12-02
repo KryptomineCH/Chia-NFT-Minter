@@ -186,5 +186,10 @@ namespace Minter_UI
                 CollectionInformation.ReLoadDirectories();
             }
         }
+
+        private void RefreshCollectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            CollectionInformation.ReLoadDirectories();
+        }
     }
 }
