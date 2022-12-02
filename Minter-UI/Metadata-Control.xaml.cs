@@ -17,64 +17,100 @@ namespace Minter_UI
         public Metadata_Control()
         {
             InitializeComponent();
-            LoadBasisInformation(true);
             LoadNextMissingMetadata();
         }
-        private void LoadBasisInformation(bool firstLoad = false)
+        private FileInfo CurrentMetadataPath;
+        private void LoadInformation(FileInfo file)
         {
-            if (CollectionInformation.MetadataFiles.Count <= 0) return;
-            FileInfo reference = CollectionInformation.MetadataFiles.First().Value;
-            Metadata data = IO.Load(reference.FullName);
-            if (firstLoad)
+            imageDisplay.Source = new Uri(file.FullName);
+            string nftName = Path.GetFileNameWithoutExtension(file.FullName);
+            CurrentMetadataPath = new FileInfo(Path.Combine(file.DirectoryName,nftName+".json"));
+            ClearAttributesPanel();
+            if (CurrentMetadataPath.Exists)
             {
-                data = CollectionInformation.LastKnownNftMetadata;
-                this.NftName_TextBox.Text = data.name;
-                this.SensitiveContent_Checkbox.IsChecked = data.sensitive_content;
-                this.SeriesTotal_TextBox.Text = data.series_total.ToString();
-                this.Description_TextBox.Text = data.description;
-                this.CollectionName_TextBox.Text = data.collection.name;
-                foreach (CollectionAttribute colAttr in data.collection.attributes)
+                Metadata metadata = IO.Load(CurrentMetadataPath.FullName);
+                this.NftName_TextBox.Text = metadata.name;
+                this.Description_TextBox.Text = metadata.description;
+                foreach (MetadataAttribute attribute in metadata.attributes)
                 {
-                    this.CollectionAttributes_StackPanel.Children.Add(new CollAttribute(colAttr));
+                    this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
                 }
             }
+            else
+            {
+                this.NftName_TextBox.Text = nftName.Replace("_", " ").Replace("-", " - ");
+                foreach(MetadataAttribute attribute in CollectionInformation.LikelyAttributes)
+                {
+                    this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                }
+            }
+        }
+        private void ClearAttributesPanel()
+        {
             for (int i = 1; i < this.Attributes_StackPanel.Children.Count; i++)
             {
                 this.Attributes_StackPanel.Children.RemoveAt(1);
             }
-            foreach (MetadataAttribute attr in CollectionInformation.LikelyAttributes)
-            {
-                this.Attributes_StackPanel.Children.Add(new Attribute(attr));
-
-            }
-            { }
         }
-        private void LoadNextMissingMetadata(bool reloaded = false)
+        private void LoadNextMissingMetadata()
         {
-
-            FileInfo missingMetadataFile;
-            if (CollectionInformation.MissingMetadata.TryDequeue(out missingMetadataFile))
+            if (CollectionInformation.MissingMetadata.Count == 0)
             {
-                LoadBasisInformation();
-                //this.imageDisplay.Navigate(missingMetadataFile.FullName);
-                this.imageDisplay.Source = new Uri(missingMetadataFile.FullName);
-                //SeriesTotal_TextBox.Text = CollectionInformation.ReserveNextFreeCollectionNumber().ToString();
+                MessageBox.Show("Info: no missing Metadata files.");
+                return;
             }
-            else if (reloaded == false)
-            {
-                CollectionInformation.ReLoadDirectories();
-                LoadNextMissingMetadata(true);
-            }
+            MissingNFTIndex++;
+            if (MissingNFTIndex >= CollectionInformation.MissingMetadata.Count) MissingNFTIndex = 0;
+            FileInfo missingMetadataFile = CollectionInformation.MissingMetadata.ElementAt(MissingNFTIndex).Value;
+            LoadInformation(missingMetadataFile);
         }
-
+        private void LoadPreviousMissingMetadata()
+        {
+            if(CollectionInformation.MissingMetadata.Count == 0)
+            {
+                MessageBox.Show("Info: no missing Metadata files.");
+                return;
+            }
+            MissingNFTIndex--;
+            if (MissingNFTIndex < 0) MissingNFTIndex = CollectionInformation.MissingMetadata.Count - 1;
+            FileInfo missingMetadataFile = CollectionInformation.MissingMetadata.ElementAt(MissingNFTIndex).Value;
+            LoadInformation(missingMetadataFile);
+        }
+        private int ExistingNFTIndex = -1;
+        private int MissingNFTIndex = -1;
         private void PrimarySubject_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
         {
             this.Attributes_StackPanel.Children.Add(new Attribute());
         }
 
-        private void CollectionAttributes_AddButton_Click(object sender, RoutedEventArgs e)
+        private void PreviousExisting_Button_Click(object sender, RoutedEventArgs e)
         {
-            this.CollectionAttributes_StackPanel.Children.Add(new CollAttribute());
+
+        }
+
+        private void PreviousMissing_Button_Click(object sender, RoutedEventArgs e)
+        {
+            LoadPreviousMissingMetadata();
+        }
+
+        private void Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveAndNext_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NextExisting_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NextMissing_Button_Click(object sender, RoutedEventArgs e)
+        {
+            LoadNextMissingMetadata();
         }
     }
 }

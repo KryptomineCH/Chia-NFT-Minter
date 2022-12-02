@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFT.Storage.Net", "..\NFT.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minter-UI", "Minter-UI\Minter-UI.csproj", "{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitmapHelper_Net", "..\..\..\..\..\OneDrive\Projects\Libraries\BitmapHelper_Net\BitmapHelper_Net\BitmapHelper_Net.csproj", "{F799A84E-2339-4955-8C58-88B786FA5B9F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Statistics", "..\..\..\..\..\OneDrive\Projects\Libraries\Statistics\Statistics\Statistics.csproj", "{A2FACB31-36F4-4ABA-B5EE-F660715E4820}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CAB7197-950A-4FD0-A6DC-2C19FE95D24B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2FACB31-36F4-4ABA-B5EE-F660715E4820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2FACB31-36F4-4ABA-B5EE-F660715E4820}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2FACB31-36F4-4ABA-B5EE-F660715E4820}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2FACB31-36F4-4ABA-B5EE-F660715E4820}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

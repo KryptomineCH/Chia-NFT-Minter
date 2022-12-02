@@ -16,8 +16,11 @@ namespace Chia_NFT_Minter
         public static Dictionary<string, FileInfo> NftFiles = new Dictionary<string, FileInfo>();
         public static Dictionary<string, FileInfo> MetadataFiles = new Dictionary<string, FileInfo>();
         public static Dictionary<string, FileInfo> RpcFiles = new Dictionary<string, FileInfo>();
-        public static Queue<FileInfo> MissingMetadata = new Queue<FileInfo>();
-        public static Queue<FileInfo> MissingRpcs = new Queue<FileInfo>();
+        public static Dictionary<string, FileInfo> MissingMetadata = new Dictionary<string, FileInfo>();
+        public static Dictionary<string, FileInfo> MissingRPCs = new Dictionary<string, FileInfo>();
+        public static Dictionary<int, string> NFTIndexes = new Dictionary<int, string>(); 
+        //public static Queue<FileInfo> MissingMetadata = new Queue<FileInfo>();
+        //public static Queue<FileInfo> MissingRpcs = new Queue<FileInfo>();
         private static List<int> CollectionNumbers = new List<int>();
         public static Metadata LastKnownNftMetadata { get; private set; }
         private static int CollectionNumbersIndex { get; set; }
@@ -83,7 +86,7 @@ namespace Chia_NFT_Minter
             nfts = nfts.Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden)).ToArray();
             NftFiles.Clear();
             MissingMetadata.Clear();
-            MissingRpcs.Clear();
+            MissingRPCs.Clear();
             foreach (FileInfo nftFile in nfts)
             {
                 string key = Path.GetFileNameWithoutExtension(nftFile.FullName);
@@ -91,11 +94,11 @@ namespace Chia_NFT_Minter
                 // add missing rpc and metadata files
                 if (!MetadataFiles.ContainsKey(key))
                 {
-                    MissingMetadata.Enqueue(nftFile);
+                    MissingMetadata.Add(key,nftFile);
                 }
                 if (!RpcFiles.ContainsKey(key))
                 {
-                    MissingRpcs.Enqueue(nftFile);
+                    MissingRPCs.Add(key,nftFile);
                 }
             }
             GetAttributes();
