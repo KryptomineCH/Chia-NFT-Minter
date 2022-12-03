@@ -34,6 +34,7 @@
             </Grid>
             <Label Content="Description"></Label>
             <TextBox x:Name="Description_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
+            <Button x:Name="RefreshCollectionButton" Content="Refresh Collection" Click="RefreshCollectionButton_Click"></Button>
         </StackPanel>
         <!-- nft attributes -->
         <WrapPanel x:Name="Attributes_StackPanel" Grid.Row="1" Orientation="Horizontal">

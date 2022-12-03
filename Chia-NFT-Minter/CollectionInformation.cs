@@ -11,7 +11,7 @@ namespace Chia_NFT_Minter
     {
         static CollectionInformation()
         {
-            ReLoadDirectories();
+            ReLoadDirectories(true);
         }
         public static Dictionary<string, FileInfo> NftFiles = new Dictionary<string, FileInfo>();
         public static Dictionary<string, FileInfo> MetadataFiles = new Dictionary<string, FileInfo>();
@@ -51,7 +51,7 @@ namespace Chia_NFT_Minter
             }
             throw new Exception("Collection number could not be specified!");
         }
-        public static void ReLoadDirectories()
+        public static void ReLoadDirectories(bool caseSensitive)
         {
             CollectionNumbersIndex = 0;
             CollectionNumbers.Clear();
@@ -69,6 +69,10 @@ namespace Chia_NFT_Minter
                     continue;
                 }
                 string key = Path.GetFileNameWithoutExtension(metadataFile.FullName);
+                if(!caseSensitive)
+                {
+                    key = key.ToLower();
+                }
                 MetadataFiles.Add(key, metadataFile);
                 Metadata meta = IO.Load(metadataFile.FullName);
                 CollectionNumbers.Add(meta.series_number);
@@ -83,7 +87,14 @@ namespace Chia_NFT_Minter
             foreach (FileInfo rpcFile in rpcs)
             {
                 string key = Path.GetFileNameWithoutExtension(rpcFile.FullName);
-                RpcFiles.Add(key, rpcFile);
+                if (!caseSensitive)
+                {
+                    key = key.ToLower();
+                }
+                if (!RpcFiles.ContainsKey(key))
+                {
+                    RpcFiles.Add(key, rpcFile);
+                }
             }
             // nft files
             /// note: first load the other folders, so that missing metadata and rpc can be build
@@ -95,6 +106,10 @@ namespace Chia_NFT_Minter
             foreach (FileInfo nftFile in nfts)
             {
                 string key = Path.GetFileNameWithoutExtension(nftFile.FullName);
+                if (!caseSensitive)
+                {
+                    key = key.ToLower();
+                }
                 NftFiles.Add(key, nftFile);
                 // add missing rpc and metadata files
                 if (!MetadataFiles.ContainsKey(key))

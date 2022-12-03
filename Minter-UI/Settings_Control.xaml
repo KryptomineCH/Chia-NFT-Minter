@@ -14,9 +14,35 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Content="NFT.Storage Api Key" Grid.Row="0" Grid.Column="0"></Label>
         <TextBox x:Name="NftStorageApiKey_TextBox" Grid.Row="1" Grid.Column="0"></TextBox>
         <Button x:Name="NftStorsgeApiKeySet_Button" Content="Set" Grid.Row="1" Grid.Column="1" Click="NftStorsgeApiKeySet_Button_Click"></Button>
+        <Label Content="nft collection custom web base address" Grid.Row="2" Grid.Column="0"></Label>
+        <TextBox x:Name="NftCustomLink_TextBox" Grid.Row="3" Grid.Column="0"></TextBox>
+        <Button x:Name="NftCustomLinkSet_Button" Content="Set" Grid.Row="3" Grid.Column="1" Click="NftCustomLinkSet_Button_Click"></Button>
+        <Label Content="wallet id on which should be minted" Grid.Row="4" Grid.Column="0"></Label>
+        <TextBox x:Name="WalletID_TextBox" Grid.Row="5" Grid.Column="0"></TextBox>
+        <Button x:Name="WalletIDSet_Button" Content="Set" Grid.Row="5" Grid.Column="1" Click="WalletIDSet_Button_Click"></Button>
+        <Label Content="Weblink to license" Grid.Row="6" Grid.Column="0"></Label>
+        <TextBox x:Name="LicenseLink_TextBox" Grid.Row="7" Grid.Column="0"></TextBox>
+        <TextBox x:Name="LicenseLink2_TextBox" Grid.Row="8" Grid.Column="0"></TextBox>
+        <Button x:Name="LicenseLinkSet_Button" Content="Set" Grid.Row="8" Grid.Column="1" Click="LicenseLinkSet_Button_Click"></Button>
+        <WrapPanel Grid.Row="9">
+            <CheckBox x:Name="CaseSensitiveFilehandling_CheckBox" IsChecked="True" Content="Case Sensitive File Handling" Grid.Column="0" Click="CaseSensitiveFilehandling_CheckBox_Checked"></CheckBox>
+        </WrapPanel>
+        <Label Content="Minting Fee" Grid.Row="10" Grid.Column="0"></Label>
+        <TextBox x:Name="MintingFee_TextBox" Text="10000" Grid.Row="11" Grid.Column="0"></TextBox>
+        <Button x:Name="MintingFeeSet_Button" Content="Set" Grid.Row="11" Grid.Column="1" Click="MintingFeeSet_Button_Click"></Button>
     </Grid>
 </UserControl>
