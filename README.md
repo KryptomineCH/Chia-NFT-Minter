@@ -14,11 +14,13 @@ the recommended aspect ratio for banner is 2:1
 5. place your nft images/documents in the final folder  
 ![image](https://user-images.githubusercontent.com/117320700/205461905-11adbacc-d334-4992-9d48-0b5833de68b7.png)
 
-6. restart the application. Edit Collection information and hit safe. Depending on internet connection speed, it may take a little while to upload logo and banner to nft.storage  
+6. Head over to the settings tab and enter your nft.storage api key
+
+7. restart the application. Edit Collection information and hit safe. Depending on internet connection speed, it may take a little while to upload logo and banner to nft.storage  
 ![image](https://user-images.githubusercontent.com/117320700/205461888-673349a1-8ca5-4b18-b938-f4e1c1033a8f.png)
 
-7. Edit metadata in the metadata tab. If you already have json metadata files with chip-0007 std, place them in the metadata folder. the name must be the same as the mages, except the file ending (`.json`)  
+8. Edit metadata in the metadata tab. If you already have json metadata files with chip-0007 std, place them in the metadata folder. the name must be the same as the mages, except the file ending (`.json`)  
 ![image](https://user-images.githubusercontent.com/117320700/205461922-4f78b6a9-2d70-4e5a-b4a2-04fbaf1627df.png)
 
-8. Head over to the minting tab and press mint. In case you already have minted nfts but no .rpc files for them, you can copy the existing metadata files to the rpc folder. The given nfts will then be excluded.  
+9. Head over to the minting tab and press mint. In case you already have minted nfts but no .rpc files for them, you can copy the existing metadata files to the rpc folder. The given nfts will then be excluded.  
 ![image](https://user-images.githubusercontent.com/117320700/205461960-6e392402-9c57-4fe1-b8d6-7fc568e05364.png)
