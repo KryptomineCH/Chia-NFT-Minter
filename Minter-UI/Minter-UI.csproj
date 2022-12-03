@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
+	  <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <RootNamespace>Minter_UI</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
