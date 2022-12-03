@@ -73,6 +73,7 @@ namespace Chia_NFT_Minter
                 {
                     key = key.ToLower();
                 }
+                if (!NftFiles.ContainsKey(key)) continue;
                 MetadataFiles.Add(key, metadataFile);
                 Metadata meta = IO.Load(metadataFile.FullName);
                 CollectionNumbers.Add(meta.series_number);
