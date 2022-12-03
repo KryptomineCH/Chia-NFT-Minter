@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="Minter_UI.Minting_Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Minter_UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <WrapPanel x:Name="Preview_WrapPanel"></WrapPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <CheckBox x:Name="GenerateRPCsOnly_Checkbox" Content="Only build rpc-files" IsEnabled="False"></CheckBox>
+            <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click"></Button>
+            <Button x:Name="Mint_Button" Content="Mint!" Click="Mint_Button_Click"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

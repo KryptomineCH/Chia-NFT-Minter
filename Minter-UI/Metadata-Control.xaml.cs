@@ -17,15 +17,27 @@ namespace Minter_UI
         public Metadata_Control()
         {
             InitializeComponent();
+            CollectionInformation.ReLoadDirectories(GlobalVar.CaseSensitiveFilehandling);
             LoadNextMissingMetadata();
         }
         private FileInfo CurrentMetadataPath;
         private void LoadInformation(FileInfo file)
         {
             string nftName = Path.GetFileNameWithoutExtension(file.FullName);
-            imageDisplay.Source = new Uri(CollectionInformation.NftFiles[nftName].FullName);
-            
-            CurrentMetadataPath = new FileInfo(Path.Combine(Directories.Metadata.FullName, nftName + ".json"));
+            string key = nftName;
+            if (!GlobalVar.CaseSensitiveFilehandling)
+            {
+                key = key.ToLower();
+            }
+            imageDisplay.Source = new Uri(CollectionInformation.NftFiles[key].FullName);
+            if (CollectionInformation.MetadataFiles.ContainsKey(key))
+            {
+                CurrentMetadataPath = CollectionInformation.MetadataFiles[key];
+            }
+            else
+            {
+                CurrentMetadataPath = new FileInfo(Path.Combine(Directories.Metadata.FullName, nftName + ".json"));
+            }
             ClearAttributesPanel();
             if (CurrentMetadataPath.Exists)
             {
@@ -183,13 +195,13 @@ namespace Minter_UI
             metadata.Save(CurrentMetadataPath.FullName);
             if (!CollectionInformation.MetadataFiles.ContainsKey(nftName))
             {
-                CollectionInformation.ReLoadDirectories();
+                CollectionInformation.ReLoadDirectories(Settings.GetProperty("CaseSensitiveFilehandling") == "true");
             }
         }
 
         private void RefreshCollectionButton_Click(object sender, RoutedEventArgs e)
         {
-            CollectionInformation.ReLoadDirectories();
+            CollectionInformation.ReLoadDirectories(Settings.GetProperty("CaseSensitiveFilehandling") == "true");
         }
     }
 }
