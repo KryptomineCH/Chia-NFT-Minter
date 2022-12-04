@@ -8,6 +8,10 @@ namespace Minter_UI
 {
     internal static class GlobalVar
     {
+        static GlobalVar()
+        {
+            Settings.Initialize();
+        }
         internal static bool CaseSensitiveFilehandling = true;
     }
 }

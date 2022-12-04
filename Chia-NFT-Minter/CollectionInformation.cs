@@ -1,4 +1,5 @@
 ﻿using Chia_Metadata;
+using System.Collections.Concurrent;
 
 namespace Chia_NFT_Minter
 {
@@ -8,12 +9,12 @@ namespace Chia_NFT_Minter
         {
             //ReLoadDirectories(true);
         }
-        public static Dictionary<string, FileInfo> NftFiles = new Dictionary<string, FileInfo>();
-        public static Dictionary<string, FileInfo> MetadataFiles = new Dictionary<string, FileInfo>();
-        public static Dictionary<string, FileInfo> RpcFiles = new Dictionary<string, FileInfo>();
-        public static Dictionary<string, FileInfo> MissingMetadata = new Dictionary<string, FileInfo>();
-        public static Dictionary<string, FileInfo> MissingRPCs = new Dictionary<string, FileInfo>();
-        public static Dictionary<int, string> NFTIndexes = new Dictionary<int, string>(); 
+        public static ConcurrentDictionary<string, FileInfo> NftFiles = new ConcurrentDictionary<string, FileInfo>();
+        public static ConcurrentDictionary<string, FileInfo> MetadataFiles = new ConcurrentDictionary<string, FileInfo>();
+        public static ConcurrentDictionary<string, FileInfo> RpcFiles = new ConcurrentDictionary<string, FileInfo>();
+        public static ConcurrentDictionary<string, FileInfo> MissingMetadata = new ConcurrentDictionary<string, FileInfo>();
+        public static ConcurrentDictionary<string, FileInfo> MissingRPCs = new ConcurrentDictionary<string, FileInfo>();
+        public static ConcurrentDictionary<int, string> NFTIndexes = new ConcurrentDictionary<int, string>(); 
         //public static Queue<FileInfo> MissingMetadata = new Queue<FileInfo>();
         //public static Queue<FileInfo> MissingRpcs = new Queue<FileInfo>();
         private static List<int> CollectionNumbers = new List<int>();
@@ -44,8 +45,15 @@ namespace Chia_NFT_Minter
             }
             throw new Exception("Collection number could not be specified!");
         }
+        private static bool IsLoading = false;
+        private static object IsLoadingLock = new object();
         public static void ReLoadDirectories(bool caseSensitive)
         {
+            lock(IsLoadingLock)
+            {
+                if (IsLoading) return;
+                IsLoading = true;
+            }
             CollectionNumbersIndex = 0;
             CollectionNumbers.Clear();
             NftFiles.Clear();
@@ -61,7 +69,7 @@ namespace Chia_NFT_Minter
                 {
                     key = key.ToLower();
                 }
-                NftFiles.Add(key, nftFile);
+                NftFiles[key] = nftFile;
             }
             // metadata files
             FileInfo[] metadataFiles = Directories.Metadata.GetFiles();
@@ -82,7 +90,7 @@ namespace Chia_NFT_Minter
                     key = key.ToLower();
                 }
                 if (!NftFiles.ContainsKey(key)) continue;
-                MetadataFiles.Add(key, metadataFile);
+                MetadataFiles[key] = metadataFile;
                 Metadata meta = IO.Load(metadataFile.FullName);
                 CollectionNumbers.Add(meta.series_number);
                 CollectionNumbers = CollectionNumbers.OrderBy(x => x).ToList();
@@ -106,7 +114,7 @@ namespace Chia_NFT_Minter
                 }
                 if (!RpcFiles.ContainsKey(key))
                 {
-                    RpcFiles.Add(key, rpcFile);
+                    RpcFiles[key] = rpcFile;
                 }
             }
             // nft files
@@ -115,21 +123,25 @@ namespace Chia_NFT_Minter
                 // add missing rpc and metadata files
                 if (!MetadataFiles.ContainsKey(key))
                 {
-                    MissingMetadata.Add(key, NftFiles[key]);
+                    MissingMetadata[key] = NftFiles[key];
                 }
                 if (!RpcFiles.ContainsKey(key))
                 {
-                    MissingRPCs.Add(key, NftFiles[key]);
+                    MissingRPCs[key] = NftFiles[key];
                 }
             }
             GetAttributes();
+            lock(IsLoadingLock)
+            {
+                IsLoading = false;
+            }
         }
         public static MetadataAttribute[] LikelyAttributes { get; set; }
-        public static Dictionary<string, MetadataAttribute> AllMetadataAttributes = new Dictionary<string, MetadataAttribute>();
+        public static ConcurrentDictionary<string, MetadataAttribute> AllMetadataAttributes = new ConcurrentDictionary<string, MetadataAttribute>();
         private static void GetAttributes()
         {
             AllMetadataAttributes.Clear();
-            Dictionary<string,int> keyValuePairs = new Dictionary<string,int>();
+            ConcurrentDictionary<string,int> keyValuePairs = new ConcurrentDictionary<string,int>();
             foreach (FileInfo fi in MetadataFiles.Values)
             {
                 if (fi.Name == "CollectionInfo.json")
@@ -142,11 +154,11 @@ namespace Chia_NFT_Minter
                 {
                     if (!AllMetadataAttributes.ContainsKey(attr.trait_type))
                     {
-                        AllMetadataAttributes.Add(attr.trait_type, attr);
+                        AllMetadataAttributes[attr.trait_type] = attr;
                     }
                     if (!keyValuePairs.ContainsKey(attr.trait_type))
                     {
-                        keyValuePairs.Add(attr.trait_type, 1);
+                        keyValuePairs[attr.trait_type] = 1;
                     }
                     else
                     {

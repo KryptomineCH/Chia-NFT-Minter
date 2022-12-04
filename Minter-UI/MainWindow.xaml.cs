@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Chia_NFT_Minter;
 
 namespace Minter_UI
@@ -10,7 +11,6 @@ namespace Minter_UI
     {
         public MainWindow()
         {
-            Settings.Initialize();
             CollectionInformation.ReLoadDirectories(GlobalVar.CaseSensitiveFilehandling);
             InitializeComponent();
         }

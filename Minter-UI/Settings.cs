@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Minter_UI
@@ -9,28 +10,35 @@ namespace Minter_UI
         {
             if (SettingsFile.Exists)
             {
-                string[] lines = File.ReadAllLines(SettingsFile.FullName);
-                foreach (string line in lines)
+                string[] lines;
+                lock (FileLock)
                 {
-                    string[] keyValue = line.Split('=');
-                    Properties.Add(keyValue[0], keyValue[1]);
+                    lines = File.ReadAllLines(SettingsFile.FullName);
+                    foreach (string line in lines)
+                    {
+                        string[] keyValue = line.Split('=');
+                        Properties[keyValue[0]] = keyValue[1];
 
+                    }
+                    GlobalVar.CaseSensitiveFilehandling = bool.Parse(Settings.GetProperty("CaseSensitiveFilehandling"));
                 }
-                GlobalVar.CaseSensitiveFilehandling = bool.Parse(Settings.GetProperty("CaseSensitiveFilehandling"));
-                { }
             }
         }
         private static FileInfo SettingsFile = new FileInfo("settings.txt");
-        private static Dictionary<string, string> Properties = new Dictionary<string, string>();
+        private static ConcurrentDictionary<string, string> Properties = new ConcurrentDictionary<string, string>();
+        private static object FileLock = new object();
         public static void SetProperty(string name, string value)
         {
-            Properties[name] = value;
-            List<string> lines = new List<string>();
-            foreach (KeyValuePair<string,string> property in Properties)
+            lock (FileLock)
             {
-                lines.Add($"{property.Key}={property.Value}");
+                Properties[name] = value;
+                List<string> lines = new List<string>();
+                foreach (KeyValuePair<string, string> property in Properties)
+                {
+                    lines.Add($"{property.Key}={property.Value}");
+                }
+                File.WriteAllLines(SettingsFile.FullName, lines);
             }
-            File.WriteAllLines(SettingsFile.FullName, lines);
         }
         public static void Initialize()
         {
