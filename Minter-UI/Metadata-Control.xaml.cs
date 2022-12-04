@@ -187,6 +187,7 @@ namespace Minter_UI
             metadata.description = this.Description_TextBox.Text;
             metadata.minting_tool = "KryptoMine Chia-Nft-Minter";
             metadata.sensitive_content = (bool)this.SensitiveContent_Checkbox.IsChecked;
+            metadata.attributes.Clear();
             for (int i = 1; i < this.Attributes_StackPanel.Children.Count; i++)
             {
                 metadata.attributes.Add(((Attribute)this.Attributes_StackPanel.Children[i]).Value);

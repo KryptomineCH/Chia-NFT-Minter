@@ -67,11 +67,12 @@ namespace Minter_UI
             foreach (FileInfo nftFile in CollectionInformation.NftFiles.Values)
             {
                 string nftName = System.IO.Path.GetFileNameWithoutExtension(nftFile.FullName);
+                string key = nftName;
                 if (!GlobalVar.CaseSensitiveFilehandling)
                 {
-                    nftName = nftName.ToLower();
+                    key = key.ToLower();
                 }
-                if (CollectionInformation.MetadataFiles.ContainsKey(nftName) && !CollectionInformation.RpcFiles.ContainsKey(nftName))
+                if (CollectionInformation.MetadataFiles.ContainsKey(key) && !CollectionInformation.RpcFiles.ContainsKey(key))
                 {
                     List<string> nftlinkList = new List<string>();
                     Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nftFile.FullName));
@@ -79,7 +80,7 @@ namespace Minter_UI
                     nftlinkList.Add(nftUploadTask.Result.URL);
                     
                     List<string> metalinkList = new List<string>();
-                    Task<NFT_File> metaUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.MetadataFiles[nftName]));
+                    Task<NFT_File> metaUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.MetadataFiles[key]));
                     metaUploadTask.Wait();
                     metalinkList.Add(metaUploadTask.Result.URL);
                     if (Settings.GetProperty("Custom Link") != null)
@@ -88,7 +89,7 @@ namespace Minter_UI
                         if (!customLink.EndsWith("/")) customLink += "/";
                         Uri customLinkUri = new Uri(customLink+nftName);
                         nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nftFile.Name);
-                        metalinkList.Add(customLink + Directories.Metadata.Name + "/" + nftName + ".json");
+                        metalinkList.Add(customLink + Directories.Metadata.Name + "/" + CollectionInformation.MetadataFiles[key].Name);
                     }
                     List<string> licenseLinks = new List<string>();
                     licenseLinks.Add(Settings.GetProperty("LicenseLink"));
