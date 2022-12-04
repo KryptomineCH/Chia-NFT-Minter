@@ -67,6 +67,10 @@ namespace Minter_UI
             foreach (FileInfo nftFile in CollectionInformation.NftFiles.Values)
             {
                 string nftName = System.IO.Path.GetFileNameWithoutExtension(nftFile.FullName);
+                if (!GlobalVar.CaseSensitiveFilehandling)
+                {
+                    nftName = nftName.ToLower();
+                }
                 if (CollectionInformation.MetadataFiles.ContainsKey(nftName) && !CollectionInformation.RpcFiles.ContainsKey(nftName))
                 {
                     List<string> nftlinkList = new List<string>();
