@@ -20,7 +20,7 @@ namespace Minter_UI
             LoadNextMissingMetadata();
         }
         private FileInfo CurrentMetadataPath;
-        private void LoadInformation(FileInfo file)
+        private void LoadInformation(FileInfo file, bool reloadMetadata = false)
         {
             string nftName = Path.GetFileNameWithoutExtension(file.FullName);
             string key = nftName;
@@ -36,6 +36,11 @@ namespace Minter_UI
             else
             {
                 CurrentMetadataPath = new FileInfo(Path.Combine(Directories.Metadata.FullName, nftName + ".json"));
+            }
+            if (!reloadMetadata)
+            {
+                this.NftName_TextBox.Text = nftName.Replace("_", " ").Replace("-", " - ");
+                return;
             }
             ClearAttributesPanel();
             if (CurrentMetadataPath.Exists)
@@ -65,7 +70,7 @@ namespace Minter_UI
                 this.Attributes_StackPanel.Children.RemoveAt(1);
             }
         }
-        private void LoadNextMissingMetadata()
+        private void LoadNextMissingMetadata(bool loadMetadata = true)
         {
             if (CollectionInformation.MissingMetadata.Count == 0)
             {
@@ -75,7 +80,7 @@ namespace Minter_UI
             MissingNFTIndex++;
             if (MissingNFTIndex >= CollectionInformation.MissingMetadata.Count) MissingNFTIndex = 0;
             FileInfo missingMetadataFile = CollectionInformation.MissingMetadata.ElementAt(MissingNFTIndex).Value;
-            LoadInformation(missingMetadataFile);
+            LoadInformation(missingMetadataFile,loadMetadata);
         }
         private void LoadNextExistingMetadata()
         {
@@ -156,7 +161,7 @@ namespace Minter_UI
         private void SaveAndNextMissing_Button_Click(object sender, RoutedEventArgs e)
         {
             SaveMetadata();
-            LoadNextMissingMetadata();
+            LoadNextMissingMetadata(false);
         }
         private void SaveMetadata()
         {
