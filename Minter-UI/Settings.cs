@@ -20,7 +20,16 @@ namespace Minter_UI
                         Properties[keyValue[0]] = keyValue[1];
 
                     }
-                    GlobalVar.CaseSensitiveFilehandling = bool.Parse(Settings.GetProperty("CaseSensitiveFilehandling"));
+                    if (Properties.ContainsKey("CaseSensitiveFilehandling"))
+                    {
+                        string prop = Properties["CaseSensitiveFilehandling"];
+                        GlobalVar.CaseSensitiveFilehandling = bool.Parse(prop);
+                    }
+                    else
+                    {
+                        Properties["CaseSensitiveFilehandling"] = false.ToString();
+                        GlobalVar.CaseSensitiveFilehandling = false;
+                    }
                 }
             }
         }
