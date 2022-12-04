@@ -22,26 +22,24 @@ namespace Chia_NFT_Minter
         public static int ReserveNextFreeCollectionNumber()
         {
             // TODO: Add Unit test
-            if (CollectionNumbers.Count == 0 || CollectionNumbers.Last() == CollectionNumbers.Count)
+            if (CollectionNumbers.Count == 0)
             {
                 CollectionNumbersIndex = CollectionNumbers.Count;
                 CollectionNumbers.Add(CollectionNumbers.Count+1);
                 return CollectionNumbers.Count;
             }
-            throw new NotImplementedException("gaps are not yet properly!");
             for(int i = CollectionNumbersIndex; i < CollectionNumbers.Count; i++)
             {
                 if (CollectionNumbersIndex == CollectionNumbers.Count)
                 {
-                    CollectionNumbers.Add(CollectionNumbers.Count);
-                    CollectionNumbersIndex++;
+                    CollectionNumbers.Add(CollectionNumbers.Count+1);
                     return CollectionNumbers.Count;
                 }
                 if (CollectionNumbers[i] < (CollectionNumbers[i+1]-1))
                 {
-                    CollectionNumbers.Add(i);
-                    CollectionNumbersIndex++;
-                    return i;
+                    CollectionNumbers.Add(i+2);
+                    CollectionNumbers = CollectionNumbers.OrderBy(x => x).ToList();
+                    return i+2;
                 }
             }
             throw new Exception("Collection number could not be specified!");
