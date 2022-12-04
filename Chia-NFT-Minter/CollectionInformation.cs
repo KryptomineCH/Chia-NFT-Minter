@@ -1,9 +1,4 @@
 ﻿using Chia_Metadata;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chia_NFT_Minter
 {
@@ -11,7 +6,7 @@ namespace Chia_NFT_Minter
     {
         static CollectionInformation()
         {
-            ReLoadDirectories(true);
+            //ReLoadDirectories(true);
         }
         public static Dictionary<string, FileInfo> NftFiles = new Dictionary<string, FileInfo>();
         public static Dictionary<string, FileInfo> MetadataFiles = new Dictionary<string, FileInfo>();
