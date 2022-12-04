@@ -74,6 +74,7 @@ namespace Minter_UI
                     CollectionInformation.LastKnownNftMetadata.Save(CollectionInformationFile.FullName);
                 }
             }
+            CollectionInformationFile.Refresh();
             // try load metadata information
             if (CollectionInformationFile.Exists)
             {

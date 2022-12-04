@@ -88,6 +88,10 @@ namespace Chia_NFT_Minter
                 Metadata meta = IO.Load(metadataFile.FullName);
                 CollectionNumbers.Add(meta.series_number);
                 CollectionNumbers = CollectionNumbers.OrderBy(x => x).ToList();
+                if (LastKnownNftMetadata == null || meta.series_number > LastKnownNftMetadata.series_number)
+                {
+                    LastKnownNftMetadata = meta;
+                }
             }
             // rpcFiles
             FileInfo[] rpcs = Directories.Rpcs.GetFiles();

@@ -10,8 +10,8 @@ namespace Minter_UI
     {
         public MainWindow()
         {
-            InitializeComponent();
             CollectionInformation.ReLoadDirectories(GlobalVar.CaseSensitiveFilehandling);
+            InitializeComponent();
         }
     }
 }
