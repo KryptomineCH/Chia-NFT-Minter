@@ -60,8 +60,13 @@ namespace Minter_UI
 
         private void TraitType_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.MinValue_TextBox.Text = CollectionInformation.AllMetadataAttributes[e.AddedItems[0].ToString()].min_value.ToString();
-            this.MaxValue_TextBox.Text = CollectionInformation.AllMetadataAttributes[e.AddedItems[0].ToString()].max_value.ToString();
+            if (e.AddedItems.Count == 0) return;
+            string key = e.AddedItems[0].ToString();
+            if (CollectionInformation.AllMetadataAttributes.ContainsKey(key))
+            {
+                this.MinValue_TextBox.Text = CollectionInformation.AllMetadataAttributes[key].min_value.ToString();
+                this.MaxValue_TextBox.Text = CollectionInformation.AllMetadataAttributes[key].max_value.ToString();
+            }
         }
     }
 }

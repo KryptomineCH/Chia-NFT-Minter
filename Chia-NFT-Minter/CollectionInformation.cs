@@ -10,6 +10,7 @@ namespace Chia_NFT_Minter
             //ReLoadDirectories(true);
         }
         public static ConcurrentDictionary<string, FileInfo> NftFiles = new ConcurrentDictionary<string, FileInfo>();
+        public static FileInfo[] NftFileInfos;
         public static ConcurrentDictionary<string, FileInfo> MetadataFiles = new ConcurrentDictionary<string, FileInfo>();
         public static ConcurrentDictionary<string, FileInfo> RpcFiles = new ConcurrentDictionary<string, FileInfo>();
         public static ConcurrentDictionary<string, FileInfo> MissingMetadata = new ConcurrentDictionary<string, FileInfo>();
@@ -31,7 +32,7 @@ namespace Chia_NFT_Minter
             }
             for(int i = CollectionNumbersIndex; i < CollectionNumbers.Count; i++)
             {
-                if (CollectionNumbersIndex == CollectionNumbers.Count)
+                if (i == CollectionNumbers.Count-1)
                 {
                     CollectionNumbers.Add(CollectionNumbers.Count+1);
                     return CollectionNumbers.Count;
@@ -61,16 +62,17 @@ namespace Chia_NFT_Minter
                 FileInfo[] nfts = Directories.Nfts.GetFiles();
                 nfts = nfts.Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden)).ToArray();
                 ConcurrentDictionary<string, FileInfo> nftFiles = new ConcurrentDictionary<string, FileInfo>();
-                    foreach (FileInfo nftFile in nfts)
+                foreach (FileInfo nftFile in nfts)
+                {
+                    string key = Path.GetFileNameWithoutExtension(nftFile.FullName);
+                    if (!caseSensitive)
                     {
-                        string key = Path.GetFileNameWithoutExtension(nftFile.FullName);
-                        if (!caseSensitive)
-                        {
-                            key = key.ToLower();
-                        }
-                        nftFiles[key] = nftFile;
+                        key = key.ToLower();
                     }
+                    nftFiles[key] = nftFile;
+                }
                 NftFiles = nftFiles;
+                NftFileInfos = nfts;
 
                 // metadata files
             FileInfo[] metadataFilesList = Directories.Metadata.GetFiles();

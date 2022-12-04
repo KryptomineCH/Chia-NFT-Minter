@@ -18,13 +18,16 @@ namespace Minter_UI
         public Minting_Control()
         {
             InitializeComponent();
-            RefreshPreviews();
+            RefreshPreviews(false);
         }
-        private void RefreshPreviews()
+        private void RefreshPreviews(bool reloadDirs = true)
         {
-            CollectionInformation.ReLoadDirectories(GlobalVar.CaseSensitiveFilehandling);
+            if (reloadDirs)
+            {
+                CollectionInformation.ReLoadDirectories(GlobalVar.CaseSensitiveFilehandling);
+            }
             this.Preview_WrapPanel.Children.Clear();
-            foreach (FileInfo nftFile in CollectionInformation.NftFiles.Values)
+            foreach (FileInfo nftFile in CollectionInformation.NftFileInfos)
             {
                 string nftName = System.IO.Path.GetFileNameWithoutExtension(nftFile.FullName);
                 string key = nftName;

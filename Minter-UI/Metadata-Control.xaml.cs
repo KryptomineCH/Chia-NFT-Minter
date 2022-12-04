@@ -17,7 +17,6 @@ namespace Minter_UI
         public Metadata_Control()
         {
             InitializeComponent();
-            CollectionInformation.ReLoadDirectories(GlobalVar.CaseSensitiveFilehandling);
             LoadNextMissingMetadata();
         }
         private FileInfo CurrentMetadataPath;
