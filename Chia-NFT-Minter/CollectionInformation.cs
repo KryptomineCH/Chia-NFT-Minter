@@ -50,6 +50,21 @@ namespace Chia_NFT_Minter
         {
             CollectionNumbersIndex = 0;
             CollectionNumbers.Clear();
+            NftFiles.Clear();
+            MissingMetadata.Clear();
+            MissingRPCs.Clear();
+            // nft files
+            FileInfo[] nfts = Directories.Nfts.GetFiles();
+            nfts = nfts.Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden)).ToArray();
+            foreach (FileInfo nftFile in nfts)
+            {
+                string key = Path.GetFileNameWithoutExtension(nftFile.FullName);
+                if (!caseSensitive)
+                {
+                    key = key.ToLower();
+                }
+                NftFiles.Add(key, nftFile);
+            }
             // metadata files
             FileInfo[] metadataFiles = Directories.Metadata.GetFiles();
             metadataFiles = metadataFiles
@@ -93,28 +108,16 @@ namespace Chia_NFT_Minter
                 }
             }
             // nft files
-            /// note: first load the other folders, so that missing metadata and rpc can be build
-            FileInfo[] nfts = Directories.Nfts.GetFiles();
-            nfts = nfts.Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden)).ToArray();
-            NftFiles.Clear();
-            MissingMetadata.Clear();
-            MissingRPCs.Clear();
-            foreach (FileInfo nftFile in nfts)
+            foreach(string key in NftFiles.Keys)
             {
-                string key = Path.GetFileNameWithoutExtension(nftFile.FullName);
-                if (!caseSensitive)
-                {
-                    key = key.ToLower();
-                }
-                NftFiles.Add(key, nftFile);
                 // add missing rpc and metadata files
                 if (!MetadataFiles.ContainsKey(key))
                 {
-                    MissingMetadata.Add(key,nftFile);
+                    MissingMetadata.Add(key, NftFiles[key]);
                 }
                 if (!RpcFiles.ContainsKey(key))
                 {
-                    MissingRPCs.Add(key,nftFile);
+                    MissingRPCs.Add(key, NftFiles[key]);
                 }
             }
             GetAttributes();
