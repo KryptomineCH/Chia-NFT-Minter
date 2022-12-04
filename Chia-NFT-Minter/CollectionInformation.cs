@@ -49,90 +49,98 @@ namespace Chia_NFT_Minter
         private static object IsLoadingLock = new object();
         public static void ReLoadDirectories(bool caseSensitive)
         {
-            lock(IsLoadingLock)
+            lock (IsLoadingLock)
             {
                 if (IsLoading) return;
                 IsLoading = true;
-            }
-            CollectionNumbersIndex = 0;
-            CollectionNumbers.Clear();
-            NftFiles.Clear();
-            MissingMetadata.Clear();
-            MissingRPCs.Clear();
-            // nft files
-            FileInfo[] nfts = Directories.Nfts.GetFiles();
-            nfts = nfts.Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden)).ToArray();
-            foreach (FileInfo nftFile in nfts)
-            {
-                string key = Path.GetFileNameWithoutExtension(nftFile.FullName);
-                if (!caseSensitive)
-                {
-                    key = key.ToLower();
-                }
-                NftFiles[key] = nftFile;
-            }
-            // metadata files
-            FileInfo[] metadataFiles = Directories.Metadata.GetFiles();
-            metadataFiles = metadataFiles
-                .Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden))
-                .Where(f => (f.Extension == ".json")).ToArray();
-            MetadataFiles.Clear();
-            foreach (FileInfo metadataFile in metadataFiles)
-            {
-                if (metadataFile.Name == "CollectionInfo.json")
-                {
-                    // skip collection information
-                    continue;
-                }
-                string key = Path.GetFileNameWithoutExtension(metadataFile.FullName);
-                if(!caseSensitive)
-                {
-                    key = key.ToLower();
-                }
-                if (!NftFiles.ContainsKey(key)) continue;
-                MetadataFiles[key] = metadataFile;
-                Metadata meta = IO.Load(metadataFile.FullName);
-                CollectionNumbers.Add(meta.series_number);
-                CollectionNumbers = CollectionNumbers.OrderBy(x => x).ToList();
-                if (LastKnownNftMetadata == null || meta.series_number > LastKnownNftMetadata.series_number)
-                {
-                    LastKnownNftMetadata = meta;
-                }
-            }
-            // rpcFiles
-            FileInfo[] rpcs = Directories.Rpcs.GetFiles();
-            rpcs = rpcs
-                .Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden))
-                .Where(f => (f.Extension == ".json" || f.Extension == ".rpc")).ToArray();
-            RpcFiles.Clear();
-            foreach (FileInfo rpcFile in rpcs)
-            {
-                string key = Path.GetFileNameWithoutExtension(rpcFile.FullName);
-                if (!caseSensitive)
-                {
-                    key = key.ToLower();
-                }
-                if (!RpcFiles.ContainsKey(key))
-                {
-                    RpcFiles[key] = rpcFile;
-                }
-            }
-            // nft files
-            foreach(string key in NftFiles.Keys)
-            {
-                // add missing rpc and metadata files
-                if (!MetadataFiles.ContainsKey(key))
-                {
-                    MissingMetadata[key] = NftFiles[key];
-                }
-                if (!RpcFiles.ContainsKey(key))
-                {
-                    MissingRPCs[key] = NftFiles[key];
-                }
-            }
-            GetAttributes();
-            lock(IsLoadingLock)
-            {
+                CollectionNumbersIndex = 0;
+                CollectionNumbers.Clear();
+                
+                
+                // nft files
+                FileInfo[] nfts = Directories.Nfts.GetFiles();
+                nfts = nfts.Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden)).ToArray();
+                ConcurrentDictionary<string, FileInfo> nftFiles = new ConcurrentDictionary<string, FileInfo>();
+                    foreach (FileInfo nftFile in nfts)
+                    {
+                        string key = Path.GetFileNameWithoutExtension(nftFile.FullName);
+                        if (!caseSensitive)
+                        {
+                            key = key.ToLower();
+                        }
+                        nftFiles[key] = nftFile;
+                    }
+                NftFiles = nftFiles;
+
+                // metadata files
+            FileInfo[] metadataFilesList = Directories.Metadata.GetFiles();
+                metadataFilesList = metadataFilesList
+                    .Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden))
+                    .Where(f => (f.Extension == ".json")).ToArray();
+                ConcurrentDictionary<string, FileInfo> metadataFiles = new ConcurrentDictionary<string, FileInfo>();
+                    foreach (FileInfo metadataFile in metadataFilesList)
+                    {
+                        if (metadataFile.Name == "CollectionInfo.json")
+                        {
+                            // skip collection information
+                            continue;
+                        }
+                        string key = Path.GetFileNameWithoutExtension(metadataFile.FullName);
+                        if (!caseSensitive)
+                        {
+                            key = key.ToLower();
+                        }
+                        if (!nftFiles.ContainsKey(key)) continue;
+                        metadataFiles[key] = metadataFile;
+                        Metadata meta = IO.Load(metadataFile.FullName);
+                        CollectionNumbers.Add(meta.series_number);
+                        CollectionNumbers = CollectionNumbers.OrderBy(x => x).ToList();
+                        if (LastKnownNftMetadata == null || meta.series_number > LastKnownNftMetadata.series_number)
+                        {
+                            LastKnownNftMetadata = meta;
+                        }
+                    }
+                MetadataFiles = metadataFiles;
+                ConcurrentDictionary<string, FileInfo> rpcFiles = new ConcurrentDictionary<string, FileInfo>();
+                // rpcFiles
+                FileInfo[] rpcs = Directories.Rpcs.GetFiles();
+                rpcs = rpcs
+                    .Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden))
+                    .Where(f => (f.Extension == ".json" || f.Extension == ".rpc")).ToArray();
+                
+                    foreach (FileInfo rpcFile in rpcs)
+                    {
+                        string key = Path.GetFileNameWithoutExtension(rpcFile.FullName);
+                        if (!caseSensitive)
+                        {
+                            key = key.ToLower();
+                        }
+                        if (!rpcFiles.ContainsKey(key))
+                        {
+                            rpcFiles[key] = rpcFile;
+                        }
+                    }
+                RpcFiles = rpcFiles;
+                ConcurrentDictionary<string, FileInfo> missingMetadata = new ConcurrentDictionary<string, FileInfo>();
+                ConcurrentDictionary<string, FileInfo> missingRPCs = new ConcurrentDictionary<string, FileInfo>();
+
+                // nft files
+                foreach (string key in nftFiles.Keys)
+                        {
+                            // add missing rpc and metadata files
+                            if (!metadataFiles.ContainsKey(key))
+                            {
+                                missingMetadata[key] = nftFiles[key];
+                            }
+                            if (!rpcFiles.ContainsKey(key))
+                            {
+                                missingRPCs[key] = nftFiles[key];
+                            }
+                        }
+                MissingMetadata = missingMetadata;
+                MissingRPCs = missingRPCs;
+
+                GetAttributes();
                 IsLoading = false;
             }
         }
@@ -140,7 +148,7 @@ namespace Chia_NFT_Minter
         public static ConcurrentDictionary<string, MetadataAttribute> AllMetadataAttributes = new ConcurrentDictionary<string, MetadataAttribute>();
         private static void GetAttributes()
         {
-            AllMetadataAttributes.Clear();
+            ConcurrentDictionary<string, MetadataAttribute> allMetadataAttributes = new ConcurrentDictionary<string, MetadataAttribute>();
             ConcurrentDictionary<string,int> keyValuePairs = new ConcurrentDictionary<string,int>();
             foreach (FileInfo fi in MetadataFiles.Values)
             {
@@ -152,9 +160,9 @@ namespace Chia_NFT_Minter
                 Metadata data = IO.Load(fi.FullName);
                 foreach (MetadataAttribute attr in data.attributes)
                 {
-                    if (!AllMetadataAttributes.ContainsKey(attr.trait_type))
+                    if (!allMetadataAttributes.ContainsKey(attr.trait_type))
                     {
-                        AllMetadataAttributes[attr.trait_type] = attr;
+                        allMetadataAttributes[attr.trait_type] = attr;
                     }
                     if (!keyValuePairs.ContainsKey(attr.trait_type))
                     {
@@ -169,6 +177,7 @@ namespace Chia_NFT_Minter
                 {
                     LastKnownNftMetadata = data;
                 }
+                AllMetadataAttributes = allMetadataAttributes;
             }
             List<MetadataAttribute> likelyAttributes = new List<MetadataAttribute>();
             foreach (string key in keyValuePairs.Keys)
