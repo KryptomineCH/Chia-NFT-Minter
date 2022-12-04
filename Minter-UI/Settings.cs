@@ -14,8 +14,11 @@ namespace Minter_UI
                 {
                     string[] keyValue = line.Split('=');
                     Properties.Add(keyValue[0], keyValue[1]);
+
                 }
-             }
+                GlobalVar.CaseSensitiveFilehandling = bool.Parse(Settings.GetProperty("CaseSensitiveFilehandling"));
+                { }
+            }
         }
         private static FileInfo SettingsFile = new FileInfo("settings.txt");
         private static Dictionary<string, string> Properties = new Dictionary<string, string>();
@@ -28,6 +31,10 @@ namespace Minter_UI
                 lines.Add($"{property.Key}={property.Value}");
             }
             File.WriteAllLines(SettingsFile.FullName, lines);
+        }
+        public static void Initialize()
+        {
+
         }
         public static string GetProperty(string name)
         {

@@ -32,16 +32,7 @@ namespace Minter_UI
             this.LicenseLink_TextBox.Text = Settings.GetProperty("LicenseLink");
             this.LicenseLink2_TextBox.Text = Settings.GetProperty("LicenseLink2");
             string caseSensitive = Settings.GetProperty("CaseSensitiveFilehandling");
-            if (caseSensitive == "True")
-            {
-                this.CaseSensitiveFilehandling_CheckBox.IsChecked = true;
-                GlobalVar.CaseSensitiveFilehandling = true;
-            }
-            else
-            {
-                this.CaseSensitiveFilehandling_CheckBox.IsChecked = false;
-                GlobalVar.CaseSensitiveFilehandling = false;
-            }
+                this.CaseSensitiveFilehandling_CheckBox.IsChecked = GlobalVar.CaseSensitiveFilehandling;
             if (Settings.GetProperty("MintingFee") == null)
             {
                 Settings.SetProperty("MintingFee", this.MintingFee_TextBox.Text.Trim());
