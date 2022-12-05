@@ -10,7 +10,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// indexes all collection files and generates missing files indexes
         /// </summary>
         /// <param name="caseSensitive"></param>
-        public static void ReLoadDirectories(bool caseSensitive, CollectionInformation_Object newInfo)
+        private static void ReLoadDirectories(bool caseSensitive, CollectionInformation_Object newInfo)
         {
             // load base directories
             newInfo.NftFiles = LoadDirectory(dirInfo: Directories.Nfts, caseSensitive: caseSensitive);
@@ -75,7 +75,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                     continue;
                 }
                 // get key
-                string key = Path.GetFileNameWithoutExtension(metadataFile.FullName);
+                string key = Path.GetFileNameWithoutExtension(metadataFile.Name);
                 if (!caseSensitive)
                 {
                     key = key.ToLower();

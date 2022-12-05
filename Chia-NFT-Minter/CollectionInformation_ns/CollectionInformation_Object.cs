@@ -10,6 +10,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// contains all nft files (eg, images, videos or documents)
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> NftFiles = new ConcurrentDictionary<string, FileInfo>();
+        public ConcurrentDictionary<string, FileInfo> NftPreviewFiles = new ConcurrentDictionary<string, FileInfo>();
 
         public FileInfo[] NftFileInfos;
         /// <summary>
