@@ -11,7 +11,7 @@ namespace Minter_UI
     {
         public MainWindow()
         {
-            CollectionInformation.ReLoadDirectories(GlobalVar.CaseSensitiveFilehandling);
+            CollectionInformation.ReLoadDirectories(Settings_NS.Settings.All.CaseSensitiveFileHandling);
             InitializeComponent();
         }
     }

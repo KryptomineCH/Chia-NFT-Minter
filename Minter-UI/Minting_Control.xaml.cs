@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Minter_UI.Settings_NS;
 
 namespace Minter_UI
 {
@@ -24,14 +25,14 @@ namespace Minter_UI
         {
             if (reloadDirs)
             {
-                CollectionInformation.ReLoadDirectories(GlobalVar.CaseSensitiveFilehandling);
+                CollectionInformation.ReLoadDirectories(Settings.All.CaseSensitiveFileHandling);
             }
             this.Preview_WrapPanel.Children.Clear();
             foreach (FileInfo nftFile in CollectionInformation.NftFileInfos)
             {
-                string nftName = System.IO.Path.GetFileNameWithoutExtension(nftFile.FullName);
+                string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
                 string key = nftName;
-                if (!GlobalVar.CaseSensitiveFilehandling)
+                if (!Settings.All.CaseSensitiveFileHandling)
                 {
                     key = key.ToLower();
                 }
@@ -53,58 +54,67 @@ namespace Minter_UI
 
         private void Mint_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Settings.GetProperty("WalletID") == null)
+            // pre-checks
+            if (Settings.All.MintingWallet == null)
             {
                 MessageBox.Show("STOP: WalletID not specified! Please specify in settings");
                 return;
             }
-            if (Settings.GetProperty("LicenseLink") == null)
+            if (Settings.All.LicenseURL == null)
             {
                 MessageBox.Show("STOP: NoLinkToLicenseSpeified! Please specify in settings");
                 return;
             }
-            int mintingFee = int.Parse(Settings.GetProperty("MintingFee"));
+            // mint each nft
             foreach (FileInfo nftFile in CollectionInformation.NftFiles.Values)
             {
-                string nftName = System.IO.Path.GetFileNameWithoutExtension(nftFile.FullName);
+                // get nft name and identifier key
+                string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
                 string key = nftName;
-                if (!GlobalVar.CaseSensitiveFilehandling)
+                if (!Settings.All.CaseSensitiveFileHandling)
                 {
                     key = key.ToLower();
                 }
+                // check if this nft has metadata and is not yet minted
                 if (CollectionInformation.MetadataFiles.ContainsKey(key) && !CollectionInformation.RpcFiles.ContainsKey(key))
                 {
+                    // upload files
+                    /// upload nft file
                     List<string> nftlinkList = new List<string>();
                     Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nftFile.FullName));
                     nftUploadTask.Wait();
                     nftlinkList.Add(nftUploadTask.Result.URL);
-                    
+                    /// upload metadata
                     List<string> metalinkList = new List<string>();
                     Task<NFT_File> metaUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.MetadataFiles[key]));
                     metaUploadTask.Wait();
                     metalinkList.Add(metaUploadTask.Result.URL);
-                    if (Settings.GetProperty("Custom Link") != null)
+                    // build link lists for rpc
+                    if (Settings.All.CustomServerURL != null)
                     {
-                        string customLink = Settings.GetProperty("Custom Link");
+                        /// prepare custom url (~prefix)
+                        string customLink = Settings.All.CustomServerURL;
                         if (!customLink.EndsWith("/")) customLink += "/";
-                        Uri customLinkUri = new Uri(customLink+nftName);
+                        /// finalize custom uri
                         nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nftFile.Name);
                         metalinkList.Add(customLink + Directories.Metadata.Name + "/" + CollectionInformation.MetadataFiles[key].Name);
                     }
+                    /// add license url (is static)
                     List<string> licenseLinks = new List<string>();
-                    licenseLinks.Add(Settings.GetProperty("LicenseLink"));
-                    if (Settings.GetProperty("LicenseLink2") != null)
+                    licenseLinks.Add(Settings.All.LicenseURL);
+                    if (Settings.All.LicenseURL_Backup != null)
                     {
-                        licenseLinks.Add(Settings.GetProperty("LicenseLink2"));
+                        licenseLinks.Add(Settings.All.LicenseURL_Backup);
                     }
-                    //file to be minted
+                    // create rpc
                     NFT_Mint_RPC rpc = new NFT_Mint_RPC(
-                        walletID: int.Parse(Settings.GetProperty("WalletID")),
+                        walletID: Settings.All.MintingWallet,
                         nftLinks: nftlinkList.ToArray(),
                         metadataLinks: metalinkList.ToArray(),
                         licenseLinks: licenseLinks.ToArray(),
-                        mintingFee_Mojos: mintingFee
+                        mintingFee_Mojos: Settings.All.MintingFee
                         );
+                    /// save rpc
                     rpc.Save(Path.Combine(Directories.Rpcs.FullName , (nftName+".rpc")));
                 }
             }

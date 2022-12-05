@@ -24,7 +24,7 @@ namespace Minter_UI
         {
             string nftName = Path.GetFileNameWithoutExtension(file.FullName);
             string key = nftName;
-            if (!GlobalVar.CaseSensitiveFilehandling)
+            if (!Settings_NS.Settings.All.CaseSensitiveFileHandling)
             {
                 key = key.ToLower();
             }
@@ -200,13 +200,13 @@ namespace Minter_UI
             metadata.Save(CurrentMetadataPath.FullName);
             if (!CollectionInformation.MetadataFiles.ContainsKey(nftName))
             {
-                CollectionInformation.ReLoadDirectories(Settings.GetProperty("CaseSensitiveFilehandling") == "true");
+                CollectionInformation.ReLoadDirectories(Settings_NS.Settings.All.CaseSensitiveFileHandling);
             }
         }
 
         private void RefreshCollectionButton_Click(object sender, RoutedEventArgs e)
         {
-            CollectionInformation.ReLoadDirectories(Settings.GetProperty("CaseSensitiveFilehandling") == "true");
+            CollectionInformation.ReLoadDirectories(Settings_NS.Settings.All.CaseSensitiveFileHandling);
         }
     }
 }
