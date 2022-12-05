@@ -1,6 +1,7 @@
 ﻿using Chia_Metadata;
 using Chia_Metadata_CHIP_0007_std;
 using Chia_NFT_Minter;
+using Chia_NFT_Minter.CollectionInformation_ns;
 using System;
 using System.IO;
 using System.Linq;
@@ -33,10 +34,10 @@ namespace Minter_UI
             {
                 key = key.ToLower();
             }
-            imageDisplay.Source = new Uri(CollectionInformation.NftFiles[key].FullName);
-            if (CollectionInformation.MetadataFiles.ContainsKey(key))
+            imageDisplay.Source = new Uri(CollectionInformation.Information.NftFiles[key].FullName);
+            if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
             {
-                CurrentMetadataPath = CollectionInformation.MetadataFiles[key];
+                CurrentMetadataPath = CollectionInformation.Information.MetadataFiles[key];
             }
             else
             {
@@ -62,7 +63,7 @@ namespace Minter_UI
             else
             {
                 this.NftName_TextBox.Text = nftName.Replace("_", " ").Replace("-", " - ");
-                foreach (MetadataAttribute attribute in CollectionInformation.LikelyAttributes)
+                foreach (MetadataAttribute attribute in CollectionInformation.Information.LikelyAttributes)
                 {
                     this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
                 }
@@ -84,14 +85,14 @@ namespace Minter_UI
         /// <param name="loadMetadata"></param>
         private void LoadNextMissingMetadata(bool loadMetadata = true)
         {
-            if (CollectionInformation.MissingMetadata.Count == 0)
+            if (CollectionInformation.Information.MissingMetadata.Count == 0)
             {
                 MessageBox.Show("Info: no missing Metadata files.");
                 return;
             }
             MissingNFTIndex++;
-            if (MissingNFTIndex >= CollectionInformation.MissingMetadata.Count) MissingNFTIndex = 0;
-            FileInfo missingMetadataFile = CollectionInformation.MissingMetadata.ElementAt(MissingNFTIndex).Value;
+            if (MissingNFTIndex >= CollectionInformation.Information.MissingMetadata.Count) MissingNFTIndex = 0;
+            FileInfo missingMetadataFile = CollectionInformation.Information.MissingMetadata.ElementAt(MissingNFTIndex).Value;
             LoadInformation(missingMetadataFile,loadMetadata);
         }
         /// <summary>
@@ -99,14 +100,14 @@ namespace Minter_UI
         /// </summary>
         private void LoadNextExistingMetadata()
         {
-            if (CollectionInformation.MetadataFiles.Count == 0)
+            if (CollectionInformation.Information.MetadataFiles.Count == 0)
             {
                 MessageBox.Show("Info: no Metadata files.");
                 return;
             }
             ExistingNFTIndex++;
-            if (ExistingNFTIndex >= CollectionInformation.MetadataFiles.Count) ExistingNFTIndex = 0;
-            FileInfo existingMetadataFile = CollectionInformation.MetadataFiles.ElementAt(ExistingNFTIndex).Value;
+            if (ExistingNFTIndex >= CollectionInformation.Information.MetadataFiles.Count) ExistingNFTIndex = 0;
+            FileInfo existingMetadataFile = CollectionInformation.Information.MetadataFiles.ElementAt(ExistingNFTIndex).Value;
             LoadInformation(existingMetadataFile);
         }
         /// <summary>
@@ -114,14 +115,14 @@ namespace Minter_UI
         /// </summary>
         private void LoadPreviousMissingMetadata()
         {
-            if (CollectionInformation.MissingMetadata.Count == 0)
+            if (CollectionInformation.Information.MissingMetadata.Count == 0)
             {
                 MessageBox.Show("Info: no missing Metadata files.");
                 return;
             }
             MissingNFTIndex--;
-            if (MissingNFTIndex < 0) MissingNFTIndex = CollectionInformation.MissingMetadata.Count - 1;
-            FileInfo missingMetadataFile = CollectionInformation.MissingMetadata.ElementAt(MissingNFTIndex).Value;
+            if (MissingNFTIndex < 0) MissingNFTIndex = CollectionInformation.Information.MissingMetadata.Count - 1;
+            FileInfo missingMetadataFile = CollectionInformation.Information.MissingMetadata.ElementAt(MissingNFTIndex).Value;
             LoadInformation(missingMetadataFile);
         }
         /// <summary>
@@ -129,14 +130,14 @@ namespace Minter_UI
         /// </summary>
         private void LoadPreviousExistingMetadata()
         {
-            if (CollectionInformation.MetadataFiles.Count == 0)
+            if (CollectionInformation.Information.MetadataFiles.Count == 0)
             {
                 MessageBox.Show("Info: no Metadata files.");
                 return;
             }
             ExistingNFTIndex--;
-            if (ExistingNFTIndex < 0) ExistingNFTIndex = CollectionInformation.MetadataFiles.Count - 1;
-            FileInfo existingMetadataFile = CollectionInformation.MetadataFiles.ElementAt(ExistingNFTIndex).Value;
+            if (ExistingNFTIndex < 0) ExistingNFTIndex = CollectionInformation.Information.MetadataFiles.Count - 1;
+            FileInfo existingMetadataFile = CollectionInformation.Information.MetadataFiles.ElementAt(ExistingNFTIndex).Value;
             LoadInformation(existingMetadataFile);
         }
         private int ExistingNFTIndex = -1;
@@ -193,7 +194,7 @@ namespace Minter_UI
         {
             // pre check
             string nftName = Path.GetFileNameWithoutExtension(CurrentMetadataPath.FullName);
-            if (CollectionInformation.RpcFiles.ContainsKey(nftName))
+            if (CollectionInformation.Information.RpcFiles.ContainsKey(nftName))
             {
                 // nft is potentially minted!
                 MessageBox.Show($"STOP: RPC for this nft was found! {Environment.NewLine} The nft is likely minted! {Environment.NewLine} If you wish to overwrite the information, please delete {nftName}.rpc and press refresh");
@@ -202,7 +203,7 @@ namespace Minter_UI
             // load collection information
             Metadata metadata = IO.Load(Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
             // get / loand series number
-            if (CollectionInformation.MetadataFiles.ContainsKey(nftName))
+            if (CollectionInformation.Information.MetadataFiles.ContainsKey(nftName))
             {
                 // load seriesnumber from existing metadata
                 Metadata oldMetadata = IO.Load(CurrentMetadataPath.FullName);
@@ -211,7 +212,7 @@ namespace Minter_UI
             else
             {
                 // reserve next free series number
-                metadata.series_number = CollectionInformation.ReserveNextFreeCollectionNumber();
+                metadata.series_number = CollectionInformation.Information.ReserveNextFreeCollectionNumber();
             }
             // fill meta information
             metadata.name = this.NftName_TextBox.Text;
@@ -224,15 +225,15 @@ namespace Minter_UI
                 metadata.attributes.Add(((Attribute)this.Attributes_StackPanel.Children[i]).Value);
             }
             metadata.Save(CurrentMetadataPath.FullName);
-            if (!CollectionInformation.MetadataFiles.ContainsKey(nftName))
+            if (!CollectionInformation.Information.MetadataFiles.ContainsKey(nftName))
             {
-                CollectionInformation.ReLoadDirectories(Settings_NS.Settings.All.CaseSensitiveFileHandling);
+                CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
             }
         }
 
         private void RefreshCollectionButton_Click(object sender, RoutedEventArgs e)
         {
-            CollectionInformation.ReLoadDirectories(Settings_NS.Settings.All.CaseSensitiveFileHandling);
+            CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
         }
     }
 }
