@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Chia_NFT_Minter
+﻿namespace Chia_NFT_Minter
 {
+    /// <summary>
+    /// this class specifies the default directories.<br/>
+    /// upon call, it creates the Directories which do not exist
+    /// </summary>
     public static class Directories
     {
         static Directories()
@@ -32,6 +30,9 @@ namespace Chia_NFT_Minter
         /// the offers directory can be used to store offer files
         /// </summary>
         public static DirectoryInfo Offers = new DirectoryInfo("offers");
+        /// <summary>
+        /// creates the specified dirs if they dont exist
+        /// </summary>
         private static void InitializeDirectories()
         {
             if (!Nfts.Exists) Nfts.Create();
