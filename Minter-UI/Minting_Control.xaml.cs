@@ -21,6 +21,10 @@ namespace Minter_UI
             InitializeComponent();
             RefreshPreviews(false);
         }
+        /// <summary>
+        /// refreshes the directories and loads all nfts which are ready for minting into the minting preview 
+        /// </summary>
+        /// <param name="reloadDirs"></param>
         private void RefreshPreviews(bool reloadDirs = true)
         {
             if (reloadDirs)
@@ -47,11 +51,23 @@ namespace Minter_UI
                 }
             }
         }
+        /// <summary>
+        /// initiates a refresh
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Refresh_Button_Click(object sender, RoutedEventArgs e)
         {
             RefreshPreviews();
         }
-
+        /// <summary>
+        /// upload nft files to nft.storage <br/>
+        /// create rpc <br/>
+        /// mint (not yet implemented)
+        /// create offer (not yet implemented)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Mint_Button_Click(object sender, RoutedEventArgs e)
         {
             // pre-checks

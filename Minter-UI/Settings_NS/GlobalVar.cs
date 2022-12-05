@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Minter_UI
+﻿namespace Minter_UI
 {
+    /// <summary>
+    /// Globalvar contains a set op application wide variables / settings
+    /// </summary>
     internal static class GlobalVar
     {
     }

@@ -13,7 +13,7 @@ using System.Windows.Media;
 namespace Minter_UI
 {
     /// <summary>
-    /// Interaction logic for CollectionInformation_Control.xaml
+    /// Interaction logic for setting collection metadata
     /// </summary>
     public partial class CollectionInformation_Control : UserControl
     {
@@ -27,11 +27,18 @@ namespace Minter_UI
         private FileInfo CollectionInformationFile = new FileInfo(
             Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
         Metadata CollectionMetadata = new Metadata();
-
+        /// <summary>
+        /// adds a collection property
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CollectionAttributes_AddButton_Click(object sender, RoutedEventArgs e)
         {
             this.CollectionAttributes_StackPanel.Children.Add(new CollAttribute());
         }
+        /// <summary>
+        /// application start. load logo and banner, load metadata
+        /// </summary>
         private void InitializeCollection()
         {
             FileInfo[] files = new DirectoryInfo(Directory.GetCurrentDirectory()).GetFiles();
@@ -101,7 +108,11 @@ namespace Minter_UI
                 this.SeriesTotal_TextBox.Text = CollectionInformation.NftFiles.Count.ToString();
             }
         }
-
+        /// <summary>
+        /// save the collection information which has been entered in the ui
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveCollection_Button_Click(object sender, RoutedEventArgs e)
         {
             

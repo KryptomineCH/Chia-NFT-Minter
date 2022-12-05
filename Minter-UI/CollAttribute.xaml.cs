@@ -8,7 +8,7 @@ using System.Windows.Media;
 namespace Minter_UI
 {
     /// <summary>
-    /// Interaction logic for CollAttribute.xaml
+    /// CollAttribute corresponds with Chia-NFT-Minter.CollectionAttribute
     /// </summary>
     public partial class CollAttribute : UserControl
     {
@@ -21,6 +21,9 @@ namespace Minter_UI
                 Value = attr;
             }
         }
+        /// <summary>
+        /// collectionattributes are a fixed suggestion collection
+        /// </summary>
         private static List<string> _AvailableAttributes = new List<string>()
         {
             "description",
@@ -30,6 +33,9 @@ namespace Minter_UI
             "twitter",
             "discord"
         };
+        /// <summary>
+        /// obtains or sets dhe corresponding collectionattribute
+        /// </summary>
         public CollectionAttribute Value
         {
             get
@@ -43,12 +49,21 @@ namespace Minter_UI
                 this.Value_TextBox.Text = (string)value.@value;
             }
         }
-
+        /// <summary>
+        /// deletes this attribute from the parents usercontrol (usually a wrappanel or stackpanel)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
             ((Panel)this.Parent).Children.Remove(this);
         }
         private bool LastValueTextBoxStateWasValid = true;
+        /// <summary>
+        /// validates the text input
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Value_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (this.Value_TextBox.Text == "" ||this.Type_ComboBox.Text == "")

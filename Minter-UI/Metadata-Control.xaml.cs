@@ -10,7 +10,7 @@ using System.Windows.Controls;
 namespace Minter_UI
 {
     /// <summary>
-    /// Interaction logic for Metadata_Control.xaml
+    /// Interaction logic for Metadata editing
     /// </summary>
     public partial class Metadata_Control : UserControl
     {
@@ -20,6 +20,11 @@ namespace Minter_UI
             LoadNextMissingMetadata();
         }
         private FileInfo CurrentMetadataPath;
+        /// <summary>
+        /// Load metadata information into the ui for editing
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="reloadMetadata"></param>
         private void LoadInformation(FileInfo file, bool reloadMetadata = false)
         {
             string nftName = Path.GetFileNameWithoutExtension(file.FullName);
@@ -63,6 +68,9 @@ namespace Minter_UI
                 }
             }
         }
+        /// <summary>
+        /// clears the attribute panel to prepare for new metadata to be loaded
+        /// </summary>
         private void ClearAttributesPanel()
         {
             while (this.Attributes_StackPanel.Children.Count > 1)
@@ -70,6 +78,10 @@ namespace Minter_UI
                 this.Attributes_StackPanel.Children.RemoveAt(1);
             }
         }
+        /// <summary>
+        /// looks for the next nft which does not have metadata and loads it
+        /// </summary>
+        /// <param name="loadMetadata"></param>
         private void LoadNextMissingMetadata(bool loadMetadata = true)
         {
             if (CollectionInformation.MissingMetadata.Count == 0)
@@ -82,6 +94,9 @@ namespace Minter_UI
             FileInfo missingMetadataFile = CollectionInformation.MissingMetadata.ElementAt(MissingNFTIndex).Value;
             LoadInformation(missingMetadataFile,loadMetadata);
         }
+        /// <summary>
+        /// loads the next nft with existing metadata into the ui
+        /// </summary>
         private void LoadNextExistingMetadata()
         {
             if (CollectionInformation.MetadataFiles.Count == 0)
@@ -94,6 +109,9 @@ namespace Minter_UI
             FileInfo existingMetadataFile = CollectionInformation.MetadataFiles.ElementAt(ExistingNFTIndex).Value;
             LoadInformation(existingMetadataFile);
         }
+        /// <summary>
+        /// loads the previus nft withiout metadata into the ui
+        /// </summary>
         private void LoadPreviousMissingMetadata()
         {
             if (CollectionInformation.MissingMetadata.Count == 0)
@@ -106,6 +124,9 @@ namespace Minter_UI
             FileInfo missingMetadataFile = CollectionInformation.MissingMetadata.ElementAt(MissingNFTIndex).Value;
             LoadInformation(missingMetadataFile);
         }
+        /// <summary>
+        /// loads the previous nft with existing metadata into the ui
+        /// </summary>
         private void LoadPreviousExistingMetadata()
         {
             if (CollectionInformation.MetadataFiles.Count == 0)
@@ -120,6 +141,11 @@ namespace Minter_UI
         }
         private int ExistingNFTIndex = -1;
         private int MissingNFTIndex = -1;
+        /// <summary>
+        /// adds a ner attribute to the attributes stack panel
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PrimarySubject_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
         {
             this.Attributes_StackPanel.Children.Add(new Attribute());
