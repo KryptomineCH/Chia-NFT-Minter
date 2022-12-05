@@ -1,20 +1,30 @@
-﻿
-
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace Chia_NFT_Minter
 {
+    /// <summary>
+    /// this method can be used to encrypt/decrypt text.
+    /// unfortunately .net only supports 128 bit keys which are not terribly secure anymore nowadays.
+    /// So its more of a bycicle lock than a tresor.
+    /// </summary>
     public class Cipher
     {
-        // This constant is used to determine the keysize of the encryption algorithm in bits.
-        // We divide this by 8 within the code below to get the equivalent number of bytes.
-        //private const int Keysize = 1024;
+        /// <summary>
+        /// This constant is used to determine the keysize of the encryption algorithm in bits.
+        /// We divide this by 8 within the code below to get the equivalent number of bytes.
+        /// </summary>
         private const int Keysize = 128;
-
-        // This constant determines the number of iterations for the password bytes generation function.
+        /// <summary>
+        /// This constant determines the number of iterations for the password bytes generation function.
+        /// </summary>
         private const int DerivationIterations = 10000;
-
+        /// <summary>
+        /// Enrypts the plain text with the passphrase and returns an encrypted string which can only be decrypted back with the passphrase
+        /// </summary>
+        /// <param name="plainText"></param>
+        /// <param name="passPhrase"></param>
+        /// <returns></returns>
         public static string Encrypt(string plainText, string passPhrase)
         {
             // Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
@@ -28,7 +38,7 @@ namespace Chia_NFT_Minter
                 using (var symmetricKey = new RijndaelManaged())
                 {
                     //symmetricKey.BlockSize = 256;
-                    symmetricKey.BlockSize = 128;
+                    symmetricKey.BlockSize = Keysize;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, ivStringBytes))
@@ -52,7 +62,12 @@ namespace Chia_NFT_Minter
                 }
             }
         }
-
+        /// <summary>
+        /// takes an encrypted text and a passphrase and decrypts said text
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <param name="passPhrase"></param>
+        /// <returns></returns>
         public static string Decrypt(string cipherText, string passPhrase)
         {
             if (cipherText == null)
@@ -75,7 +90,7 @@ namespace Chia_NFT_Minter
                 using (var symmetricKey = new RijndaelManaged())
                 {
                     //symmetricKey.BlockSize = 256;
-                    symmetricKey.BlockSize = 128;
+                    symmetricKey.BlockSize = Keysize;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivStringBytes))
@@ -92,7 +107,10 @@ namespace Chia_NFT_Minter
                 }
             }
         }
-
+        /// <summary>
+        /// generates random data
+        /// </summary>
+        /// <returns></returns>
         private static byte[] GenerateBitsOfRandomEntropy()
         {
             var randomBytes = new byte[Keysize / 8]; // 32 Bytes will give us 256 bits.

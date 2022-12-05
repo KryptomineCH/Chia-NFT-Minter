@@ -6,12 +6,18 @@ using System.IO;
 
 namespace Minter_UI
 {
+    /// <summary>
+    /// provides access to nft.storage api
+    /// </summary>
     internal static class NftStorageAccount
     {
         static NftStorageAccount()
         {
             TryLoadApiKey();
         }
+        /// <summary>
+        /// the apii key, obtained from nft.storage
+        /// </summary>
         internal static string ApiKey {
             get
             {
