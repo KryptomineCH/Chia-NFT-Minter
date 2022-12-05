@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Minter_UI.Settings_NS;
+using Chia_NFT_Minter.CollectionInformation_ns;
 
 namespace Minter_UI
 {
@@ -29,10 +30,10 @@ namespace Minter_UI
         {
             if (reloadDirs)
             {
-                CollectionInformation.ReLoadDirectories(Settings.All.CaseSensitiveFileHandling);
+                CollectionInformation.ReloadAll(Settings.All.CaseSensitiveFileHandling);
             }
             this.Preview_WrapPanel.Children.Clear();
-            foreach (FileInfo nftFile in CollectionInformation.NftFileInfos)
+            foreach (FileInfo nftFile in CollectionInformation.Information.NftFileInfos)
             {
                 string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
                 string key = nftName;
@@ -40,7 +41,8 @@ namespace Minter_UI
                 {
                     key = key.ToLower();
                 }
-                if (CollectionInformation.MetadataFiles.ContainsKey(key) && !CollectionInformation.RpcFiles.ContainsKey(key))
+                if (CollectionInformation.Information.MetadataFiles.ContainsKey(key) 
+                    && !CollectionInformation.Information.RpcFiles.ContainsKey(key))
                 {
                     //file to be minted
                     MediaElement media = new MediaElement();
@@ -82,7 +84,7 @@ namespace Minter_UI
                 return;
             }
             // mint each nft
-            foreach (FileInfo nftFile in CollectionInformation.NftFiles.Values)
+            foreach (FileInfo nftFile in CollectionInformation.Information.NftFiles.Values)
             {
                 // get nft name and identifier key
                 string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
@@ -92,7 +94,8 @@ namespace Minter_UI
                     key = key.ToLower();
                 }
                 // check if this nft has metadata and is not yet minted
-                if (CollectionInformation.MetadataFiles.ContainsKey(key) && !CollectionInformation.RpcFiles.ContainsKey(key))
+                if (CollectionInformation.Information.MetadataFiles.ContainsKey(key) 
+                    && !CollectionInformation.Information.RpcFiles.ContainsKey(key))
                 {
                     // upload files
                     /// upload nft file
@@ -102,7 +105,8 @@ namespace Minter_UI
                     nftlinkList.Add(nftUploadTask.Result.URL);
                     /// upload metadata
                     List<string> metalinkList = new List<string>();
-                    Task<NFT_File> metaUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.MetadataFiles[key]));
+                    Task<NFT_File> metaUploadTask = 
+                        Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.Information.MetadataFiles[key]));
                     metaUploadTask.Wait();
                     metalinkList.Add(metaUploadTask.Result.URL);
                     // build link lists for rpc
@@ -113,7 +117,8 @@ namespace Minter_UI
                         if (!customLink.EndsWith("/")) customLink += "/";
                         /// finalize custom uri
                         nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nftFile.Name);
-                        metalinkList.Add(customLink + Directories.Metadata.Name + "/" + CollectionInformation.MetadataFiles[key].Name);
+                        metalinkList.Add(
+                            customLink + Directories.Metadata.Name + "/" + CollectionInformation.Information.MetadataFiles[key].Name);
                     }
                     /// add license url (is static)
                     List<string> licenseLinks = new List<string>();

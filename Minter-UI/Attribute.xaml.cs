@@ -1,5 +1,5 @@
 ﻿using Chia_Metadata;
-using Chia_NFT_Minter;
+using Chia_NFT_Minter.CollectionInformation_ns;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -50,7 +50,7 @@ namespace Minter_UI
         private void LoadAvailableAttributes()
         {
             List<string> values = new List<string>();
-            foreach(MetadataAttribute meta in CollectionInformation.AllMetadataAttributes.Values)
+            foreach(MetadataAttribute meta in CollectionInformation.Information.AllMetadataAttributes.Values)
             {
                 values.Add(meta.trait_type);
             }
@@ -75,11 +75,13 @@ namespace Minter_UI
         {
             if (e.AddedItems.Count == 0) return;
             string key = e.AddedItems[0].ToString();
-            if (CollectionInformation.AllMetadataAttributes.ContainsKey(key))
+            if (CollectionInformation.Information.AllMetadataAttributes.ContainsKey(key))
             {
-                this.MinValue_TextBox.Text = CollectionInformation.AllMetadataAttributes[key].min_value.ToString();
-                this.MaxValue_TextBox.Text = CollectionInformation.AllMetadataAttributes[key].max_value.ToString();
+                this.MinValue_TextBox.Text = CollectionInformation.Information.AllMetadataAttributes[key].min_value.ToString();
+                this.MaxValue_TextBox.Text = CollectionInformation.Information.AllMetadataAttributes[key].max_value.ToString();
+                this.Value_ComboBox.ItemsSource = CollectionInformation.Information.AllMetadataAttributeValues[key].ToArray();
             }
+
         }
     }
 }
