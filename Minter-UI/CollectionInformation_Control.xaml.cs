@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Chia_NFT_Minter.CollectionInformation_ns;
 
 namespace Minter_UI
 {
@@ -76,9 +77,9 @@ namespace Minter_UI
             // copy existing nft metadata if no collection information file exists bot anormal info exists
             if (!CollectionInformationFile.Exists)
             {
-                if (CollectionInformation.LastKnownNftMetadata != null)
+                if (CollectionInformation.Information.LastKnownNftMetadata != null)
                 {
-                    CollectionInformation.LastKnownNftMetadata.Save(CollectionInformationFile.FullName);
+                    CollectionInformation.Information.LastKnownNftMetadata.Save(CollectionInformationFile.FullName);
                 }
             }
             CollectionInformationFile.Refresh();
@@ -105,7 +106,7 @@ namespace Minter_UI
                 this.CollectionAttributes_StackPanel.Children.Add(new CollAttribute(new CollectionAttribute("twitter", "@KryptomineCH")));
                 this.CollectionAttributes_StackPanel.Children.Add(new CollAttribute(new CollectionAttribute("discord", "https://discord.gg/J7z3hVHT8a")));
                 this.CollectionID_TextBox.Text = Guid.NewGuid().ToString();
-                this.SeriesTotal_TextBox.Text = CollectionInformation.NftFiles.Count.ToString();
+                this.SeriesTotal_TextBox.Text = CollectionInformation.Information.NftFiles.Count.ToString();
             }
         }
         /// <summary>

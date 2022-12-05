@@ -1,6 +1,5 @@
-﻿using System;
-using System.Windows;
-using Chia_NFT_Minter;
+﻿using System.Windows;
+using Chia_NFT_Minter.CollectionInformation_ns;
 
 namespace Minter_UI
 {
@@ -12,7 +11,7 @@ namespace Minter_UI
         public MainWindow()
         {
             // load collection information once
-            CollectionInformation.ReLoadDirectories(Settings_NS.Settings.All.CaseSensitiveFileHandling);
+            CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
             InitializeComponent();
         }
     }
