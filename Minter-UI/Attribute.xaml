@@ -6,12 +6,12 @@
              xmlns:local="clr-namespace:Minter_UI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Padding="0.1cm, 0.1cm, 0, 0">
-    <Grid>
+    <Grid x:Name="Main_Grid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="1cm"></ColumnDefinition>
             <ColumnDefinition Width="0.5cm"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Vertical" Grid.Row="0">
+        <StackPanel x:Name="Stack_Panel"  Orientation="Vertical" Grid.Row="0">
             <ComboBox x:Name="TraitType_ComboBox" IsEditable="True" Text="TraitType" SelectionChanged="TraitType_ComboBox_SelectionChanged"></ComboBox>
             <ComboBox x:Name="Value_ComboBox" IsEditable="True" Text="Value"></ComboBox>
             <Grid>
