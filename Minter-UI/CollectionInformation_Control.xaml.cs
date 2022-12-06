@@ -182,10 +182,6 @@ namespace Minter_UI
                 }
 
             }
-            if (!bannerNeedsToBeRefreshed && ! logoNeedsToBeRefreshed)
-            {
-                return;
-            }
             if (NftStorageAccount.Client == null )
             {
                 MessageBox.Show("STOP: please set the NFT.Storage api key in settings first!");
@@ -233,6 +229,26 @@ namespace Minter_UI
                 }
             }
             CollectionMetadata.Save(CollectionInformationFile.FullName);
+            // refresh all existing Metadata
+            int updatedMetadata = 0;
+            foreach(string unmintedNFT_Key in CollectionInformation.Information.MissingRPCs.Keys)
+            {
+                FileInfo metadata_FileInfo;
+                if (CollectionInformation.Information.MetadataFiles.TryGetValue(unmintedNFT_Key, out metadata_FileInfo))
+                {
+                    Metadata metaData = IO.Load(metadata_FileInfo.FullName);
+                    metaData.collection = CollectionMetadata.collection;
+                    metaData.series_total = CollectionMetadata.series_total;
+                    metaData.Save(metadata_FileInfo.FullName);
+                    updatedMetadata++;
+                }
+            }
+            if (CollectionInformation.Information.RpcFiles.Count > 0)
+            {
+                MessageBox.Show($"Warning: {updatedMetadata} files have been updated. {Environment.NewLine}" +
+                    $"{CollectionInformation.Information.RpcFiles.Count} files have not been updated because RPC files exist. {Environment.NewLine}" +
+                    $"The software assumes they are already minted.");
+            }
         }
         /// <summary>
         /// this function checks if the input for SeriesTotal_TextBox is valid
