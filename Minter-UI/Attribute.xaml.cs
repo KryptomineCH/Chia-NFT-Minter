@@ -67,6 +67,9 @@ namespace Minter_UI
         }
         public void Delete()
         {
+            // unregister events
+            this.TraitType_ComboBox.SelectionChanged -= this.TraitType_ComboBox_SelectionChanged;
+            this.Delete_Button.Click -= this.Delete_Button_Click;
             // main grid
             this.Main_Grid.Children.Clear();
             this.Main_Grid = null;

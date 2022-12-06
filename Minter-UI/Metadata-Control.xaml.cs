@@ -3,6 +3,7 @@ using Chia_Metadata_CHIP_0007_std;
 using Chia_NFT_Minter;
 using Chia_NFT_Minter.CollectionInformation_ns;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace Minter_UI
             
         }
         private FileInfo CurrentMetadataPath;
+        Queue<Attribute> AttributeReuseElements = new Queue<Attribute>();
         /// <summary>
         /// Load metadata information into the ui for editing
         /// </summary>
@@ -69,7 +71,16 @@ namespace Minter_UI
                 this.SensitiveContent_Checkbox.IsChecked = metadata.sensitive_content;
                 foreach (MetadataAttribute attribute in metadata.attributes)
                 {
-                    this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                    if (AttributeReuseElements.Count>0)
+                    {
+                        Attribute attr = AttributeReuseElements.Dequeue();
+                        attr.SetAttribute(attribute);
+                        this.Attributes_StackPanel.Children.Add(attr);
+                    }
+                    else
+                    {
+                        this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                    }
                 }
             }
             else
@@ -77,7 +88,16 @@ namespace Minter_UI
                 this.NftName_TextBox.Text = nftName.Replace("_", " ").Replace("-", " - ");
                 foreach (MetadataAttribute attribute in CollectionInformation.Information.LikelyAttributes)
                 {
-                    this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                    if (AttributeReuseElements.Count > 0)
+                    {
+                        Attribute attr = AttributeReuseElements.Dequeue();
+                        attr.SetAttribute(attribute);
+                        this.Attributes_StackPanel.Children.Add(attr);
+                    }
+                    else
+                    {
+                        this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                    }
                 }
             }
         }
@@ -88,10 +108,8 @@ namespace Minter_UI
         {
             for(int i = this.Attributes_StackPanel.Children.Count-1; i > 0; i--)
             {
-
-                Attribute attr = (Attribute)this.Attributes_StackPanel.Children[i];
-                attr.Delete();
-                attr = null;
+                AttributeReuseElements.Enqueue((Attribute)this.Attributes_StackPanel.Children[i]);
+                this.Attributes_StackPanel.Children.RemoveAt(i);
             }
         }
         /// <summary>
@@ -197,11 +215,11 @@ namespace Minter_UI
 
         private void NextMissing_Button_Click(object sender, RoutedEventArgs e)
         {
-            while(true)
-            {
-                LoadNextMissingMetadata();
-                Task.Delay(200).Wait();
-            }
+            //while(true)
+            //{
+            //    LoadNextMissingMetadata();
+            //    Task.Delay(200).Wait();
+            //}
             LoadNextMissingMetadata();
         }
 
