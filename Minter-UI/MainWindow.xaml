@@ -6,19 +6,27 @@
         xmlns:local="clr-namespace:Minter_UI" xmlns:local1="clr-namespace:Minter_UI.Settings_NS"
         mc:Ignorable="d"
         Title="KryptoMine NftMinter" Height="450" Width="800" Icon="/Resources/Application_Icon.png" Background="#201E11">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                   Source="Styles/TabControl_Style_Dark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <TabControl>
-            <TabItem Header="Collection Information">
-                <local:CollectionInformation_Control></local:CollectionInformation_Control>
+            <TabItem Header="Collection Information" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
+                <local:CollectionInformation_Control Background="#111009"></local:CollectionInformation_Control>
             </TabItem>
-            <TabItem Header="Metadata">
-                <local:Metadata_Control></local:Metadata_Control>
+            <TabItem Header="Metadata" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
+                <local:Metadata_Control Background="#111009"></local:Metadata_Control>
             </TabItem>
-            <TabItem Header="Minting">
-                <local:Minting_Control></local:Minting_Control>
+            <TabItem Header="Minting" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
+                <local:Minting_Control Background="#111009"></local:Minting_Control>
             </TabItem>
-            <TabItem Header="Settings">
-                <local1:Settings_Control></local1:Settings_Control>
+            <TabItem Header="Settings" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
+                <local1:Settings_Control Background="#111009"></local1:Settings_Control>
             </TabItem>
         </TabControl>
     </Grid>

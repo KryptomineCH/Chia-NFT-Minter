@@ -6,6 +6,15 @@
              xmlns:local="clr-namespace:Minter_UI" xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/TextBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/ScrollBarStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/CheckBoxStyle_Dark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -18,9 +27,9 @@
         </Grid.RowDefinitions>
         <wpf:WebView2 x:Name="ImageWebView" Grid.Column="0" Grid.Row="0" DefaultBackgroundColor="Transparent"></wpf:WebView2>
         <StackPanel Grid.Column="1" Grid.RowSpan="2">
-            <Label Content="Name"></Label>
+            <Label Content="Name" Foreground="#998826"></Label>
             <TextBox x:Name="NftName_TextBox"></TextBox>
-            <CheckBox x:Name="SensitiveContent_Checkbox" Content="Sensitive Content (18+)"></CheckBox>
+            <CheckBox x:Name="SensitiveContent_Checkbox" Content="Sensitive Content (18+)" Foreground="#998826"></CheckBox>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -31,13 +40,15 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
             </Grid>
-            <Label Content="Description"></Label>
+            <Label Content="Description" Foreground="#998826"></Label>
             <TextBox x:Name="Description_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
-            <Button x:Name="RefreshCollectionButton" Content="Refresh Collection" Click="RefreshCollectionButton_Click"></Button>
+            <Button x:Name="RefreshCollectionButton" Content="Refresh Collection" 
+                    BorderBrush="Black" Background="#697a1f"
+                    Click="RefreshCollectionButton_Click"></Button>
         </StackPanel>
         <!-- nft attributes -->
         <WrapPanel x:Name="Attributes_StackPanel" Grid.Row="1" Orientation="Horizontal">
-            <Button x:Name="PrimarySubject_TagTanel_AddButton" Content="+" Background="LightGreen" Click="PrimarySubject_TagTanel_AddButton_Click"></Button>
+            <Button x:Name="PrimarySubject_TagTanel_AddButton" Content="+" Background="#5d995d" Click="PrimarySubject_TagTanel_AddButton_Click"></Button>
         </WrapPanel>
         <!-- interaction buttons -->
         <Grid Grid.Row="3" Grid.ColumnSpan="2">
