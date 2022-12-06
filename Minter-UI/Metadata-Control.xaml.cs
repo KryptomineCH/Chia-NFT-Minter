@@ -3,8 +3,10 @@ using Chia_Metadata_CHIP_0007_std;
 using Chia_NFT_Minter;
 using Chia_NFT_Minter.CollectionInformation_ns;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -19,8 +21,10 @@ namespace Minter_UI
         {
             InitializeComponent();
             LoadNextMissingMetadata();
+            
         }
         private FileInfo CurrentMetadataPath;
+        Queue<Attribute> AttributeReuseElements = new Queue<Attribute>();
         /// <summary>
         /// Load metadata information into the ui for editing
         /// </summary>
@@ -34,7 +38,16 @@ namespace Minter_UI
             {
                 key = key.ToLower();
             }
-            imageDisplay.Source = new Uri(CollectionInformation.Information.NftFiles[key].FullName);
+            // load image
+            if (CollectionInformation.Information.NftPreviewFiles.ContainsKey(key))
+            {
+                ImageWebView.Source = new Uri(CollectionInformation.Information.NftPreviewFiles[key].FullName);
+            }
+            else
+            {
+                ImageWebView.Source = new Uri(CollectionInformation.Information.NftFiles[key].FullName);
+            }
+            // load metadata
             if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
             {
                 CurrentMetadataPath = CollectionInformation.Information.MetadataFiles[key];
@@ -48,6 +61,7 @@ namespace Minter_UI
                 this.NftName_TextBox.Text = nftName.Replace("_", " ").Replace("-", " - ");
                 return;
             }
+            // load attributes
             ClearAttributesPanel();
             if (CurrentMetadataPath.Exists)
             {
@@ -57,7 +71,16 @@ namespace Minter_UI
                 this.SensitiveContent_Checkbox.IsChecked = metadata.sensitive_content;
                 foreach (MetadataAttribute attribute in metadata.attributes)
                 {
-                    this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                    if (AttributeReuseElements.Count>0)
+                    {
+                        Attribute attr = AttributeReuseElements.Dequeue();
+                        attr.SetAttribute(attribute);
+                        this.Attributes_StackPanel.Children.Add(attr);
+                    }
+                    else
+                    {
+                        this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                    }
                 }
             }
             else
@@ -65,7 +88,16 @@ namespace Minter_UI
                 this.NftName_TextBox.Text = nftName.Replace("_", " ").Replace("-", " - ");
                 foreach (MetadataAttribute attribute in CollectionInformation.Information.LikelyAttributes)
                 {
-                    this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                    if (AttributeReuseElements.Count > 0)
+                    {
+                        Attribute attr = AttributeReuseElements.Dequeue();
+                        attr.SetAttribute(attribute);
+                        this.Attributes_StackPanel.Children.Add(attr);
+                    }
+                    else
+                    {
+                        this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                    }
                 }
             }
         }
@@ -74,9 +106,10 @@ namespace Minter_UI
         /// </summary>
         private void ClearAttributesPanel()
         {
-            while (this.Attributes_StackPanel.Children.Count > 1)
+            for(int i = this.Attributes_StackPanel.Children.Count-1; i > 0; i--)
             {
-                this.Attributes_StackPanel.Children.RemoveAt(1);
+                AttributeReuseElements.Enqueue((Attribute)this.Attributes_StackPanel.Children[i]);
+                this.Attributes_StackPanel.Children.RemoveAt(i);
             }
         }
         /// <summary>
@@ -182,6 +215,11 @@ namespace Minter_UI
 
         private void NextMissing_Button_Click(object sender, RoutedEventArgs e)
         {
+            //while(true)
+            //{
+            //    LoadNextMissingMetadata();
+            //    Task.Delay(200).Wait();
+            //}
             LoadNextMissingMetadata();
         }
 
@@ -222,7 +260,7 @@ namespace Minter_UI
             metadata.attributes.Clear();
             for (int i = 1; i < this.Attributes_StackPanel.Children.Count; i++)
             {
-                metadata.attributes.Add(((Attribute)this.Attributes_StackPanel.Children[i]).Value);
+                metadata.attributes.Add(((Attribute)this.Attributes_StackPanel.Children[i]).GetAttribute());
             }
             metadata.Save(CurrentMetadataPath.FullName);
             if (!CollectionInformation.Information.MetadataFiles.ContainsKey(nftName))

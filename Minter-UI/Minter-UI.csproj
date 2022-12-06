@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1462.37" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Chia-Metadata\Chia-Metadata\Chia-Metadata.csproj" />
     <ProjectReference Include="..\..\CHIA-RPC\CHIA-RPC\CHIA-RPC.csproj" />
     <ProjectReference Include="..\..\NFT.Storage.Net\NFT.Storage.Net\NFT.Storage.Net.csproj" />

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Minter_UI.Settings_NS;
 using Chia_NFT_Minter.CollectionInformation_ns;
+using Microsoft.Web.WebView2.Wpf;
 
 namespace Minter_UI
 {
@@ -45,8 +46,15 @@ namespace Minter_UI
                     && !CollectionInformation.Information.RpcFiles.ContainsKey(key))
                 {
                     //file to be minted
-                    MediaElement media = new MediaElement();
-                    media.Source = new Uri(nftFile.FullName);
+                    WebView2 media = new WebView2();
+                    if (CollectionInformation.Information.NftPreviewFiles.ContainsKey(key))
+                    {
+                        media.Source = new Uri(CollectionInformation.Information.NftPreviewFiles[key].FullName);
+                    }
+                    else
+                    {
+                        media.Source = new Uri(nftFile.FullName);
+                    }
                     media.Width = 200;
                     media.Height = 200;
                     this.Preview_WrapPanel.Children.Add(media);

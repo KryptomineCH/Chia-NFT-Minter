@@ -18,6 +18,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                 CollectionInformation_Object newInfo = new CollectionInformation_Object();
                 ReLoadDirectories(caseSensitive, newInfo);
                 GetAttributes(newInfo);
+                GeneratePreviews(caseSensitive, newInfo);
                 Information = newInfo;
             }
         }

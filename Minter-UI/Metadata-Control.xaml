@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Minter_UI"
+             xmlns:local="clr-namespace:Minter_UI" xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -16,8 +16,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <!-- <WebBrowser x:Name="imageDisplay" Grid.Column="0" Grid.Row="0" ></WebBrowser> -->
-        <MediaElement x:Name="imageDisplay" Grid.Column="0" Grid.Row="0" ></MediaElement>
+        <wpf:WebView2 x:Name="ImageWebView" Grid.Column="0" Grid.Row="0" DefaultBackgroundColor="Transparent"></wpf:WebView2>
         <StackPanel Grid.Column="1" Grid.RowSpan="2">
             <Label Content="Name"></Label>
             <TextBox x:Name="NftName_TextBox"></TextBox>
