@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Minter_UI" xmlns:local1="clr-namespace:Minter_UI.Settings_NS"
+        xmlns:local="clr-namespace:Minter_UI" xmlns:local1="clr-namespace:Minter_UI.Settings_NS" xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Title="KryptoMine NftMinter" Height="450" Width="800" Icon="/Resources/Application_Icon.png" Background="#201E11">
     <Window.Resources>
@@ -27,6 +27,9 @@
             </TabItem>
             <TabItem Header="Settings" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <local1:Settings_Control Background="#111009"></local1:Settings_Control>
+            </TabItem>
+            <TabItem Header="Help" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
+                <wpf:WebView2 Source="https://github.com/KryptomineCH/Chia-NFT-Minter/wiki"/>
             </TabItem>
         </TabControl>
     </Grid>
