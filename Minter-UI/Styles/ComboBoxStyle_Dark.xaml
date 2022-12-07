@@ -6,7 +6,7 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="MinWidth" Value="120"/>
+        <Setter Property="MinWidth" Value="2cm"/>
         <Setter Property="MinHeight" Value="20"/>
         <Setter Property="Template">
             
@@ -86,7 +86,7 @@
                             Background="Transparent"
                             Visibility="Hidden"
                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                            Foreground="#998826"
+                            Foreground="#e0cf6c"
                             CaretBrush="Gold">
                             <!-- editable text -->
                             <TextBox.Template>

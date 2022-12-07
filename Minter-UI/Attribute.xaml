@@ -17,7 +17,7 @@
     </UserControl.Resources>
     <Grid x:Name="Main_Grid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="1cm"></ColumnDefinition>
+            <ColumnDefinition MinWidth="2.5cm"></ColumnDefinition>
             <ColumnDefinition Width="0.5cm"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Border Padding="0.15cm" CornerRadius="5,0,0,5" Background="#2E2A10">
@@ -33,14 +33,41 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label Content="MinValue" Grid.Column="0"></Label>
-                    <Label Content="MaxValue" Grid.Column="1"></Label>
+                    <Label Content="Min" Grid.Column="0" Foreground="#e0cf6c"></Label>
+                    <Label Content="Max" Grid.Column="1" Foreground="#e0cf6c"></Label>
                     <TextBox x:Name="MinValue_TextBox" Grid.Row="1" Grid.Column="0"></TextBox>
                     <TextBox x:Name="MaxValue_TextBox" Grid.Row="1" Grid.Column="1"></TextBox>
                 </Grid>
 
             </StackPanel>
         </Border>
-        <Button x:Name="Delete_Button" Content="X" Background="#CF6679" Grid.Column="1" Click="Delete_Button_Click"></Button>
+        <Button x:Name="Delete_Button" Content="X" 
+                Foreground="DarkRed"
+                Grid.Column="1" Click="Delete_Button_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="0,4,4,0"/>
+                </Style>
+            </Button.Resources>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#CF6679"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Red"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </UserControl>
