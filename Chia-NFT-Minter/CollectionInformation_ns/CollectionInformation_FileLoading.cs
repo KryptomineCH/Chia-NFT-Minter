@@ -12,6 +12,9 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// <param name="caseSensitive"></param>
         private static void ReLoadDirectories(bool caseSensitive, CollectionInformation_Object newInfo)
         {
+            Directories.Nfts.Refresh();
+            Directories.Rpcs.Refresh();
+            Directories.Metadata.Refresh();
             // load base directories
             newInfo.NftFiles = LoadDirectory(dirInfo: Directories.Nfts, caseSensitive: caseSensitive);
             newInfo.MetadataFiles = LoadDirectory(
