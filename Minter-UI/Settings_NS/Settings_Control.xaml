@@ -33,6 +33,8 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Content="NFT.Storage Api Key" Grid.Row="0" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="NftStorageApiKey_TextBox" Grid.Row="1" Grid.Column="0"></TextBox>
@@ -62,9 +64,11 @@
                       Click="CaseSensitiveFilehandling_CheckBox_Checked"></CheckBox>
         </WrapPanel>
         <Label Content="Minting Fee" Grid.Row="10" Grid.Column="0" Foreground="#998826"></Label>
-        <TextBox x:Name="MintingFee_TextBox" Text="10000" Grid.Row="11" Grid.Column="0"></TextBox>
+        <TextBox x:Name="MintingFee_TextBox" Text="10000" Grid.Row="11" Grid.Column="0" Foreground="#998826"></TextBox>
         <Button x:Name="MintingFeeSet_Button" Content="Set" Grid.Row="11" Grid.Column="1" 
                 Background="#697a1f"
                 Click="MintingFeeSet_Button_Click"></Button>
+        <Label Content="Update" Grid.Row="12" Grid.Column="0" Foreground="#998826"></Label>
+        <Button x:Name="Update_Button" Content="Update check pending..." Grid.Row="13" Click="Update_Button_Click"></Button>
     </Grid>
 </UserControl>
