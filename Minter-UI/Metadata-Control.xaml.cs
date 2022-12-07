@@ -230,6 +230,10 @@ namespace Minter_UI
         }
         private void SaveMetadata()
         {
+            if (CurrentMetadataPath == null)
+            {
+                return;
+            }
             // pre check
             string nftName = Path.GetFileNameWithoutExtension(CurrentMetadataPath.FullName);
             if (CollectionInformation.Information.RpcFiles.ContainsKey(nftName))
