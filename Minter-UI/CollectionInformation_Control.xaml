@@ -37,7 +37,7 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Label Content="Series Total" Grid.Column="1"></Label>
+                <Label Content="Series Total" Grid.Column="1" Foreground="#998826"></Label>
                 <TextBox x:Name="SeriesTotal_TextBox" Text="10000" TextChanged="SeriesTotal_TextBox_TextChanged"></TextBox>
             </Grid>
             <Button x:Name="CollectionAttributes_AddButton" Content="Add Attribute" Background="#5d995d" Click="CollectionAttributes_AddButton_Click"></Button>

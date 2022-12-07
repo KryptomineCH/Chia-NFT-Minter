@@ -30,7 +30,7 @@ namespace Minter_UI
         /// </summary>
         /// <param name="file"></param>
         /// <param name="reloadMetadata"></param>
-        private void LoadInformation(FileInfo file, bool reloadMetadata = false)
+        private void LoadInformation(FileInfo file, bool reloadMetadata = true)
         {
             string nftName = Path.GetFileNameWithoutExtension(file.FullName);
             string key = nftName;
@@ -146,7 +146,7 @@ namespace Minter_UI
         /// <summary>
         /// loads the previus nft withiout metadata into the ui
         /// </summary>
-        private void LoadPreviousMissingMetadata()
+        private void LoadPreviousMissingMetadata(bool loadMetadata = false)
         {
             if (CollectionInformation.Information.MissingMetadata.Count == 0)
             {
@@ -156,7 +156,7 @@ namespace Minter_UI
             MissingNFTIndex--;
             if (MissingNFTIndex < 0) MissingNFTIndex = CollectionInformation.Information.MissingMetadata.Count - 1;
             FileInfo missingMetadataFile = CollectionInformation.Information.MissingMetadata.ElementAt(MissingNFTIndex).Value;
-            LoadInformation(missingMetadataFile);
+            LoadInformation(missingMetadataFile, loadMetadata);
         }
         /// <summary>
         /// loads the previous nft with existing metadata into the ui

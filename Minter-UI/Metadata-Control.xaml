@@ -61,13 +61,13 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button x:Name="PreviousExisting_Button" Content="prev. Existing" Grid.Column="0" Click="PreviousExisting_Button_Click"></Button>
-            <Button x:Name="PreviousMissing_Button" Content="prev. Missing" Grid.Column="1" Click="PreviousMissing_Button_Click"></Button>
-            <Button x:Name="Save_Button" Content="Save" Grid.Column="2" Click="Save_Button_Click"></Button>
-            <Button x:Name="SaveAndNextMissing_Button" Content="Save - next Missing" Grid.Column="3" Click="SaveAndNextMissing_Button_Click" ></Button>
-            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Column="4" Click="SaveAndNext_Button_Click"></Button>
-            <Button x:Name="NextMissing_Button" Content="next. Missing" Grid.Column="5" Click="NextMissing_Button_Click"></Button>
-            <Button x:Name="NextExisting_Button" Content="next. Existing" Grid.Column="6" Click="NextExisting_Button_Click"></Button>
+            <Button x:Name="PreviousExisting_Button" Content="prev. Existing" Grid.Column="0" Click="PreviousExisting_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
+            <Button x:Name="PreviousMissing_Button" Content="prev. Missing" Grid.Column="1" Click="PreviousMissing_Button_Click" Background="#591f7a" Foreground="#e0cf6c"></Button>
+            <Button x:Name="Save_Button" Content="Save" Grid.Column="2" Click="Save_Button_Click" Background="#697a1f" Foreground="Gold" ></Button>
+            <Button x:Name="SaveAndNextMissing_Button" Content="Save - next Missing" Grid.Column="3" Click="SaveAndNextMissing_Button_Click" Background="#697a1f" Foreground="Gold" ></Button>
+            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Column="4" Click="SaveAndNext_Button_Click" Background="#697a1f" Foreground="Gold"></Button>
+            <Button x:Name="NextMissing_Button" Content="next. Missing" Grid.Column="5" Click="NextMissing_Button_Click" Background="#591f7a" Foreground="#e0cf6c"></Button>
+            <Button x:Name="NextExisting_Button" Content="next. Existing" Grid.Column="6" Click="NextExisting_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
         </Grid>
     </Grid>
 </UserControl>
