@@ -6,6 +6,15 @@
              xmlns:local="clr-namespace:Minter_UI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/TextBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/ScrollBarStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/CheckBoxStyle_Dark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -13,9 +22,9 @@
         </Grid.RowDefinitions>
         <WrapPanel x:Name="Preview_WrapPanel"></WrapPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <CheckBox x:Name="GenerateRPCsOnly_Checkbox" Content="Only build rpc-files" IsEnabled="False"></CheckBox>
-            <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click"></Button>
-            <Button x:Name="Mint_Button" Content="Mint!" Click="Mint_Button_Click"></Button>
+            <CheckBox x:Name="GenerateRPCsOnly_Checkbox" Content="Only build rpc-files" IsEnabled="False" Foreground="#e0cf6c"></CheckBox>
+            <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
+            <Button x:Name="Mint_Button" Content="Mint!" Click="Mint_Button_Click" Background="#697a1f"  Foreground="#e0cf6c"></Button>
         </StackPanel>
     </Grid>
 </UserControl>
