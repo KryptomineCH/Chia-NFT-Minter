@@ -16,5 +16,6 @@
         // Minting
         public int MintingWallet { get; set; }
         public int MintingFee { get; set; }
+        public string ReceiveAdress { get; set; }
     }
 }

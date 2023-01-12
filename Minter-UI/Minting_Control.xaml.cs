@@ -1,5 +1,4 @@
 ﻿using Chia_NFT_Minter;
-using CHIA_RPC;
 using NFT.Storage.Net;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,10 @@ using System.Windows.Controls;
 using Minter_UI.Settings_NS;
 using Chia_NFT_Minter.CollectionInformation_ns;
 using Microsoft.Web.WebView2.Wpf;
+using CHIA_RPC.Wallet_RPC_NS.NFT;
+using CHIA_RPC.Wallet_RPC_NS.WalletManagement_NS;
+using Chia_Client_API.Wallet_NS.WalletAPI_NS;
+using CHIA_RPC.Wallet_RPC_NS.KeyManagement;
 
 namespace Minter_UI
 {
@@ -34,6 +37,8 @@ namespace Minter_UI
                 CollectionInformation.ReloadAll(Settings.All.CaseSensitiveFileHandling);
             }
             this.Preview_WrapPanel.Children.Clear();
+            int previewcount = 20;
+            int index = 0;
             foreach (FileInfo nftFile in CollectionInformation.Information.NftFileInfos)
             {
                 string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
@@ -58,6 +63,8 @@ namespace Minter_UI
                     media.Width = 200;
                     media.Height = 200;
                     this.Preview_WrapPanel.Children.Add(media);
+                    index++;
+                    if (index >= previewcount) return;
                 }
             }
         }
@@ -136,12 +143,13 @@ namespace Minter_UI
                         licenseLinks.Add(Settings.All.LicenseURL_Backup);
                     }
                     // create rpc
-                    NFT_Mint_RPC rpc = new NFT_Mint_RPC(
-                        walletID: Settings.All.MintingWallet,
+                    NftMintNFT_RPC rpc = new NftMintNFT_RPC(
+                        walletID: (ulong)Settings.All.MintingWallet,
                         nftLinks: nftlinkList.ToArray(),
                         metadataLinks: metalinkList.ToArray(),
                         licenseLinks: licenseLinks.ToArray(),
-                        mintingFee_Mojos: Settings.All.MintingFee
+                        mintingFee_Mojos: (ulong)Settings.All.MintingFee,
+                        royaltyAddress: Settings.All.ReceiveAdress
                         );
                     /// save rpc
                     rpc.Save(Path.Combine(Directories.Rpcs.FullName , (nftName+".rpc")));

@@ -15,7 +15,11 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0">
             <TabItem Header="Collection Information" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <local:CollectionInformation_Control Background="#111009"></local:CollectionInformation_Control>
             </TabItem>
@@ -32,5 +36,6 @@
                 <wpf:WebView2 Source="https://github.com/KryptomineCH/Chia-NFT-Minter/wiki"/>
             </TabItem>
         </TabControl>
+        <local:Footer Grid.Row="1"></local:Footer>
     </Grid>
 </Window>

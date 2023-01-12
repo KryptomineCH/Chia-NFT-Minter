@@ -32,7 +32,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// <summary>
         /// can be used to find out which nft belongs to which collectionnumber
         /// </summary>
-        public ConcurrentDictionary<int, string> NFTIndexes = new ConcurrentDictionary<int, string>();
+        public ConcurrentDictionary<ulong, string> NFTIndexes = new ConcurrentDictionary<ulong, string>();
         /// <summary>
         /// is used to determine the nft numbers and to reserve the next free number in the collection
         /// </summary>

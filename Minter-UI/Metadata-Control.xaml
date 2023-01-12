@@ -40,7 +40,12 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
             </Grid>
-            <Label Content="Description" Foreground="#998826"></Label>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Description" Foreground="#998826"></Label>
+                <Button x:Name="UpdateAllDescriptions" Content="Update all Descriptions" 
+                    BorderBrush="Black" Background="#697a1f"
+                    Click="UpdateAllDescriptionsButton_Click"></Button>
+            </StackPanel>
             <TextBox x:Name="Description_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
             <Button x:Name="RefreshCollectionButton" Content="Refresh Collection" 
                     BorderBrush="Black" Background="#697a1f"

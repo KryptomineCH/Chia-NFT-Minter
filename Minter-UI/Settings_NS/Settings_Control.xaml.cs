@@ -182,5 +182,11 @@ namespace Minter_UI.Settings_NS
                 Environment.Exit(0);
             }
         }
+
+        private void ReceiveAdress_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.All.ReceiveAdress = this.ReceiveAdress_TextBox.Text;
+            Settings.Save();
+        }
     }
 }

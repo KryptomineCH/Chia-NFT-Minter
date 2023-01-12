@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Minter_UI.Minting_Control"
+﻿<UserControl x:Class="Minter_UI.Footer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -17,16 +17,17 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0">
-            <WrapPanel x:Name="Preview_WrapPanel"></WrapPanel>
-        </ScrollViewer>
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
-            <Button x:Name="Mint_Button" Content="Mint!" Click="Mint_Button_Click" Background="#697a1f"  Foreground="#e0cf6c"></Button>
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Wallet: " Foreground="White"></Label>
+            <ComboBox x:Name="WalletSelector_ComboBox" Foreground="White" SelectionChanged="WalletSelector_ComboBox_SelectionChanged"></ComboBox>
+            <Label Content="NFT Wallet: " Foreground="White"></Label>
+            <ComboBox x:Name="NftWalletSelector_ComboBox" Foreground="White"></ComboBox>
+            <Label Content="License"  Foreground="White"></Label>
+            <Label x:Name="License_Label" Content="Unverified" Foreground="LightGray"></Label>
+            <Button x:Name="ObtainLicense_Button" Content="Obtain License" 
+                    BorderBrush="Black" Background="#697a1f" Foreground="DarkBlue" Click="ObtainLicense_Button_Click"></Button>
+            <Label Content="Status: " Foreground="white"></Label>
+            <Label x:Name="StatusLabel" Content="Initializing" Foreground="LightGray"></Label>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -15,7 +15,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
             {
                 Metadata data = IO.Load(fi.FullName);
                 // update last known collection metadata
-                newInfo.CollectionNumbers.Add(data.series_number);
+                newInfo.CollectionNumbers.Add((int)data.series_number);
                 newInfo.CollectionNumbers = newInfo.CollectionNumbers.OrderBy(x => x).ToList();
                 if (newInfo.LastKnownNftMetadata == null || data.series_number > newInfo.LastKnownNftMetadata.series_number)
                 {

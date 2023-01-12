@@ -121,7 +121,7 @@ namespace Minter_UI
             int collectionTotal;
             if (int.TryParse(this.SeriesTotal_TextBox.Text.Trim(), out collectionTotal))
             {
-                CollectionMetadata.series_total = collectionTotal;
+                CollectionMetadata.series_total = (ulong)collectionTotal;
             }
             else
             {
@@ -132,7 +132,7 @@ namespace Minter_UI
             CollectionMetadata.collection.name = this.CollectionName_TextBox.Text;
             CollectionMetadata.collection.SetAttribute("description", this.Description_TextBox.Text);
             CollectionMetadata.collection.id = this.CollectionID_TextBox.Text;
-            CollectionMetadata.series_total = collectionTotal;
+            CollectionMetadata.series_total = (ulong)collectionTotal;
             List<CollectionAttribute> attributes = new List<CollectionAttribute>();
             foreach (CollAttribute attr in this.CollectionAttributes_StackPanel.Children)
             {

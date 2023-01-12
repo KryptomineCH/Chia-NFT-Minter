@@ -254,7 +254,7 @@ namespace Minter_UI
             else
             {
                 // reserve next free series number
-                metadata.series_number = CollectionInformation.Information.ReserveNextFreeCollectionNumber();
+                metadata.series_number = (ulong)CollectionInformation.Information.ReserveNextFreeCollectionNumber();
             }
             // fill meta information
             metadata.name = this.NftName_TextBox.Text;
@@ -276,6 +276,29 @@ namespace Minter_UI
         private void RefreshCollectionButton_Click(object sender, RoutedEventArgs e)
         {
             CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
+        }
+
+        private void UpdateAllDescriptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            // refresh all existing Metadata
+            int updatedMetadata = 0;
+            foreach (string unmintedNFT_Key in CollectionInformation.Information.MissingRPCs.Keys)
+            {
+                FileInfo metadata_FileInfo;
+                if (CollectionInformation.Information.MetadataFiles.TryGetValue(unmintedNFT_Key, out metadata_FileInfo))
+                {
+                    Metadata metaData = IO.Load(metadata_FileInfo.FullName);
+                    metaData.description = this.Description_TextBox.Text;
+                    metaData.Save(metadata_FileInfo.FullName);
+                    updatedMetadata++;
+                }
+            }
+            if (CollectionInformation.Information.RpcFiles.Count > 0)
+            {
+                MessageBox.Show($"Warning: {updatedMetadata} files have been updated. {Environment.NewLine}" +
+                    $"{CollectionInformation.Information.RpcFiles.Count} files have not been updated because RPC files exist. {Environment.NewLine}" +
+                    $"The software assumes they are already minted.");
+            }
         }
     }
 }
