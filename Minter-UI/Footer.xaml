@@ -21,7 +21,7 @@
             <Label Content="Wallet: " Foreground="White"></Label>
             <ComboBox x:Name="WalletSelector_ComboBox" Foreground="White" SelectionChanged="WalletSelector_ComboBox_SelectionChanged"></ComboBox>
             <Label Content="NFT Wallet: " Foreground="White"></Label>
-            <ComboBox x:Name="NftWalletSelector_ComboBox" Foreground="White"></ComboBox>
+            <ComboBox x:Name="NftWalletSelector_ComboBox" Foreground="White" SelectionChanged="NftWalletSelector_ComboBox_SelectionChanged"></ComboBox>
             <Label Content="License"  Foreground="White"></Label>
             <Label x:Name="License_Label" Content="Unverified" Foreground="LightGray"></Label>
             <Button x:Name="ObtainLicense_Button" Content="Obtain License" 

@@ -48,12 +48,8 @@
         <Button x:Name="NftCustomLinkSet_Button" Content="Set" Grid.Row="3" Grid.Column="1" 
                 Background="#697a1f"
                 Click="NftCustomLinkSet_Button_Click"></Button>
-        <Label Content="wallet id on which should be minted" Grid.Row="4" Grid.Column="0" Foreground="#998826"></Label>
-        <TextBox x:Name="WalletID_TextBox" Grid.Row="5" Grid.Column="0"></TextBox>
-        <Button x:Name="WalletIDSet_Button" Content="Set" Grid.Row="5" Grid.Column="1" 
-                Background="#697a1f"
-                Click="WalletIDSet_Button_Click"></Button>
-        <Label Content="Weblink to license" Grid.Row="6" Grid.Column="0" Foreground="#998826"></Label>
+        <Label Content="Weblink to license files for specifying the terms of using your nfts" 
+               Grid.Row="6" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="LicenseLink_TextBox" Grid.Row="7" Grid.Column="0"></TextBox>
         <TextBox x:Name="LicenseLink2_TextBox" Grid.Row="8" Grid.Column="0"></TextBox>
         <Button x:Name="LicenseLinkSet_Button" Content="Set" Grid.Row="8" Grid.Column="1" 
@@ -66,16 +62,11 @@
                       Click="CaseSensitiveFilehandling_CheckBox_Checked"></CheckBox>
         </WrapPanel>
         <Label Content="Minting Fee" Grid.Row="10" Grid.Column="0" Foreground="#998826"></Label>
-        <TextBox x:Name="MintingFee_TextBox" Text="10000" Grid.Row="11" Grid.Column="0" Foreground="#998826"></TextBox>
+        <TextBox x:Name="MintingFee_TextBox" Text="auto" Grid.Row="11" Grid.Column="0" Foreground="#998826"></TextBox>
         <Button x:Name="MintingFeeSet_Button" Content="Set" Grid.Row="11" Grid.Column="1" 
                 Background="#697a1f"
                 Click="MintingFeeSet_Button_Click"></Button>
         <Label Content="Update" Grid.Row="12" Grid.Column="0" Foreground="#998826"></Label>
         <Button x:Name="Update_Button" Content="Update check pending..." Grid.Row="13" Click="Update_Button_Click"></Button>
-        <Label Content="ReceiveAdress on which should be minted" Grid.Row="14" Grid.Column="0" Foreground="#998826"></Label>
-        <TextBox x:Name="ReceiveAdress_TextBox" Grid.Row="15" Grid.Column="0"></TextBox>
-        <Button x:Name="ReceiveAdress_Button" Content="Set" Grid.Row="15" Grid.Column="1" 
-                Background="#697a1f"
-                Click="ReceiveAdress_Button_Click"></Button>
     </Grid>
 </UserControl>

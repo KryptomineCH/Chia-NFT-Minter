@@ -7,6 +7,9 @@
             // set default settings
             CaseSensitiveFileHandling = false;
             MintingFee = 10000;
+            LicenseURL = "https://bafkreicc3peq64kpclsssu344iroadtsvbloo7ofbkzdyyrqhybhvmblve.ipfs.nftstorage.link/";
+            LicenseURL_Backup = "https://nft.kryptomine.ch/Kryptomine.ch_NFT_CreativeCommons_Attribution_License.pdf";
+            PrimaryWallet = ulong.MaxValue;
         }
         // Metadata
         public string CustomServerURL { get; set; }
@@ -14,8 +17,8 @@
         public string LicenseURL_Backup { get; set; }
         public bool CaseSensitiveFileHandling { get; set; }
         // Minting
-        public int MintingWallet { get; set; }
-        public int MintingFee { get; set; }
-        public string ReceiveAdress { get; set; }
+        public ulong PrimaryWallet { get; set; }
+        public string DidWallet { get; set; }
+        public ulong MintingFee { get; set; }
     }
 }

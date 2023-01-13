@@ -13,6 +13,9 @@ using CHIA_RPC.Wallet_RPC_NS.NFT;
 using CHIA_RPC.Wallet_RPC_NS.WalletManagement_NS;
 using Chia_Client_API.Wallet_NS.WalletAPI_NS;
 using CHIA_RPC.Wallet_RPC_NS.KeyManagement;
+using System.Threading;
+using System.Drawing;
+using System.Windows.Media;
 
 namespace Minter_UI
 {
@@ -26,6 +29,9 @@ namespace Minter_UI
             InitializeComponent();
             RefreshPreviews(false);
         }
+        private bool MintingInProgress = false;
+        private bool UploadingInProgress = false;
+        private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
         /// <summary>
         /// refreshes the directories and loads all nfts which are ready for minting into the minting preview 
         /// </summary>
@@ -78,17 +84,21 @@ namespace Minter_UI
             RefreshPreviews();
         }
         /// <summary>
-        /// upload nft files to nft.storage <br/>
-        /// create rpc <br/>
-        /// mint (not yet implemented)
-        /// create offer (not yet implemented)
+        /// this function will upload the files and generate the rpc for minting in advance.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Mint_Button_Click(object sender, RoutedEventArgs e)
+        private async Task UploadAndGenerateRPCs()
         {
+            if (UploadInProgress) return;
+        }
+        /// <summary>
+        /// this function will process the mintable files
+        /// </summary>
+        /// <returns></returns>
+        private async Task Mint()
+        { 
+            if (MintingInProgress) return;
             // pre-checks
-            if (Settings.All.MintingWallet == null)
+            if (Settings.All.PrimaryWallet == null)
             {
                 MessageBox.Show("STOP: WalletID not specified! Please specify in settings");
                 return;
@@ -109,7 +119,7 @@ namespace Minter_UI
                     key = key.ToLower();
                 }
                 // check if this nft has metadata and is not yet minted
-                if (CollectionInformation.Information.MetadataFiles.ContainsKey(key) 
+                if (CollectionInformation.Information.MetadataFiles.ContainsKey(key)
                     && !CollectionInformation.Information.RpcFiles.ContainsKey(key))
                 {
                     // upload files
@@ -120,7 +130,7 @@ namespace Minter_UI
                     nftlinkList.Add(nftUploadTask.Result.URL);
                     /// upload metadata
                     List<string> metalinkList = new List<string>();
-                    Task<NFT_File> metaUploadTask = 
+                    Task<NFT_File> metaUploadTask =
                         Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.Information.MetadataFiles[key]));
                     metaUploadTask.Wait();
                     metalinkList.Add(metaUploadTask.Result.URL);
@@ -144,18 +154,54 @@ namespace Minter_UI
                     }
                     // create rpc
                     NftMintNFT_RPC rpc = new NftMintNFT_RPC(
-                        walletID: (ulong)Settings.All.MintingWallet,
+                        walletID: (ulong)Settings.All.PrimaryWallet,
                         nftLinks: nftlinkList.ToArray(),
                         metadataLinks: metalinkList.ToArray(),
                         licenseLinks: licenseLinks.ToArray(),
-                        mintingFee_Mojos: (ulong)Settings.All.MintingFee,
-                        royaltyAddress: Settings.All.ReceiveAdress
+                        mintingFee_Mojos: (ulong)Settings.All.MintingFee//,
+                                                                        //royaltyAddress: WalletApi.
                         );
                     /// save rpc
-                    rpc.Save(Path.Combine(Directories.Rpcs.FullName , (nftName+".rpc")));
+                    rpc.Save(Path.Combine(Directories.Rpcs.FullName, (nftName + ".rpc")));
                 }
             }
             RefreshPreviews();
+        }
+        /// <summary>
+        /// upload nft files to nft.storage <br/>
+        /// create rpc <br/>
+        /// mint (not yet implemented)
+        /// create offer (not yet implemented)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Mint_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (MintingInProgress || UploadingInProgress)
+            {
+                Mint_Button.IsEnabled = false;
+                Mint_Button.Content = "Stopping";
+                CancleProcessing.Cancel();
+                Mint_Button.Background = System.Windows.Media.Brushes.DarkKhaki;
+                while (MintingInProgress || UploadingInProgress)
+                {
+                    Task.Delay(1000).Wait();
+                }
+                Mint_Button.Content = "Mint!";
+                Mint_Button.Background = new SolidColorBrush(ColorHelper.ColorConverter.FromHex("#697a1f"));
+                Mint_Button.IsEnabled = true;
+                return;
+            }
+            else
+            {
+                MintingInProgress = true;
+                UploadingInProgress = true;
+                CancleProcessing = new CancellationTokenSource();
+                Mint();
+                UploadAndGenerateRPCs();
+                Mint_Button.Content = "Stop!";
+                Mint_Button.Background = System.Windows.Media.Brushes.Red;
+            }
         }
     }
 }

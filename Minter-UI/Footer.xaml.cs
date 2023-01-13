@@ -4,6 +4,7 @@ using CHIA_RPC.Objects_NS;
 using CHIA_RPC.Wallet_RPC_NS.KeyManagement;
 using CHIA_RPC.Wallet_RPC_NS.NFT;
 using CHIA_RPC.Wallet_RPC_NS.WalletManagement_NS;
+using Minter_UI.Settings_NS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,8 +42,18 @@ namespace Minter_UI
             // get currently logged in wallet
             LogIn_Response loggedInWallet = await WalletApi.GetLoggedInFingerprint_Async();
             // select currently logged in wallet
-            int index = WalletFingerprints.IndexOf(loggedInWallet.fingerprint);
-            this.WalletSelector_ComboBox.SelectedIndex = index;
+            if (Settings.All.PrimaryWallet == ulong.MaxValue)
+            {
+                int index = WalletFingerprints.IndexOf(loggedInWallet.fingerprint);
+                this.WalletSelector_ComboBox.SelectedIndex = index;
+                Settings.All.PrimaryWallet = loggedInWallet.fingerprint;
+                Settings.Save();
+            }
+            else
+            {
+                int index = WalletFingerprints.IndexOf(Settings.All.PrimaryWallet);
+                this.WalletSelector_ComboBox.SelectedIndex = index;
+            }
         }
 
         private void WalletSelector_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -53,18 +64,19 @@ namespace Minter_UI
         {
             ulong selectedWallet = (ulong)WalletSelector_ComboBox.SelectedItem;
             GlobalVar.CurrentlyLoggedInWallet.Value = await WalletApi.GetLoggedInFingerprint_Async();
-            if (GlobalVar.CurrentlyLoggedInWallet.Value.fingerprint != selectedWallet)
+            if (GlobalVar.CurrentlyLoggedInWallet.Value.fingerprint != selectedWallet && this.WalletSelector_ComboBox.IsEnabled)
             {
                 // reset first sync indicator
                 GlobalVar.FullSync = false;
                 // log in
                 this.WalletSelector_ComboBox.IsEnabled = false;
                 StatusLabel.Content = "Logging in";
-                GlobalVar.CurrentlyLoggedInWallet.Value = await WalletApi.LogIn_Async(new CHIA_RPC.General.FingerPrint_RPC { fingerprint = selectedWallet });
+                Settings.All.PrimaryWallet = selectedWallet;
+                Settings.Save();
+                GlobalVar.CurrentlyLoggedInWallet.Value = await WalletApi.LogIn_Async(new FingerPrint_RPC { fingerprint = selectedWallet });
                 GlobalVar.FullSync = false;
                 this.WalletSelector_ComboBox.IsEnabled = true;
-
-                GetNftWallets();
+                await GetNftWallets();
             }
         }
         /// <summary>
@@ -78,17 +90,26 @@ namespace Minter_UI
             GetWallets_Response subWallets = WalletApi.GetWallets_Sync();
             // refresh cache
             NftWallets.Clear();
+            Wallets_info selectedWallet = null;
             foreach (Wallets_info info in subWallets.wallets)
             {
-                if (info.type == CHIA_RPC.Objects_NS.WalletType.did_wallet)
+                if (info.type == WalletType.did_wallet)
                 {
                     NftWallets.Add(info.name);
+                    if (Settings.All.DidWallet == info.name)
+                    {
+                        selectedWallet = info;
+                    }
                 }
             }
             // update selector combobox
             NftWalletSelector_ComboBox.ItemsSource = NftWallets;
             // if there are selectable wallets, choost the first available nft wallet
-            if (NftWallets.Count > 0)
+            if (selectedWallet != null)
+            {
+                NftWalletSelector_ComboBox.SelectedIndex = NftWallets.IndexOf(selectedWallet.name);
+            }
+            else if (NftWallets.Count > 0)
             {
                 NftWalletSelector_ComboBox.SelectedIndex = 0;
             }
@@ -118,7 +139,6 @@ namespace Minter_UI
 
                     {
                         GlobalVar.FullSync = false;
-                        await RefreshWallets();
                         await GetNftWallets();
                     }
                     // obtain sync status and write it to globalvar
@@ -223,6 +243,12 @@ namespace Minter_UI
                     throw;
                 }
             }
+        }
+
+        private void NftWalletSelector_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Settings.All.DidWallet = (string)NftWalletSelector_ComboBox.SelectedItem;
+            Settings.Save();
         }
     }
 }

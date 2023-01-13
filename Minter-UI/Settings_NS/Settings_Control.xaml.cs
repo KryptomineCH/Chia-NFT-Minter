@@ -27,7 +27,6 @@ namespace Minter_UI.Settings_NS
                 NftStorageApiKeySet_Button.Background = Brushes.LightBlue;
             }
             this.NftCustomLink_TextBox.Text = Settings.All.CustomServerURL;
-            this.WalletID_TextBox.Text = Settings.All.MintingWallet.ToString();
             this.LicenseLink_TextBox.Text = Settings.All.LicenseURL;
             this.LicenseLink2_TextBox.Text = Settings.All.LicenseURL_Backup;
             this.CaseSensitiveFilehandling_CheckBox.IsChecked = Settings.All.CaseSensitiveFileHandling;
@@ -111,23 +110,6 @@ namespace Minter_UI.Settings_NS
             Settings.Save();
         }
 
-        private void WalletIDSet_Button_Click(object sender, RoutedEventArgs e)
-        {
-            int wallet;
-            if(!int.TryParse(this.WalletID_TextBox.Text.Trim(),out wallet))
-            {
-                this.WalletID_TextBox.Background = Brushes.LightCoral;
-                MessageBox.Show($"STOP: Wallet ID couldnt be parsed into a number! {Environment.NewLine}example: 3");
-                return;
-            }
-            else
-            {
-                Settings.All.MintingWallet = wallet;
-                this.WalletID_TextBox.Background = null;
-                Settings.Save();
-            }
-        }
-
         private void LicenseLinkSet_Button_Click(object sender, RoutedEventArgs e)
         {
             Settings.All.LicenseURL = LicenseLink_TextBox.Text.Trim();
@@ -143,8 +125,8 @@ namespace Minter_UI.Settings_NS
 
         private void MintingFeeSet_Button_Click(object sender, RoutedEventArgs e)
         {
-            int mintingFee;
-            if (!int.TryParse(MintingFee_TextBox.Text.Trim(), out mintingFee))
+            ulong mintingFee;
+            if (!ulong.TryParse(MintingFee_TextBox.Text.Trim(), out mintingFee))
             {
                 MintingFee_TextBox.Background = Brushes.LightCoral;
                 MessageBox.Show($"STOP: Minting fee couldnt be parsed into a number! {Environment.NewLine}example: 10000");
@@ -181,12 +163,6 @@ namespace Minter_UI.Settings_NS
                 // stop current process
                 Environment.Exit(0);
             }
-        }
-
-        private void ReceiveAdress_Button_Click(object sender, RoutedEventArgs e)
-        {
-            Settings.All.ReceiveAdress = this.ReceiveAdress_TextBox.Text;
-            Settings.Save();
         }
     }
 }
