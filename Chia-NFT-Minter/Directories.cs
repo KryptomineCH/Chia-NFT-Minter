@@ -27,6 +27,10 @@
         /// </summary>
         public static DirectoryInfo Rpcs = new DirectoryInfo("rpcs");
         /// <summary>
+        /// this directiry contains the minted NFTs
+        /// </summary>
+        public static DirectoryInfo Minted = new DirectoryInfo("minted");
+        /// <summary>
         /// the offers directory can be used to store offer files
         /// </summary>
         public static DirectoryInfo Offers = new DirectoryInfo("offers");
@@ -40,6 +44,7 @@
             if (!Metadata.Exists) Metadata.Create();
             if (!Rpcs.Exists) Rpcs.Create();
             if (!Offers.Exists) Offers.Create();
+            if (!Minted.Exists) Minted.Create();
         }
     }
 }

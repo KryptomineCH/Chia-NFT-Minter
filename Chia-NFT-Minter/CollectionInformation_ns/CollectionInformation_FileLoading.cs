@@ -15,6 +15,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
             Directories.Nfts.Refresh();
             Directories.Rpcs.Refresh();
             Directories.Metadata.Refresh();
+            Directories.Minted.Refresh();
             // load base directories
             newInfo.NftFiles = LoadDirectory(dirInfo: Directories.Nfts, caseSensitive: caseSensitive);
             newInfo.MetadataFiles = LoadDirectory(
@@ -22,6 +23,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                 fileTypes: new[] { ".json"},fileNameFilter: new[] { "CollectionInfo.json" }, mustBeContainedWithin: newInfo.NftFiles
                 );
             newInfo.RpcFiles = LoadDirectory(dirInfo: Directories.Rpcs, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.MintedFiles = LoadDirectory(dirInfo: Directories.Minted, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc" }, mustBeContainedWithin: newInfo.NftFiles);
             // load missing files
             foreach(string key in newInfo.NftFiles.Keys)
             {

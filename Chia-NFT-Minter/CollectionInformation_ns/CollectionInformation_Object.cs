@@ -22,6 +22,10 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> RpcFiles = new ConcurrentDictionary<string, FileInfo>();
         /// <summary>
+        /// contains all minted rpc files
+        /// </summary>
+        public ConcurrentDictionary<string, FileInfo> MintedFiles = new ConcurrentDictionary<string, FileInfo>();
+        /// <summary>
         /// contains all nft's where metadata is missing
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> MissingMetadata = new ConcurrentDictionary<string, FileInfo>();

@@ -1,5 +1,6 @@
 ﻿using Chia_Metadata;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 
 namespace Chia_NFT_Minter.CollectionInformation_ns
 {
@@ -13,23 +14,38 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         {
             lock (IsLoadingLock)
             {
-                if (IsLoading) return;
-                IsLoading = true;
-                CollectionInformation_Object newInfo = new CollectionInformation_Object();
-                ReLoadDirectories(caseSensitive, newInfo);
-                GetAttributes(newInfo);
-                GeneratePreviews(caseSensitive, newInfo);
-                Information = newInfo;
+                if (LoadTask == null || LoadTask.IsCompleted)
+                {
+                    LoadTask = Task.Run(() => ReloadAll_Async(caseSensitive));
+                }
             }
+            LoadTask.Wait();
+            return;
+        }
+        public static async Task ReloadAll_Async(bool caseSensitive)
+        {
+            lock (IsLoadingLock)
+            {
+                if (IsLoading)
+                {
+                    LoadTask.Wait(); 
+                    return;
+                }
+                IsLoading = true;
+            }
+            CollectionInformation_Object newInfo = new CollectionInformation_Object();
+            ReLoadDirectories(caseSensitive, newInfo);
+            GetAttributes(newInfo);
+            GeneratePreviews(caseSensitive, newInfo);
+            Information = newInfo;
+            IsLoading= false;
         }
         /// <summary>
         /// is used in an attempt to defy access violation exceptions in a multithreaded environment
         /// </summary>
-        private static bool IsLoading = false;
+        private static volatile bool IsLoading = false;
         private static object IsLoadingLock = new object();
-        
-        
-        
+        public static Task LoadTask = null;
         
     }
 }
