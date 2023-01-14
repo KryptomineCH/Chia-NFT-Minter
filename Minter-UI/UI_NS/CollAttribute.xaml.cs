@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Minter_UI
+namespace Minter_UI.UI_NS
 {
     /// <summary>
     /// CollAttribute corresponds with Chia-NFT-Minter.CollectionAttribute

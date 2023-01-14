@@ -28,6 +28,11 @@ namespace Minter_UI
         /// The currently logged in wallet. This variable is updated from within Footer.xaml.cs
         /// </summary>
         internal static OneWrite_MultiRead<LogIn_Response> CurrentlyLoggedInWallet = new OneWrite_MultiRead<LogIn_Response>(new LogIn_Response(), 5000);
+        internal static string PrimaryWalletAdress { get; set; }
         internal static bool Licensed = false;
+        /// <summary>
+        /// the wallet number of the currently selected nft wallet
+        /// </summary>
+        internal static ulong NftWallet_ID { get; set; }
     }
 }

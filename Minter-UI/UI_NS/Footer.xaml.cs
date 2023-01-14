@@ -1,8 +1,10 @@
 ﻿using Chia_Client_API.Wallet_NS.WalletAPI_NS;
 using CHIA_RPC.General;
 using CHIA_RPC.Objects_NS;
+using CHIA_RPC.Wallet_RPC_NS.DID_NS;
 using CHIA_RPC.Wallet_RPC_NS.KeyManagement;
 using CHIA_RPC.Wallet_RPC_NS.NFT;
+using CHIA_RPC.Wallet_RPC_NS.Wallet_NS;
 using CHIA_RPC.Wallet_RPC_NS.WalletManagement_NS;
 using Minter_UI.Settings_NS;
 using System;
@@ -15,7 +17,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Minter_UI
+namespace Minter_UI.UI_NS
 {
     /// <summary>
     /// Interaction logic for Footer.xaml
@@ -76,6 +78,13 @@ namespace Minter_UI
                 GlobalVar.CurrentlyLoggedInWallet.Value = await WalletApi.LogIn_Async(new FingerPrint_RPC { fingerprint = selectedWallet });
                 GlobalVar.FullSync = false;
                 this.WalletSelector_ComboBox.IsEnabled = true;
+                GetNextAddress_RPC rpc = new GetNextAddress_RPC()
+                {
+                    new_address = false,
+                    wallet_id = 1
+                };
+                GetNextAddress_Response adress = await WalletApi.GetNextAddress_Async(rpc);
+                GlobalVar.PrimaryWalletAdress = adress.address;
                 await GetNftWallets();
             }
         }
@@ -249,6 +258,21 @@ namespace Minter_UI
         {
             Settings.All.DidWallet = (string)NftWalletSelector_ComboBox.SelectedItem;
             Settings.Save();
+            // get wallet id
+            GetWallets_Response subWallets = WalletApi.GetWallets_Sync();
+            foreach (Wallets_info info in subWallets.wallets)
+            {
+                if (info.type == WalletType.did_wallet)
+                {
+                    NftWallets.Add(info.name);
+                    if (Settings.All.DidWallet == info.name)
+                    {
+                        DidGetDid_Response didWallet = WalletApi.DidGetDid_Sync(new WalletID_RPC { wallet_id = info.id });
+                        WalletID_Response id = WalletApi.NftGetByDID_Sync(new DidID_RPC() { did_id = didWallet.my_did} );
+                    }
+                }
+            }
+            
         }
     }
 }

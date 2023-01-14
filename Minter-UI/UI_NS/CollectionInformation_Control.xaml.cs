@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Chia_NFT_Minter.CollectionInformation_ns;
 
-namespace Minter_UI
+namespace Minter_UI.UI_NS
 {
     /// <summary>
     /// Interaction logic for setting collection metadata

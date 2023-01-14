@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Minter_UI
+namespace Minter_UI.UI_NS
 {
     /// <summary>
     /// Interaction logic for Metadata editing

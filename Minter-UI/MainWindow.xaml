@@ -3,14 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Minter_UI" xmlns:local1="clr-namespace:Minter_UI.Settings_NS" xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:local="clr-namespace:Minter_UI" 
+        xmlns:ui="clr-namespace:Minter_UI.UI_NS" 
+        xmlns:settings="clr-namespace:Minter_UI.Settings_NS" 
+        xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" xmlns:local2="clr-namespace:Minter_UI.UI_NS" xmlns:ui1="clr-namespace:Minter_UI.Settings_NS"
         mc:Ignorable="d"
         Title="KryptoMine NftMinter" Height="450" Width="800" Icon="/Resources/Application_Icon.png" Background="#201E11">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
-                   Source="Styles/TabControl_Style_Dark.xaml"/>
+                   Source="UI_NS/Styles/TabControl_Style_Dark.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -21,21 +24,21 @@
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0">
             <TabItem Header="Collection Information" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
-                <local:CollectionInformation_Control Background="#111009"></local:CollectionInformation_Control>
+                <ui:CollectionInformation_Control Background="#111009"></ui:CollectionInformation_Control>
             </TabItem>
             <TabItem Header="Metadata" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
-                <local:Metadata_Control Background="#111009"></local:Metadata_Control>
+                <ui:Metadata_Control Background="#111009"></ui:Metadata_Control>
             </TabItem>
             <TabItem Header="Minting" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
-                <local:Minting_Control Background="#111009"></local:Minting_Control>
+                <ui:Minting_Control Background="#111009"></ui:Minting_Control>
             </TabItem>
             <TabItem Header="Settings" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
-                <local1:Settings_Control Background="#111009"></local1:Settings_Control>
+                <settings:Settings_Control Background="#111009"></settings:Settings_Control>
             </TabItem>
             <TabItem Header="Help" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <wpf:WebView2 Source="https://github.com/KryptomineCH/Chia-NFT-Minter/wiki"/>
             </TabItem>
         </TabControl>
-        <local:Footer Grid.Row="1"></local:Footer>
+        <ui:Footer Grid.Row="1"></ui:Footer>
     </Grid>
 </Window>

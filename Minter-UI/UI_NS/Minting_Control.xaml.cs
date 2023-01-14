@@ -10,14 +10,10 @@ using Minter_UI.Settings_NS;
 using Chia_NFT_Minter.CollectionInformation_ns;
 using Microsoft.Web.WebView2.Wpf;
 using CHIA_RPC.Wallet_RPC_NS.NFT;
-using CHIA_RPC.Wallet_RPC_NS.WalletManagement_NS;
-using Chia_Client_API.Wallet_NS.WalletAPI_NS;
-using CHIA_RPC.Wallet_RPC_NS.KeyManagement;
 using System.Threading;
-using System.Drawing;
 using System.Windows.Media;
 
-namespace Minter_UI
+namespace Minter_UI.UI_NS
 {
     /// <summary>
     /// Interaction logic for Minting_Control.xaml
@@ -30,7 +26,6 @@ namespace Minter_UI
             RefreshPreviews(false);
         }
         private bool MintingInProgress = false;
-        private bool UploadingInProgress = false;
         private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
         /// <summary>
         /// refreshes the directories and loads all nfts which are ready for minting into the minting preview 
@@ -82,13 +77,6 @@ namespace Minter_UI
         private void Refresh_Button_Click(object sender, RoutedEventArgs e)
         {
             RefreshPreviews();
-        }
-        /// <summary>
-        /// this function will upload the files and generate the rpc for minting in advance.
-        /// </summary>
-        private async Task UploadAndGenerateRPCs()
-        {
-            if (UploadInProgress) return;
         }
         /// <summary>
         /// this function will process the mintable files
@@ -177,13 +165,13 @@ namespace Minter_UI
         /// <param name="e"></param>
         private void Mint_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (MintingInProgress || UploadingInProgress)
+            if (MintingInProgress || Tasks_NS.UploadNftFiles.UploadingInProgress)
             {
                 Mint_Button.IsEnabled = false;
                 Mint_Button.Content = "Stopping";
                 CancleProcessing.Cancel();
                 Mint_Button.Background = System.Windows.Media.Brushes.DarkKhaki;
-                while (MintingInProgress || UploadingInProgress)
+                while (MintingInProgress || Tasks_NS.UploadNftFiles.UploadingInProgress)
                 {
                     Task.Delay(1000).Wait();
                 }
@@ -195,10 +183,10 @@ namespace Minter_UI
             else
             {
                 MintingInProgress = true;
-                UploadingInProgress = true;
+                Tasks_NS.UploadNftFiles.UploadingInProgress = true;
                 CancleProcessing = new CancellationTokenSource();
                 Mint();
-                UploadAndGenerateRPCs();
+                Tasks_NS.UploadNftFiles.UploadAndGenerateRpcs_Task(CancleProcessing.Token);
                 Mint_Button.Content = "Stop!";
                 Mint_Button.Background = System.Windows.Media.Brushes.Red;
             }

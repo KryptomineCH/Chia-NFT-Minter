@@ -9,9 +9,9 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/TextBoxStyle_Dark.xaml"/>
-                <ResourceDictionary Source="/Styles/ScrollBarStyle_Dark.xaml"/>
-                <ResourceDictionary Source="/Styles/CheckBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="/UI_NS/Styles/TextBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="/UI_NS/Styles/ScrollBarStyle_Dark.xaml"/>
+                <ResourceDictionary Source="/UI_NS/Styles/CheckBoxStyle_Dark.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
