@@ -19,7 +19,15 @@ namespace Minter_UI.UI_NS
         public Metadata_Control()
         {
             InitializeComponent();
-            LoadNextMissingMetadata();
+            if (CollectionInformation.Information.MissingMetadata.Count == 0)
+            {
+                LoadNextExistingMetadata();
+            }
+            else
+            {
+                LoadNextMissingMetadata();
+            }
+            
             
         }
         private FileInfo CurrentMetadataPath;
