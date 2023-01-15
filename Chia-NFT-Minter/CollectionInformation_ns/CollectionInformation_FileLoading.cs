@@ -32,10 +32,15 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                     string caseSensitiveFileName = Path.GetFileNameWithoutExtension(newInfo.NftFiles[key].FullName) + ".json";
                     newInfo.MissingMetadata[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));
                 }
-                if(!newInfo.RpcFiles.ContainsKey(key) && !newInfo.MintedFiles.ContainsKey(key))
+                else if(!newInfo.RpcFiles.ContainsKey(key) && !newInfo.MintedFiles.ContainsKey(key))
                 {
                     string caseSensitiveFileName = Path.GetFileNameWithoutExtension(newInfo.NftFiles[key].FullName) + ".rpc";
                     newInfo.MissingRPCs[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));
+                }
+                else if (newInfo.RpcFiles.ContainsKey(key) && !newInfo.MintedFiles.ContainsKey(key))
+                {
+                    string caseSensitiveFileName = Path.GetFileNameWithoutExtension(newInfo.NftFiles[key].FullName) + ".rpc";
+                    newInfo.ReadyToMint[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));
                 }
             }
             newInfo.NftFileInfos = newInfo.NftFiles.Values.ToArray();

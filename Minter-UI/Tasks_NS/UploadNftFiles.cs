@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Linq;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -21,25 +22,25 @@ namespace Minter_UI.Tasks_NS
             {
                 royaltyAdress = GlobalVar.PrimaryWalletAdress;
             }
-            foreach (FileInfo nftFile in CollectionInformation.Information.NftFiles.Values)
+            while(!CollectionInformation.Information.MissingRPCs.IsEmpty)
             {
+                KeyValuePair<string, FileInfo> nftToBeUploaded = CollectionInformation.Information.MissingRPCs.First();
                 if (cancle.IsCancellationRequested) return;
                 // get nft name and identifier key
-                string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
-                string key = nftName;
+                string nftFullName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.FullName);
+                string nftName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.Name);
+                string key = nftFullName;
                 if (!Settings.All.CaseSensitiveFileHandling)
                 {
                     key = key.ToLower();
                 }
                 // check if this nft has metadata and is not yet uploaded
-                if (CollectionInformation.Information.MetadataFiles.ContainsKey(key)
-                    && !CollectionInformation.Information.RpcFiles.ContainsKey(key)
-                    && !CollectionInformation.Information.MintedFiles.ContainsKey(key))
+                if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
                 {
                     // upload files
                     /// upload nft file
                     List<string> nftlinkList = new List<string>();
-                    Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nftFile.FullName));
+                    Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nftFullName));
                     nftUploadTask.Wait();
                     nftlinkList.Add(nftUploadTask.Result.URL);
                     /// upload metadata
@@ -55,7 +56,7 @@ namespace Minter_UI.Tasks_NS
                         string customLink = Settings.All.CustomServerURL;
                         if (!customLink.EndsWith("/")) customLink += "/";
                         /// finalize custom uri
-                        nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nftFile.Name);
+                        nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nftName);
                         metalinkList.Add(
                             customLink + Directories.Metadata.Name + "/" + CollectionInformation.Information.MetadataFiles[key].Name);
                     }
@@ -75,7 +76,14 @@ namespace Minter_UI.Tasks_NS
                         royaltyAddress: royaltyAdress
                         );
                     /// save rpc
-                    rpc.Save(Path.Combine(Directories.Rpcs.FullName, (nftName + ".rpc")));
+                    rpc.Save(Path.Combine(Directories.Rpcs.FullName, (nftFullName + ".rpc")));
+                    /// manage collection information
+                    CollectionInformation.Information.MissingRPCs.Remove(nftToBeUploaded.Key, out _);
+                    CollectionInformation.Information.ReadyToMint[nftToBeUploaded.Key] = nftToBeUploaded.Value;
+                }
+                else
+                { // no metadata found!
+                    await Task.Delay(1000);
                 }
             }
         }

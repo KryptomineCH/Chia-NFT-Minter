@@ -18,7 +18,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> MetadataFiles = new ConcurrentDictionary<string, FileInfo>();
         /// <summary>
-        /// contains all rpc files (~minted nft's)
+        /// contains all rpc files
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> RpcFiles = new ConcurrentDictionary<string, FileInfo>();
         /// <summary>
@@ -33,6 +33,10 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// contains all nfts which have not been minted
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> MissingRPCs = new ConcurrentDictionary<string, FileInfo>();
+        /// <summary>
+        /// these are the nfts which have been uploaded to nft.storage and are ready for minting
+        /// </summary>
+        public ConcurrentDictionary<string, FileInfo> ReadyToMint = new ConcurrentDictionary<string, FileInfo>();
         /// <summary>
         /// can be used to find out which nft belongs to which collectionnumber
         /// </summary>
