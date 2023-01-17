@@ -40,7 +40,7 @@ namespace Minter_UI.UI_NS
             this.Preview_WrapPanel.Children.Clear();
             int previewcount = 20;
             int index = 0;
-            foreach (FileInfo nftFile in CollectionInformation.Information.NftFileInfos)
+            foreach (FileInfo nftFile in CollectionInformation.Information.NftFiles.Values)
             {
                 string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
                 string key = nftName;

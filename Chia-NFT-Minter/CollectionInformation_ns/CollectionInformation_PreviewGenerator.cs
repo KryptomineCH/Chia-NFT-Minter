@@ -20,7 +20,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
             ImageCodecInfo jpegCodec = ImageCodecInfo.GetImageEncoders().First(c => c.FormatID == ImageFormat.Jpeg.Guid);
             EncoderParameters encoderParams = new EncoderParameters(1);
             encoderParams.Param[0] = new EncoderParameter(Encoder.Quality, 70L);
-            foreach (FileInfo info in newInfo.NftFileInfos)
+            foreach (FileInfo info in newInfo.NftFiles.Values)
             {
                 if (info.Extension == ".png" || info.Extension == ".jpg" || info.Extension == ".tiff")
                 {

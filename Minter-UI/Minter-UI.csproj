@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Chia-Client-API" Version="1.6.2.1" />
+    <PackageReference Include="Chia-Client-API" Version="1.6.2.4" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1462.37" />
     <PackageReference Include="Multithreading_Library" Version="1.0.0" />
     <PackageReference Include="NFT.Storage.Net" Version="1.0.0.1" />

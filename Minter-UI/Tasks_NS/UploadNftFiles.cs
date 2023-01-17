@@ -14,18 +14,22 @@ namespace Minter_UI.Tasks_NS
     internal class UploadNftFiles
     {
         internal static bool UploadingInProgress = false;
+        private static object UploadingInProgressLock = new object();
         internal static async Task UploadAndGenerateRpcs_Task(CancellationToken cancle)
         {
-            if (UploadingInProgress) return;
+            lock(UploadingInProgressLock)
+            {
+                if (UploadingInProgress) return;
+                UploadingInProgress = true;
+            }
             string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
             if (GlobalVar.Licensed)
             {
                 royaltyAdress = GlobalVar.PrimaryWalletAdress;
             }
-            while(!CollectionInformation.Information.MissingRPCs.IsEmpty)
+            while(!cancle.IsCancellationRequested && !CollectionInformation.Information.MissingRPCs.IsEmpty)
             {
                 KeyValuePair<string, FileInfo> nftToBeUploaded = CollectionInformation.Information.MissingRPCs.First();
-                if (cancle.IsCancellationRequested) return;
                 // get nft name and identifier key
                 string nftFullName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.FullName);
                 string nftName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.Name);
@@ -41,13 +45,21 @@ namespace Minter_UI.Tasks_NS
                     /// upload nft file
                     List<string> nftlinkList = new List<string>();
                     Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nftFullName));
-                    nftUploadTask.Wait();
+                    nftUploadTask.Wait(cancle);
+                    if (cancle.IsCancellationRequested)
+                    {
+                        goto CancleJump;
+                    }
                     nftlinkList.Add(nftUploadTask.Result.URL);
                     /// upload metadata
                     List<string> metalinkList = new List<string>();
                     Task<NFT_File> metaUploadTask =
                         Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.Information.MetadataFiles[key]));
-                    metaUploadTask.Wait();
+                    metaUploadTask.Wait(cancle);
+                    if (cancle.IsCancellationRequested)
+                    {
+                        goto CancleJump;
+                    }
                     metalinkList.Add(metaUploadTask.Result.URL);
                     // build link lists for rpc
                     if (Settings.All.CustomServerURL != null)
@@ -85,6 +97,11 @@ namespace Minter_UI.Tasks_NS
                 { // no metadata found!
                     await Task.Delay(1000);
                 }
+            }
+        CancleJump:;
+            lock (UploadingInProgressLock)
+            {
+                UploadingInProgress = false;
             }
         }
     }
