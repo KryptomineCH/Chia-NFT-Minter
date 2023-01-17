@@ -6,7 +6,7 @@
         {
             // set default settings
             CaseSensitiveFileHandling = false;
-            MintingFee = 10000;
+            MintingFee = 1000;
             LicenseURL = "https://bafkreicc3peq64kpclsssu344iroadtsvbloo7ofbkzdyyrqhybhvmblve.ipfs.nftstorage.link/";
             LicenseURL_Backup = "https://nft.kryptomine.ch/Kryptomine.ch_NFT_CreativeCommons_Attribution_License.pdf";
             PrimaryWallet = ulong.MaxValue;

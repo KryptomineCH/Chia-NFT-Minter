@@ -62,7 +62,7 @@
                       Click="CaseSensitiveFilehandling_CheckBox_Checked"></CheckBox>
         </WrapPanel>
         <Label Content="Minting Fee" Grid.Row="10" Grid.Column="0" Foreground="#998826"></Label>
-        <TextBox x:Name="MintingFee_TextBox" Text="auto" Grid.Row="11" Grid.Column="0" Foreground="#998826"></TextBox>
+        <TextBox x:Name="MintingFee_TextBox" Text="1000" Grid.Row="11" Grid.Column="0" Foreground="#998826"></TextBox>
         <Button x:Name="MintingFeeSet_Button" Content="Set" Grid.Row="11" Grid.Column="1" 
                 Background="#697a1f"
                 Click="MintingFeeSet_Button_Click"></Button>

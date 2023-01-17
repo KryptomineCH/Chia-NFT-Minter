@@ -19,6 +19,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Text.Json;
 using System.Runtime;
 using System.Windows.Input;
+using System.Windows;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -26,7 +27,7 @@ namespace Minter_UI.Tasks_NS
     {
         internal static bool MintingInProgress = false;
         private static object MintingInProgressLock = new object();
-        internal static async Task UploadAndGenerateRpcs_Task(CancellationToken cancle)
+        internal static async Task MintNfts_Task(CancellationToken cancle)
         {
             lock (MintingInProgressLock)
             {
@@ -51,9 +52,33 @@ namespace Minter_UI.Tasks_NS
                 KeyValuePair<string, FileInfo> nftToBeMinted = CollectionInformation.Information.MissingRPCs.First();
                 _ = CollectionInformation.Information.MissingRPCs.Remove(nftToBeMinted.Key, out _);
                 // balance check
-                throw new NotImplementedException("need to implement balance check!");
-                // start mint task
-                MintNft(nftToBeMinted, royaltyAdress, cancle);
+                GetWalletBalance_Response walletBalance = await WalletApi.GetWalletBalance_Async(new WalletID_RPC() { wallet_id = 1 });
+                if (walletBalance.wallet_balance.spendable_balance > Settings.All.MintingFee+1) 
+                {
+                    // start mint task
+                    MintNft(nftToBeMinted, royaltyAdress, cancle);
+                }
+                else if (walletBalance.wallet_balance.unconfirmed_wallet_balance != 0)
+                {
+                    // there seem to be transactions ongoing which block cash
+                    int ongoingTransactions = await CheckPendingTransactions();
+                    if (ongoingTransactions == 0)
+                    { 
+                        // no ongoing transactions, all transactions seem stuck!
+                        await WalletApi.DeleteUnconfirmedTransactions_Async(1);
+                    }
+                    Task.Delay(1000);
+                }
+                else
+                {
+                    // not enough balance
+                    MessageBox.Show($"you do not seem to have enough balance to mint an NFT!" +
+                        $"{Environment.NewLine}" +
+                        $"{Environment.NewLine}" +
+                        $"Minting has been stopped");
+                    goto CancleJump;
+                }
+                
             }
             CancleJump:;
             lock (MintingInProgressLock)
