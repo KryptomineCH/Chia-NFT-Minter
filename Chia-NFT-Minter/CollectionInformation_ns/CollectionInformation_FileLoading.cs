@@ -23,7 +23,8 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                 fileTypes: new[] { ".json"},fileNameFilter: new[] { "CollectionInfo.json" }, mustBeContainedWithin: newInfo.NftFiles
                 );
             newInfo.RpcFiles = LoadDirectory(dirInfo: Directories.Rpcs, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc" }, mustBeContainedWithin: newInfo.NftFiles);
-            newInfo.MintedFiles = LoadDirectory(dirInfo: Directories.Minted, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.PendingTransactions = LoadDirectory(dirInfo: Directories.PendingTransactions, caseSensitive: caseSensitive, fileTypes: new[] { ".mint" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.MintedFiles = LoadDirectory(dirInfo: Directories.Minted, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc",".nft" }, mustBeContainedWithin: newInfo.NftFiles);
             // load missing files
             foreach(string key in newInfo.NftFiles.Keys)
             {
@@ -32,12 +33,12 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                     string caseSensitiveFileName = Path.GetFileNameWithoutExtension(newInfo.NftFiles[key].FullName) + ".json";
                     newInfo.MissingMetadata[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));
                 }
-                else if(!newInfo.RpcFiles.ContainsKey(key) && !newInfo.MintedFiles.ContainsKey(key))
+                else if(!newInfo.RpcFiles.ContainsKey(key) && !newInfo.PendingTransactions.ContainsKey(key) && !newInfo.MintedFiles.ContainsKey(key))
                 {
                     string caseSensitiveFileName = Path.GetFileNameWithoutExtension(newInfo.NftFiles[key].FullName) + ".rpc";
                     newInfo.MissingRPCs[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));
                 }
-                else if (newInfo.RpcFiles.ContainsKey(key) && !newInfo.MintedFiles.ContainsKey(key))
+                else if (newInfo.RpcFiles.ContainsKey(key) && !newInfo.PendingTransactions.ContainsKey(key) && !newInfo.MintedFiles.ContainsKey(key))
                 {
                     string caseSensitiveFileName = Path.GetFileNameWithoutExtension(newInfo.NftFiles[key].FullName) + ".rpc";
                     newInfo.ReadyToMint[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));

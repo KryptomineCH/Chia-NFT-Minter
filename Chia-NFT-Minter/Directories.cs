@@ -35,6 +35,10 @@
         /// </summary>
         public static DirectoryInfo Offers = new DirectoryInfo("offers");
         /// <summary>
+        /// 
+        /// </summary>
+        public static DirectoryInfo PendingTransactions = new DirectoryInfo("pending_transactions");
+        /// <summary>
         /// creates the specified dirs if they dont exist
         /// </summary>
         private static void InitializeDirectories()
@@ -45,6 +49,11 @@
             if (!Rpcs.Exists) Rpcs.Create();
             if (!Offers.Exists) Offers.Create();
             if (!Minted.Exists) Minted.Create();
+            if (!PendingTransactions.Exists)
+            {
+                PendingTransactions.Create();
+                PendingTransactions.Attributes = FileAttributes.Hidden;
+            }
         }
     }
 }
