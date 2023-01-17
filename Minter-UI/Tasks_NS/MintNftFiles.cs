@@ -17,6 +17,8 @@ using System.Data;
 using System.Reflection.Metadata;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text.Json;
+using System.Runtime;
+using System.Windows.Input;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -48,7 +50,10 @@ namespace Minter_UI.Tasks_NS
                 // get nft to be minted
                 KeyValuePair<string, FileInfo> nftToBeMinted = CollectionInformation.Information.MissingRPCs.First();
                 _ = CollectionInformation.Information.MissingRPCs.Remove(nftToBeMinted.Key, out _);
-                // stat mint task
+                // balance check
+                throw new NotImplementedException("need to implement balance check!");
+                // start mint task
+                MintNft(nftToBeMinted, royaltyAdress, cancle);
             }
             CancleJump:;
             lock (MintingInProgressLock)
@@ -56,12 +61,27 @@ namespace Minter_UI.Tasks_NS
                 MintingInProgress = false;
             }
         }
-        private static async Task CheckPendingTransactions()
+        /// <summary>
+        /// This function checks for pending transactions related to NFT minting. 
+        /// It looks for files with a ".mint" extension in the "PendingTransactions" directory, 
+        /// and verifies if the NFT was minted successfully using the "VerifyMint" function from the "WalletApi" class. 
+        /// If the NFT was minted successfully, 
+        /// the function adds the NFT's information to the "MintedFiles" dictionary in the "CollectionInformation" class
+        /// and deletes the corresponding pending transaction file. 
+        /// If the transaction has been pending for longer than the specified time (default 0.25 hours) 
+        /// it is considered stuck and the file is deleted and removed from the "PendingTransactions" dictionary.
+        /// </summary>
+        /// <param name="hoursAfterTransactionConsideredStuck">The amount of hours after which a pending transaction is considered stuck. Default is 0.25 hours.</param>
+        /// <returns>The number of still pending transactions.</returns>
+        private static async Task<int> CheckPendingTransactions(double hoursAfterTransactionConsideredStuck = 0.25)
         {
             FileInfo[] files = Directories.PendingTransactions.GetFiles("*.mint");
+            int stillPendingTransactions = 0;
             foreach (FileInfo file in files)
             {
-                NftMintNFT_Response spendBundle = JsonSerializer.Deserialize<NftMintNFT_Response>(File.ReadAllText(file.FullName));
+                // load spend bundle
+                NftMintNFT_Response spendBundle = NftMintNFT_Response.Load(file.FullName);
+                // check if nft was minted
                 NftGetInfo_Response nft = await WalletApi.VerifyMint(spendBundle);
                 if (nft.success)
                 {
@@ -73,15 +93,36 @@ namespace Minter_UI.Tasks_NS
                     {
                         key = key.ToLower();
                     }
-                    // copy nft mint rpc file
-                    FileInfo sourceRpcFile = CollectionInformation.Information.RpcFiles[key];
-                    FileInfo targetRpcFile = new FileInfo(Path.Combine(Directories.Rpcs.FullName, sourceRpcFile.Name));
-                    File.Copy(sourceRpcFile.FullName, targetRpcFile.FullName);
-                    // delete 
+                    FileInfo nftFilePath = new FileInfo(Path.Combine(Directories.Minted.FullName, nftName));
+                    nft.nft_info.Save(nftFilePath.FullName);
+                    /// add successful mint to collection information
+                    CollectionInformation.Information.MintedFiles[key] = nftFilePath;
+                    /// delete pending transaction
+                    File.Delete(file.FullName);
+                    /// remove pending transaction
+                    _ = CollectionInformation.Information.PendingTransactions.Remove(key, out _);
+                }
+                else if (file.CreationTime < DateTime.Now - TimeSpan.FromHours(hoursAfterTransactionConsideredStuck))
+                {
+                    File.Delete(file.FullName);
+                    // nft was minted sucessfully
+                    string nftFullName = Path.GetFileNameWithoutExtension(file.FullName);
+                    string nftName = Path.GetFileNameWithoutExtension(file.Name);
+                    string key = nftFullName;
+                    if (!Settings.All.CaseSensitiveFileHandling)
+                    {
+                        key = key.ToLower();
+                    }
+                    _ = CollectionInformation.Information.PendingTransactions.Remove(key, out _);
+                }
+                else
+                {
+                    stillPendingTransactions++;
                 }
             }
+            return stillPendingTransactions;
         }
-        private static async Task UploadNft(KeyValuePair<string, FileInfo> nftToBeMinted, string royaltyAdress, CancellationToken cancel)
+        private static async Task MintNft(KeyValuePair<string, FileInfo> nftToBeMinted, string royaltyAdress, CancellationToken cancel)
         {
             // get nft name and identifier key
             string nftFullName = Path.GetFileNameWithoutExtension(nftToBeMinted.Value.FullName);
@@ -96,27 +137,24 @@ namespace Minter_UI.Tasks_NS
             NftMintNFT_RPC rpc = NftMintNFT_RPC.Load(rpcSourcePath);
             rpc.wallet_id = GlobalVar.NftWallet_ID;
             rpc.royalty_address = royaltyAdress;
-            /// Mint!
-            if (!Settings.All.CaseSensitiveFileHandling)
-            {
-                key = key.ToLower();
-            }
-            /// send mint transaction
+            // send mint transaction
             NftMintNFT_Response response = await WalletApi.NftMintNft_Async(rpc);
             /// save spend bundle to validate transaction completeness
             string transactionPath = Path.Combine(Directories.PendingTransactions.FullName, nftFullName,".mint");
             File.WriteAllText(transactionPath, response.ToString());
-            /// wait for mint to complete
+            // wait for mint to complete
             NftGetInfo_Response nftInfo = await WalletApi.NftAwaitMintComplete_Async(response, cancel);
-            /// save rpc
+            /// validate mint
             if (nftInfo.success)
-            {
-                FileInfo nftFilePath = new FileInfo(Path.Combine(Directories.Minted.FullName, nftFullName));
+            { /// mint was successful
+                FileInfo nftFilePath = new FileInfo(Path.Combine(Directories.Minted.FullName, nftName));
                 nftInfo.nft_info.Save(nftFilePath.FullName);
-                /// manage collection information
-                CollectionInformation.Information.MintedFiles[key] = nftToBeMinted.Value;
+                /// add successful mint to collection information
+                CollectionInformation.Information.MintedFiles[key] = nftFilePath;
                 /// delete pending transaction
                 File.Delete(transactionPath);
+                /// remove pending transaction
+                _ = CollectionInformation.Information.PendingTransactions.Remove(key,out _);
             }
         }
     }
