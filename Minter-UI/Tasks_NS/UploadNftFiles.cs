@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
+using System.Windows;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -17,13 +18,18 @@ namespace Minter_UI.Tasks_NS
         private static object UploadingInProgressLock = new object();
         internal static async Task UploadAndGenerateRpcs_Task(CancellationToken cancle)
         {
+            if (NftStorageAccount.Client == null)
+            {
+                MessageBox.Show("cannot upload pics because nft.storage account is not set!");
+                return;
+            }
             lock(UploadingInProgressLock)
             {
                 if (UploadingInProgress) return;
                 UploadingInProgress = true;
             }
             string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
-            if (GlobalVar.Licensed)
+            if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
             {
                 royaltyAdress = GlobalVar.PrimaryWalletAdress;
             }
@@ -34,7 +40,7 @@ namespace Minter_UI.Tasks_NS
                 string nftFullName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.FullName);
                 string nftName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.Name);
                 string key = nftFullName;
-                if (!Settings.All.CaseSensitiveFileHandling)
+                if (Settings.All != null && !Settings.All.CaseSensitiveFileHandling)
                 {
                     key = key.ToLower();
                 }
@@ -62,7 +68,7 @@ namespace Minter_UI.Tasks_NS
                     }
                     metalinkList.Add(metaUploadTask.Result.URL);
                     // build link lists for rpc
-                    if (Settings.All.CustomServerURL != null)
+                    if (Settings.All != null && Settings.All.CustomServerURL != null)
                     {
                         /// prepare custom url (~prefix)
                         string customLink = Settings.All.CustomServerURL;
@@ -73,8 +79,12 @@ namespace Minter_UI.Tasks_NS
                             customLink + Directories.Metadata.Name + "/" + CollectionInformation.Information.MetadataFiles[key].Name);
                     }
                     /// add license url (is static)
-                    List<string> licenseLinks = new List<string> { Settings.All.LicenseURL };
-                    if (Settings.All.LicenseURL_Backup != null)
+                    List<string> licenseLinks = new List<string>();
+                    if (Settings.All != null && Settings.All.LicenseURL != null)
+                    {
+                        licenseLinks.Add(Settings.All.LicenseURL);
+                    }
+                    if (Settings.All != null && Settings.All.LicenseURL_Backup != null)
                     {
                         licenseLinks.Add(Settings.All.LicenseURL_Backup);
                     }
@@ -84,9 +94,12 @@ namespace Minter_UI.Tasks_NS
                         nftLinks: nftlinkList.ToArray(),
                         metadataLinks: metalinkList.ToArray(),
                         licenseLinks: licenseLinks.ToArray(),
-                        mintingFee_Mojos: (ulong)Settings.All.MintingFee,
                         royaltyAddress: royaltyAdress
                         );
+                    if (Settings.All != null)
+                    {
+                        rpc.fee = Settings.All.MintingFee;
+                    }
                     /// save rpc
                     rpc.Save(Path.Combine(Directories.Rpcs.FullName, (nftFullName + ".rpc")));
                     /// manage collection information

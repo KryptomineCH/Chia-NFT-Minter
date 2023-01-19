@@ -69,9 +69,9 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         private static ConcurrentDictionary<string,FileInfo> LoadDirectory(
             DirectoryInfo dirInfo, 
             bool caseSensitive, 
-            string[] fileTypes = null, 
-            string[] fileNameFilter = null, 
-            ConcurrentDictionary<string, FileInfo> mustBeContainedWithin = null)
+            string[]? fileTypes = null, 
+            string[]? fileNameFilter = null, 
+            ConcurrentDictionary<string, FileInfo>? mustBeContainedWithin = null)
         {
             // get files
             FileInfo[] filesList = dirInfo.GetFiles();

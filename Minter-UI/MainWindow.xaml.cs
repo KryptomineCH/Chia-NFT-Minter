@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using Chia_NFT_Minter.CollectionInformation_ns;
 
 namespace Minter_UI
@@ -10,8 +12,30 @@ namespace Minter_UI
     {
         public MainWindow()
         {
+            #if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached == false)
+            {
+                System.Diagnostics.Debugger.Launch();
+            }
+#endif
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            {
+                Exception ex = (Exception)args.ExceptionObject;
+                // Log the exception details
+                string filePath = @"errors.log";
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    writer.WriteLine("Unhandled exception: " + ex.Message);
+                    writer.WriteLine("Stack trace: " + ex.StackTrace);
+                }
+            };
             // load collection information once
-            CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
+            bool caseSensitive = true;
+            if (Settings_NS.Settings.All != null)
+            {
+                caseSensitive = Settings_NS.Settings.All.CaseSensitiveFileHandling;
+            }
+            CollectionInformation.ReloadAll(caseSensitive);
             InitializeComponent();
         }
     }

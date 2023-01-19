@@ -12,13 +12,13 @@
             PrimaryWallet = ulong.MaxValue;
         }
         // Metadata
-        public string CustomServerURL { get; set; }
+        public string? CustomServerURL { get; set; }
         public string LicenseURL { get; set; }
         public string LicenseURL_Backup { get; set; }
         public bool CaseSensitiveFileHandling { get; set; }
         // Minting
-        public ulong PrimaryWallet { get; set; }
-        public string DidWallet { get; set; }
+        public ulong? PrimaryWallet { get; set; }
+        public string? DidWallet { get; set; }
         public ulong MintingFee { get; set; }
     }
 }

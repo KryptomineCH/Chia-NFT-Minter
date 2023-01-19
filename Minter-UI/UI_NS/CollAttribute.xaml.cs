@@ -12,7 +12,7 @@ namespace Minter_UI.UI_NS
     /// </summary>
     public partial class CollAttribute : UserControl
     {
-        public CollAttribute(CollectionAttribute attr = null)
+        public CollAttribute(CollectionAttribute? attr = null)
         {
             InitializeComponent();
             this.Type_ComboBox.ItemsSource = _AvailableAttributes;
@@ -84,7 +84,7 @@ namespace Minter_UI.UI_NS
                         LastValueTextBoxStateWasValid = true;
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     if (LastValueTextBoxStateWasValid)
                     {

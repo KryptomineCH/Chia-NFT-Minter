@@ -70,7 +70,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// </summary>
         /// <remarks>it can be used to suggest certain metadata features in the new nft.
         /// For example, if the last nft was from a subcollection Fanta-Boys of Soda-Club-Boys, it is likely the next nft will be a fanta boy as well</remarks>
-        public Metadata LastKnownNftMetadata { get; set; }
+        public Metadata? LastKnownNftMetadata { get; set; }
         /// <summary>
         /// index to specify up to which index CollectionNumbers has been scanned for the next free index slot. makes finding gaps more performant
         /// </summary>
@@ -81,7 +81,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// <remarks>
         /// each attribute in here is applied to at least 60% of the NFT Collection
         /// </remarks>
-        public MetadataAttribute[] LikelyAttributes { get; set; }
+        public MetadataAttribute[] LikelyAttributes = new MetadataAttribute[0];
         /// <summary>
         /// a list of all attributes. Used to suggest attributes in the attribute selector dropdown
         /// </summary>

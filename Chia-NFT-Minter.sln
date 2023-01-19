@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minter-UI", "Minter-UI\Mint
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitmapHelper_Net", "..\..\..\..\..\OneDrive\Projects\Libraries\BitmapHelper_Net\BitmapHelper_Net\BitmapHelper_Net.csproj", "{F799A84E-2339-4955-8C58-88B786FA5B9F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2F0C3455-B2A2-4A76-A0F9-CD8B0FC98B7E}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

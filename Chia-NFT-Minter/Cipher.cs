@@ -32,9 +32,11 @@ namespace Chia_NFT_Minter
             var saltStringBytes = GenerateBitsOfRandomEntropy();
             var ivStringBytes = GenerateBitsOfRandomEntropy();
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            #pragma warning disable SYSLIB0041 // Type or member is obsolete
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
+                #pragma warning disable SYSLIB0022 // Type or member is obsolete
                 using (var symmetricKey = new RijndaelManaged())
                 {
                     //symmetricKey.BlockSize = 256;
@@ -60,7 +62,9 @@ namespace Chia_NFT_Minter
                         }
                     }
                 }
+#pragma warning restore SYSLIB0022 // Type or member is obsolete
             }
+#pragma warning restore SYSLIB0041 // Type or member is obsolete
         }
         /// <summary>
         /// takes an encrypted text and a passphrase and decrypts said text
@@ -72,7 +76,7 @@ namespace Chia_NFT_Minter
         {
             if (cipherText == null)
             {
-                return null;
+                return "";
             }
             // Get the complete stream of bytes that represent:
             // [32 bytes of Salt] + [32 bytes of IV] + [n bytes of CipherText]
@@ -84,9 +88,11 @@ namespace Chia_NFT_Minter
             // Get the actual cipher text bytes by removing the first 64 bytes from the cipherText string.
             var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip((Keysize / 8) * 2).Take(cipherTextBytesWithSaltAndIv.Length - ((Keysize / 8) * 2)).ToArray();
 
+#pragma warning disable SYSLIB0041 // Type or member is obsolete
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
+#pragma warning disable SYSLIB0022 // Type or member is obsolete
                 using (var symmetricKey = new RijndaelManaged())
                 {
                     //symmetricKey.BlockSize = 256;
@@ -105,7 +111,9 @@ namespace Chia_NFT_Minter
                         }
                     }
                 }
+#pragma warning restore SYSLIB0022 // Type or member is obsolete
             }
+#pragma warning restore SYSLIB0041 // Type or member is obsolete
         }
         /// <summary>
         /// generates random data
@@ -114,11 +122,13 @@ namespace Chia_NFT_Minter
         private static byte[] GenerateBitsOfRandomEntropy()
         {
             var randomBytes = new byte[Keysize / 8]; // 32 Bytes will give us 256 bits.
+#pragma warning disable SYSLIB0023 // Type or member is obsolete
             using (var rngCsp = new RNGCryptoServiceProvider())
             {
                 // Fill the array with cryptographically secure random bytes.
                 rngCsp.GetBytes(randomBytes);
             }
+#pragma warning restore SYSLIB0023 // Type or member is obsolete
             return randomBytes;
         }
     }

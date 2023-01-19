@@ -30,7 +30,7 @@ namespace Minter_UI.UI_NS
             
             
         }
-        private FileInfo CurrentMetadataPath;
+        private FileInfo? CurrentMetadataPath;
         Queue<Attribute> AttributeReuseElements = new Queue<Attribute>();
         /// <summary>
         /// Load metadata information into the ui for editing
@@ -41,7 +41,7 @@ namespace Minter_UI.UI_NS
         {
             string nftName = Path.GetFileNameWithoutExtension(file.FullName);
             string key = nftName;
-            if (!Settings_NS.Settings.All.CaseSensitiveFileHandling)
+            if (Settings_NS.Settings.All != null && !Settings_NS.Settings.All.CaseSensitiveFileHandling)
             {
                 key = key.ToLower();
             }
@@ -267,7 +267,10 @@ namespace Minter_UI.UI_NS
             metadata.name = this.NftName_TextBox.Text;
             metadata.description = this.Description_TextBox.Text;
             metadata.minting_tool = "KryptoMine Chia-Nft-Minter";
-            metadata.sensitive_content = (bool)this.SensitiveContent_Checkbox.IsChecked;
+            if (this.SensitiveContent_Checkbox.IsChecked == null)
+                metadata.sensitive_content = false;
+            else
+                metadata.sensitive_content = (bool)this.SensitiveContent_Checkbox.IsChecked;
             metadata.attributes.Clear();
             for (int i = 1; i < this.Attributes_StackPanel.Children.Count; i++)
             {
@@ -291,7 +294,7 @@ namespace Minter_UI.UI_NS
             int updatedMetadata = 0;
             foreach (string unmintedNFT_Key in CollectionInformation.Information.MissingRPCs.Keys)
             {
-                FileInfo metadata_FileInfo;
+                FileInfo? metadata_FileInfo;
                 if (CollectionInformation.Information.MetadataFiles.TryGetValue(unmintedNFT_Key, out metadata_FileInfo))
                 {
                     Metadata metaData = IO.Load(metadata_FileInfo.FullName);

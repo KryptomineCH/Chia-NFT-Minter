@@ -35,9 +35,14 @@ namespace Minter_UI.Tasks_NS
                 MintingInProgress = true;
             }
             string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
-            if (GlobalVar.Licensed)
+            if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
             {
                 royaltyAdress = GlobalVar.PrimaryWalletAdress;
+            }
+            else 
+            {
+                MessageBox.Show($"Software not licensed, not in sync or royalty address couldnt be found{Environment.NewLine}" +
+                    $"1.9% Fees will go to KryptoMine");
             }
             while (!cancle.IsCancellationRequested && 
                 (!CollectionInformation.Information.ReadyToMint.IsEmpty || UploadNftFiles.UploadingInProgress))
@@ -56,7 +61,7 @@ namespace Minter_UI.Tasks_NS
                 if (walletBalance.wallet_balance.spendable_balance > Settings.All.MintingFee+1) 
                 {
                     // start mint task
-                    MintNft(nftToBeMinted, royaltyAdress, cancle);
+                    _ = Task.Run(() => MintNft(nftToBeMinted, royaltyAdress, cancle)).ConfigureAwait(false);
                 }
                 else if (walletBalance.wallet_balance.unconfirmed_wallet_balance != 0)
                 {
@@ -67,7 +72,7 @@ namespace Minter_UI.Tasks_NS
                         // no ongoing transactions, all transactions seem stuck!
                         await WalletApi.DeleteUnconfirmedTransactions_Async(1);
                     }
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                 }
                 else
                 {

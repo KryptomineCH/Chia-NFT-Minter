@@ -9,7 +9,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
     /// </summary>
     public static partial class CollectionInformation
     {
-        public static CollectionInformation_Object Information { get; set; }
+        public static CollectionInformation_Object Information = new CollectionInformation_Object();
         public static void ReloadAll(bool caseSensitive)
         {
             lock (IsLoadingLock)
@@ -26,7 +26,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         {
             lock (IsLoadingLock)
             {
-                if (IsLoading)
+                if (IsLoading && LoadTask != null)
                 {
                     LoadTask.Wait(); 
                     return;
@@ -36,16 +36,16 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
             CollectionInformation_Object newInfo = new CollectionInformation_Object();
             ReLoadDirectories(caseSensitive, newInfo);
             GetAttributes(newInfo);
-            Task.Run(() => GeneratePreviews(caseSensitive, newInfo));
+            _ = Task.Run(() => GeneratePreviews(caseSensitive, newInfo));
             Information = newInfo;
-            IsLoading= false;
+            IsLoading = false;
         }
         /// <summary>
         /// is used in an attempt to defy access violation exceptions in a multithreaded environment
         /// </summary>
         private static volatile bool IsLoading = false;
         private static object IsLoadingLock = new object();
-        public static Task LoadTask = null;
+        public static Task? LoadTask { get; set; }
         
     }
 }

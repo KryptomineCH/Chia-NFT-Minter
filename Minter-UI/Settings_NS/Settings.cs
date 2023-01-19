@@ -20,8 +20,11 @@ namespace Minter_UI.Settings_NS
                     string text = File.ReadAllText(SettingsFile.FullName);
                     try
                     {
-                        Settings_Object json = JsonSerializer.Deserialize<Settings_Object>(text);
-                        All = json;
+                        Settings_Object? json = JsonSerializer.Deserialize<Settings_Object>(text);
+                        if (json != null)
+                        {
+                            All = json;
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -39,7 +42,7 @@ namespace Minter_UI.Settings_NS
         }
         private static FileInfo SettingsFile = new FileInfo("settings.json");
         private static object FileLock = new object();
-        internal static Settings_Object All;
+        internal static Settings_Object All = new Settings_Object();
         internal static void Save()
         {
             lock (FileLock)

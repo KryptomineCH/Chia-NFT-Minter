@@ -12,7 +12,7 @@ namespace Minter_UI.UI_NS
     /// </summary>
     public partial class Attribute : UserControl
     {
-        public Attribute(MetadataAttribute attr = null)
+        public Attribute(MetadataAttribute? attr = null)
         {
             InitializeComponent();
             LoadAvailableAttributes();
@@ -39,10 +39,14 @@ namespace Minter_UI.UI_NS
         public void SetAttribute(MetadataAttribute attribute)
         {
             if (attribute == null) return;
-            this.TraitType_ComboBox.Text = String.Copy(attribute.trait_type.ToString());
-            this.Value_ComboBox.Text = String.Copy(attribute.@value.ToString());
-            this.MinValue_TextBox.Text = String.Copy(attribute.min_value.ToString());
-            this.MaxValue_TextBox.Text = String.Copy(attribute.max_value.ToString());
+            if (attribute.trait_type != null)
+                this.TraitType_ComboBox.Text = new String(attribute.trait_type);
+            if (attribute.@value != null)
+            this.Value_ComboBox.Text = attribute.@value.ToString();
+            if (attribute.min_value != null)
+            this.MinValue_TextBox.Text = attribute.min_value.ToString();
+            if (attribute.max_value != null)
+                this.MaxValue_TextBox.Text = attribute.max_value.ToString();
         }
         /// <summary>
         /// loads available attributes into combobox suggestions
@@ -52,7 +56,7 @@ namespace Minter_UI.UI_NS
             List<string> values = new List<string>();
             foreach(MetadataAttribute meta in CollectionInformation.Information.AllMetadataAttributes.Values)
             {
-                values.Add(String.Copy(meta.trait_type));
+                values.Add(new String(meta.trait_type));
             }
             this.TraitType_ComboBox.ItemsSource = values;
         }
@@ -111,12 +115,14 @@ namespace Minter_UI.UI_NS
         /// <param name="e"></param>
         private void TraitType_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0) return;
-            string key = String.Copy(e.AddedItems[0].ToString());
+            if (e == null || e.AddedItems == null || e.AddedItems.Count == 0) return;
+            var test = e.AddedItems[0];
+            if (test == null) return;
+            string key = new String(test.ToString());
             if (CollectionInformation.Information.AllMetadataAttributes.ContainsKey(key))
             {
-                this.MinValue_TextBox.Text = String.Copy(CollectionInformation.Information.AllMetadataAttributes[key].min_value.ToString());
-                this.MaxValue_TextBox.Text = String.Copy(CollectionInformation.Information.AllMetadataAttributes[key].max_value.ToString());
+                this.MinValue_TextBox.Text = new String(CollectionInformation.Information.AllMetadataAttributes[key].min_value.ToString());
+                this.MaxValue_TextBox.Text = new String(CollectionInformation.Information.AllMetadataAttributes[key].max_value.ToString());
                 this.Value_ComboBox.ItemsSource = CollectionInformation.Information.AllMetadataAttributeValues[key].ToArray();
             }
         }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -26,11 +27,14 @@ namespace Minter_UI.Settings_NS
             {
                 NftStorageApiKeySet_Button.Background = Brushes.LightBlue;
             }
-            this.NftCustomLink_TextBox.Text = Settings.All.CustomServerURL;
-            this.LicenseLink_TextBox.Text = Settings.All.LicenseURL;
-            this.LicenseLink2_TextBox.Text = Settings.All.LicenseURL_Backup;
-            this.CaseSensitiveFilehandling_CheckBox.IsChecked = Settings.All.CaseSensitiveFileHandling;
-            this.MintingFee_TextBox.Text = Settings.All.MintingFee.ToString();
+            if (Settings.All != null)
+            {
+                this.NftCustomLink_TextBox.Text = Settings.All.CustomServerURL;
+                this.LicenseLink_TextBox.Text = Settings.All.LicenseURL;
+                this.LicenseLink2_TextBox.Text = Settings.All.LicenseURL_Backup;
+                this.CaseSensitiveFilehandling_CheckBox.IsChecked = Settings.All.CaseSensitiveFileHandling;
+                this.MintingFee_TextBox.Text = Settings.All.MintingFee.ToString();
+            }
             // check update
             UpdateCheck();
             { }
@@ -47,7 +51,10 @@ namespace Minter_UI.Settings_NS
                 NoCache = true
             };
             HttpResponseMessage queryResult = await client.GetAsync(ReleasesURI);
-            if (!queryResult.IsSuccessStatusCode)
+            if (!queryResult.IsSuccessStatusCode ||
+                queryResult.RequestMessage == null ||
+                queryResult.RequestMessage.RequestUri == null
+                )
             {
                 this.Update_Button.Content = "Updatecheck failed, click here to check Manually...";
                 UpdateCheckSuccess = false;
@@ -62,9 +69,14 @@ namespace Minter_UI.Settings_NS
                 // extract version numbers such as 1.2.342
                 string onlineVersion_extractedString = onlineVersion_string.Split('-')[0].Remove(0,1);
                 Version onlineVersion = new Version(onlineVersion_extractedString);
-
-                string localVersion_string = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                Version localVersion = new Version(localVersion_string);
+                Version? localVersion = Assembly.GetExecutingAssembly().GetName().Version;
+                if (localVersion == null)
+                {
+                    this.Update_Button.Content = "Updatecheck failed, click here to check Manually...";
+                    UpdateCheckSuccess = false;
+                    this.Update_Button.IsEnabled = true;
+                    return;
+                }
                 if (onlineVersion.CompareTo(localVersion) > 0)
                 {
                     NewerVersionAvailable = true;
@@ -74,7 +86,7 @@ namespace Minter_UI.Settings_NS
                 }
                 else
                 {
-                    this.Update_Button.Content = $"You have the newest version: {localVersion_string}";
+                    this.Update_Button.Content = $"You have the newest version: {localVersion.ToString()}";
                     this.Update_Button.IsEnabled = false;
                     this.Update_Button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5d995d"));
                 }
@@ -85,11 +97,11 @@ namespace Minter_UI.Settings_NS
                     oldVersion.Delete();
                     if (!NewerVersionAvailable)
                     {
-                        MessageBox.Show($"Update Successful! {Environment.NewLine}New version: {localVersion_string}");
+                        MessageBox.Show($"Update Successful! {Environment.NewLine}New version: {localVersion.ToString()}");
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 this.Update_Button.Content = "Updatecheck failed, click here to check Manually...";
                 UpdateCheckSuccess = false;
@@ -106,20 +118,39 @@ namespace Minter_UI.Settings_NS
 
         private void NftCustomLinkSet_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (Settings.All == null)
+            {
+                NftCustomLink_TextBox.Text = "error";
+                MessageBox.Show("setting settings failed, Settings.All == null");
+                return;
+            }
             Settings.All.CustomServerURL = NftCustomLink_TextBox.Text.Trim();
             Settings.Save();
         }
 
         private void LicenseLinkSet_Button_Click(object sender, RoutedEventArgs e)
         {
-            Settings.All.LicenseURL = LicenseLink_TextBox.Text.Trim();
+            if (Settings.All == null)
+            {
+                LicenseLink_TextBox.Text = "error";
+                MessageBox.Show("setting settings failed, Settings.All == null");
+                return;
+            }
+                Settings.All.LicenseURL = LicenseLink_TextBox.Text.Trim();
             Settings.All.LicenseURL_Backup = LicenseLink2_TextBox.Text.Trim();
             Settings.Save();
         }
 
         private void CaseSensitiveFilehandling_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            Settings.All.CaseSensitiveFileHandling = (bool)this.CaseSensitiveFilehandling_CheckBox.IsChecked;
+            if (this.CaseSensitiveFilehandling_CheckBox.IsChecked == null)
+            {
+                Settings.All.CaseSensitiveFileHandling = false;
+            }
+            else
+            {
+                Settings.All.CaseSensitiveFileHandling = (bool)this.CaseSensitiveFilehandling_CheckBox.IsChecked;
+            }
             Settings.Save();
         }
 

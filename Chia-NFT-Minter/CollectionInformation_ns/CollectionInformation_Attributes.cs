@@ -10,7 +10,15 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
         /// </summary>
         private static void GetAttributes(CollectionInformation_Object newInfo)
         {
-            ConcurrentDictionary<string, int> attributeOcurrences = new ConcurrentDictionary<string, int>();
+            if (newInfo == null)
+            {
+                return;
+            }
+            if (newInfo.AllMetadataAttributes == null)
+            {
+                newInfo.AllMetadataAttributes = new ConcurrentDictionary<string, MetadataAttribute>();
+            }
+                    ConcurrentDictionary<string, int> attributeOcurrences = new ConcurrentDictionary<string, int>();
             foreach (FileInfo fi in newInfo.MetadataFiles.Values)
             {
                 Metadata data = IO.Load(fi.FullName);
@@ -24,6 +32,14 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                 // set attributes
                 foreach (MetadataAttribute attr in data.attributes)
                 {
+                    if (attr == null || newInfo == null)
+                    {
+                        continue;
+                    }
+                    if (attr.trait_type == null)
+                    {
+                        continue;
+                    }
                     // add attribute to all attributes dictionary
                     if (!newInfo.AllMetadataAttributes.ContainsKey(attr.trait_type))
                     {
@@ -39,16 +55,24 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                         attributeOcurrences[attr.trait_type]++;
                     }
                     // add attributeValue to attributeValues (used to propose dropdown values)
-                    if (!newInfo.AllMetadataAttributeValues.ContainsKey(attr.trait_type))
+                    if (attr.value != null)
                     {
-                        newInfo.AllMetadataAttributeValues[attr.trait_type] = new List<string> { attr.value.ToString() };
-                    }
-                    else
-                    {
-                        if (!newInfo.AllMetadataAttributeValues[attr.trait_type].Contains(attr.value.ToString()))
+                        string? val = attr.value.ToString();
+                        if (val != null && newInfo != null && newInfo.AllMetadataAttributeValues != null)
                         {
-                            newInfo.AllMetadataAttributeValues[attr.trait_type].Add(attr.value.ToString());
+                            if (!newInfo.AllMetadataAttributeValues.ContainsKey(attr.trait_type))
+                            {
+                                if (attr != null && newInfo != null && attr.value != null && attr.trait_type != null && newInfo.AllMetadataAttributeValues != null)
+                                {
+                                    newInfo.AllMetadataAttributeValues[attr.trait_type] = new List<string> { val };
+                                }
+                            }
+                            else if (attr.value != null && !newInfo.AllMetadataAttributeValues[attr.trait_type].Contains(val))
+                            {
+                                    newInfo.AllMetadataAttributeValues[attr.trait_type].Add(val);
+                            }
                         }
+                            
                     }
                 }
             }

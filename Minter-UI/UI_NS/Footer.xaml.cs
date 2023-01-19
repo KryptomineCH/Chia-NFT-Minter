@@ -27,9 +27,9 @@ namespace Minter_UI.UI_NS
         public Footer()
         {
             InitializeComponent();
-            RefreshWallets();
-            GetNftWallets();
-            ObtainStatusLoop(TimeSpan.FromSeconds(3));
+            _ = RefreshWallets();
+            _ = GetNftWallets();
+            _ = ObtainStatusLoop(TimeSpan.FromSeconds(3));
         }
         List<ulong> WalletFingerprints = new List<ulong>();
         List<string> NftWallets = new List<string>();
@@ -44,23 +44,26 @@ namespace Minter_UI.UI_NS
             // get currently logged in wallet
             LogIn_Response loggedInWallet = await WalletApi.GetLoggedInFingerprint_Async();
             // select currently logged in wallet
-            if (Settings.All.PrimaryWallet == ulong.MaxValue)
+            if (Settings.All == null || Settings.All.PrimaryWallet == null || Settings.All.PrimaryWallet == ulong.MaxValue)
             {
                 int index = WalletFingerprints.IndexOf(loggedInWallet.fingerprint);
                 this.WalletSelector_ComboBox.SelectedIndex = index;
-                Settings.All.PrimaryWallet = loggedInWallet.fingerprint;
-                Settings.Save();
+                if (Settings.All != null)
+                {
+                    Settings.All.PrimaryWallet = loggedInWallet.fingerprint;
+                    Settings.Save();
+                }
             }
-            else
+            else if (Settings.All.PrimaryWallet != null)
             {
-                int index = WalletFingerprints.IndexOf(Settings.All.PrimaryWallet);
+                int index = WalletFingerprints.IndexOf((ulong)Settings.All.PrimaryWallet);
                 this.WalletSelector_ComboBox.SelectedIndex = index;
             }
         }
 
         private void WalletSelector_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Login();
+            _ = Login();
         }
         private async Task Login()
         {
@@ -96,10 +99,10 @@ namespace Minter_UI.UI_NS
         private async Task GetNftWallets()
         {
             // get all associated Wallets
-            GetWallets_Response subWallets = WalletApi.GetWallets_Sync();
+            GetWallets_Response subWallets = await WalletApi.GetWallets_Async();
             // refresh cache
             NftWallets.Clear();
-            Wallets_info selectedWallet = null;
+            Wallets_info? selectedWallet = null;
             foreach (Wallets_info info in subWallets.wallets)
             {
                 if (info.type == WalletType.did_wallet)
@@ -143,12 +146,11 @@ namespace Minter_UI.UI_NS
                 {
                     // check which if the logged in wallet changed
                     GlobalVar.CurrentlyLoggedInWallet.Value = await WalletApi.GetLoggedInFingerprint_Async();
-                    if ((ulong)WalletSelector_ComboBox.SelectedItem == null ||
+                    if (WalletSelector_ComboBox.SelectedItem == null ||
                         GlobalVar.CurrentlyLoggedInWallet.Value.fingerprint != (ulong)WalletSelector_ComboBox.SelectedItem)
-
                     {
                         GlobalVar.FullSync = false;
-                        await GetNftWallets();
+                        GetNftWallets();
                     }
                     // obtain sync status and write it to globalvar
                     GlobalVar.SyncStatus.Value = await WalletApi.GetSyncStatus_Async();

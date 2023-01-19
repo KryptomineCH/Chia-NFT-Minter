@@ -28,9 +28,14 @@ namespace Minter_UI.UI_NS
         /// <param name="reloadDirs"></param>
         private void RefreshPreviews(bool reloadDirs = true)
         {
+            bool caseSensitive = true;
+            if (Settings.All != null)
+            {
+                caseSensitive = Settings.All.CaseSensitiveFileHandling;
+            }
             if (reloadDirs)
             {
-                CollectionInformation.ReloadAll(Settings.All.CaseSensitiveFileHandling);
+                CollectionInformation.ReloadAll(caseSensitive);
             }
             this.Preview_WrapPanel.Children.Clear();
             int previewcount = 20;
@@ -39,7 +44,7 @@ namespace Minter_UI.UI_NS
             {
                 string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
                 string key = nftName;
-                if (!Settings.All.CaseSensitiveFileHandling)
+                if (!caseSensitive)
                 {
                     key = key.ToLower();
                 }
@@ -103,8 +108,8 @@ namespace Minter_UI.UI_NS
                 Tasks_NS.MintNftFiles.MintingInProgress = true;
                 Tasks_NS.UploadNftFiles.UploadingInProgress = true;
                 CancleProcessing = new CancellationTokenSource();
-                Tasks_NS.UploadNftFiles.UploadAndGenerateRpcs_Task(CancleProcessing.Token);
-                Tasks_NS.MintNftFiles.MintNfts_Task(CancleProcessing.Token);
+                _ = Tasks_NS.UploadNftFiles.UploadAndGenerateRpcs_Task(CancleProcessing.Token);
+                _ = Tasks_NS.MintNftFiles.MintNfts_Task(CancleProcessing.Token);
                 Mint_Button.Content = "Stop!";
                 Mint_Button.Background = Brushes.Red;
             }

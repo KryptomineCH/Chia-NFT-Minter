@@ -23,8 +23,8 @@ namespace Minter_UI.UI_NS
             InitializeComponent();
             InitializeCollection();
         }
-        private FileInfo HeaderImageFile;
-        private FileInfo LogoImageFile;
+        private FileInfo? HeaderImageFile;
+        private FileInfo? LogoImageFile;
         private FileInfo CollectionInformationFile = new FileInfo(
             Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
         Metadata CollectionMetadata = new Metadata();
@@ -145,7 +145,7 @@ namespace Minter_UI.UI_NS
             bool logoNeedsToBeRefreshed = true;
             /// check if benner needs to be uploaded
             string bannerLink = CollectionMetadata.collection.GetAttribute("banner");
-            if (bannerLink != null && bannerLink != "")
+            if (bannerLink != null && bannerLink != "" && HeaderImageFile != null)
             { // validate hashsums
                 string localBannerSum = Sha256.GetSha256Sum(HeaderImageFile);
                 try
@@ -156,7 +156,7 @@ namespace Minter_UI.UI_NS
                         bannerNeedsToBeRefreshed = false;
                     }
                 }
-                catch(Exception ex)
+                catch
                 {
                     MessageBox.Show("STOP! banner link file could not be read! Is the link correct?");
                     return;
@@ -164,7 +164,7 @@ namespace Minter_UI.UI_NS
             }
             /// check if collection logo needs to be uploaded
             string logoLink = CollectionMetadata.collection.GetAttribute("icon");
-            if (logoLink != null && logoLink != "")
+            if (logoLink != null && logoLink != "" && LogoImageFile != null)
             { // validate hashsums
                 string localLogoSum = Sha256.GetSha256Sum(LogoImageFile);
                 try
@@ -175,7 +175,7 @@ namespace Minter_UI.UI_NS
                         logoNeedsToBeRefreshed = false;
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     MessageBox.Show("STOP! icon link file could not be read! Is the link correct?");
                     return;
@@ -187,7 +187,7 @@ namespace Minter_UI.UI_NS
                 MessageBox.Show("STOP: please set the NFT.Storage api key in settings first!");
                 return;
             }
-            if (bannerNeedsToBeRefreshed)
+            if (bannerNeedsToBeRefreshed && HeaderImageFile != null)
             {
                 Task<NFT_File> uploadFile = Task.Run(() => NftStorageAccount.Client.Upload(HeaderImageFile));
                 uploadFile.Wait();
@@ -208,7 +208,7 @@ namespace Minter_UI.UI_NS
                 }
                 
             }
-            if (logoNeedsToBeRefreshed)
+            if (logoNeedsToBeRefreshed && LogoImageFile != null)
             {
                 Task<NFT_File> uploadFile = Task.Run(() => NftStorageAccount.Client.Upload(LogoImageFile));
                 uploadFile.Wait();
@@ -233,7 +233,7 @@ namespace Minter_UI.UI_NS
             int updatedMetadata = 0;
             foreach(string unmintedNFT_Key in CollectionInformation.Information.MissingRPCs.Keys)
             {
-                FileInfo metadata_FileInfo;
+                FileInfo? metadata_FileInfo;
                 if (CollectionInformation.Information.MetadataFiles.TryGetValue(unmintedNFT_Key, out metadata_FileInfo))
                 {
                     Metadata metaData = IO.Load(metadata_FileInfo.FullName);
