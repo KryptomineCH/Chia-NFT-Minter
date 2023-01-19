@@ -22,7 +22,7 @@ namespace Minter_UI.UI_NS
         public CollectionInformation_Control()
         {
             InitializeComponent();
-            //InitializeCollection();
+            InitializeCollection();
         }
         private FileInfo? HeaderImageFile;
         private FileInfo? LogoImageFile;
