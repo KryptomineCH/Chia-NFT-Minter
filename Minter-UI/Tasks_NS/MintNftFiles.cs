@@ -20,6 +20,7 @@ using System.Text.Json;
 using System.Runtime;
 using System.Windows.Input;
 using System.Windows;
+using Minter_UI.CollectionInformation_ns;
 
 namespace Minter_UI.Tasks_NS
 {

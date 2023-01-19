@@ -17,7 +17,7 @@ namespace Minter_UI
             {
                 System.Diagnostics.Debugger.Launch();
             }
-#endif
+            #endif
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 Exception ex = (Exception)args.ExceptionObject;
@@ -29,6 +29,7 @@ namespace Minter_UI
                     writer.WriteLine("Stack trace: " + ex.StackTrace);
                 }
             };
+            InitializeComponent();
             // load collection information once
             bool caseSensitive = true;
             if (Settings_NS.Settings.All != null)
@@ -36,7 +37,6 @@ namespace Minter_UI
                 caseSensitive = Settings_NS.Settings.All.CaseSensitiveFileHandling;
             }
             CollectionInformation.ReloadAll(caseSensitive);
-            InitializeComponent();
         }
     }
 }

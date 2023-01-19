@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Chia_NFT_Minter.CollectionInformation_ns;
+using Minter_UI.CollectionInformation_ns;
 
 namespace Minter_UI.UI_NS
 {
@@ -21,13 +22,14 @@ namespace Minter_UI.UI_NS
         public CollectionInformation_Control()
         {
             InitializeComponent();
-            InitializeCollection();
+            //InitializeCollection();
         }
         private FileInfo? HeaderImageFile;
         private FileInfo? LogoImageFile;
         private FileInfo CollectionInformationFile = new FileInfo(
             Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
         Metadata CollectionMetadata = new Metadata();
+        
         /// <summary>
         /// adds a collection property
         /// </summary>

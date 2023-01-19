@@ -40,14 +40,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BitmapHelper_Net" Version="1.0.0" />
     <PackageReference Include="Chia-Client-API" Version="1.6.2.4" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1462.37" />
     <PackageReference Include="Multithreading_Library" Version="1.0.0" />
     <PackageReference Include="NFT.Storage.Net" Version="1.0.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Chia-NFT-Minter\Chia-NFT-Minter.csproj" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

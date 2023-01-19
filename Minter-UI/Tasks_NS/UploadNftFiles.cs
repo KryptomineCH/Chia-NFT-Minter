@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
 using System.Windows;
+using Minter_UI.CollectionInformation_ns;
 
 namespace Minter_UI.Tasks_NS
 {
