@@ -8,6 +8,9 @@ using Chia_NFT_Minter.CollectionInformation_ns;
 using Microsoft.Web.WebView2.Wpf;
 using System.Threading;
 using System.Windows.Media;
+using System.Collections.ObjectModel;
+using System.Windows.Media.Imaging;
+using CHIA_RPC.FullNode_RPC_NS;
 
 namespace Minter_UI.UI_NS
 {
@@ -18,14 +21,15 @@ namespace Minter_UI.UI_NS
     {
         public Minting_Control()
         {
+            _viewModel = new MintingPreview_ViewModel();
+            _viewModel.Items = new ObservableCollection<MintingItem>();
+            this.DataContext = _viewModel;
             InitializeComponent();
             RefreshPreviews(false);
         }
         private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
-        /// <summary>
-        /// refreshes the directories and loads all nfts which are ready for minting into the minting preview 
-        /// </summary>
-        /// <param name="reloadDirs"></param>
+        private MintingPreview_ViewModel _viewModel;
+
         private void RefreshPreviews(bool reloadDirs = true)
         {
             bool caseSensitive = true;
@@ -37,8 +41,7 @@ namespace Minter_UI.UI_NS
             {
                 CollectionInformation.ReloadAll(caseSensitive);
             }
-            this.Preview_WrapPanel.Children.Clear();
-            int previewcount = 20;
+            //this.Preview_WrapPanel.Children.Clear();
             int index = 0;
             foreach (FileInfo nftFile in CollectionInformation.Information.NftFiles.Values)
             {
@@ -52,22 +55,20 @@ namespace Minter_UI.UI_NS
                     && !CollectionInformation.Information.RpcFiles.ContainsKey(key))
                 {
                     //file to be minted
-                    WebView2 media = new WebView2();
+                    string data;
                     if (CollectionInformation.Information.NftPreviewFiles.ContainsKey(key))
                     {
-                        media.Source = new Uri(CollectionInformation.Information.NftPreviewFiles[key].FullName);
+                        data = CollectionInformation.Information.NftPreviewFiles[key].FullName;
                     }
                     else
                     {
-                        media.Source = new Uri(nftFile.FullName);
+                        data = nftFile.FullName;
                     }
-                    media.Width = 200;
-                    media.Height = 200;
-                    this.Preview_WrapPanel.Children.Add(media);
+                    this._viewModel.Items.Add(new MintingItem(data));
                     index++;
-                    if (index >= previewcount) return;
                 }
             }
+            { }
         }
         /// <summary>
         /// initiates a refresh

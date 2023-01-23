@@ -41,11 +41,13 @@
 
   <ItemGroup>
     <PackageReference Include="BitmapHelper_Net" Version="1.0.0" />
+    <PackageReference Include="CefSharp.Wpf.NETCore" Version="109.1.110" />
     <PackageReference Include="Chia-Client-API" Version="1.6.2.4" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1462.37" />
     <PackageReference Include="Multithreading_Library" Version="1.0.0" />
     <PackageReference Include="NFT.Storage.Net" Version="1.0.0.1" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="1.5.7" />
   </ItemGroup>
 
   <ItemGroup>

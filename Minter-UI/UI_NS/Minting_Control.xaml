@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Minter_UI.UI_NS"
+             xmlns:local="clr-namespace:Minter_UI.UI_NS" xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -21,12 +21,57 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0">
-            <WrapPanel x:Name="Preview_WrapPanel"></WrapPanel>
-        </ScrollViewer>
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
-            <Button x:Name="Mint_Button" Content="Mint!" Click="Mint_Button_Click" Background="#697a1f"  Foreground="#e0cf6c"></Button>
-        </StackPanel>
+        <ListView
+            Margin="0,2,0,0"
+            VirtualizingPanel.CacheLengthUnit="Page"
+            VirtualizingPanel.CacheLength="2"
+            VirtualizingPanel.ScrollUnit="Item"
+            VirtualizingPanel.VirtualizationMode="Recycling"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            ScrollViewer.CanContentScroll="True"
+            ItemsSource="{Binding Items}" 
+            Background="#111009"
+            BorderBrush="Transparent">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <controls:VirtualizingWrapPanel
+                                    Orientation="Vertical"
+                                    SpacingMode="Uniform"
+                                    StretchItems="False"
+                                    ScrollLineDelta="{Binding ScrollLineDelta, Mode=OneWay}"
+                                    MouseWheelDelta="{Binding MouseWheelDelta, Mode=OneWay}"
+                                    ScrollLineDeltaItem="{Binding ScrollLineDeltaItem, Mode=OneWay}"
+                                    MouseWheelDeltaItem="{Binding MouseWheelDeltaItem, Mode=OneWay}"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:MintingPreview_Control Data="{Binding Data}" IsMinting="{Binding IsMinting}"  IsUploading="{Binding IsUploading}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!-- Mint button footer -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <Button x:Name="Mint_Button" Content="Mint!" Click="Mint_Button_Click" Background="#697a1f"  Foreground="#e0cf6c"></Button>
+            </StackPanel>
+        </Grid>
+        
+        
     </Grid>
 </UserControl>
