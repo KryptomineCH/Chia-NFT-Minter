@@ -1,6 +1,7 @@
-﻿using CHIA_RPC.FullNode_RPC_NS;
+﻿using Minter_UI.Settings_NS;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace Minter_UI.UI_NS
@@ -25,6 +26,17 @@ namespace Minter_UI.UI_NS
             set
             {
                 _data = value;
+                string key = Path.GetFileNameWithoutExtension(Data);
+                bool caseSensitive = true;
+                if (Settings.All != null)
+                {
+                    caseSensitive = Settings.All.CaseSensitiveFileHandling;
+                }
+                if (!caseSensitive)
+                {
+                    key = key.ToLower();
+                }
+                this.Key = key;
                 OnPropertyChanged();
             }
         }
@@ -38,6 +50,16 @@ namespace Minter_UI.UI_NS
                 OnPropertyChanged();
             }
         }
+        private bool isUploaded;
+        public bool IsUploaded
+        {
+            get { return isUploaded; }
+            set
+            {
+                isUploaded = value;
+                OnPropertyChanged();
+            }
+        }
         private bool isMinting;
         public bool IsMinting
         {
@@ -48,6 +70,7 @@ namespace Minter_UI.UI_NS
                 OnPropertyChanged();
             }
         }
+        public string Key { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

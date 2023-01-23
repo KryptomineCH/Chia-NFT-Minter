@@ -1,26 +1,18 @@
 ﻿using Chia_NFT_Minter.CollectionInformation_ns;
-using Chia_NFT_Minter;
 using CHIA_RPC.Wallet_RPC_NS.NFT;
 using Minter_UI.Settings_NS;
-using NFT.Storage.Net;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Chia_Client_API.Wallet_NS.WalletAPI_NS;
 using CHIA_RPC.General;
 using CHIA_RPC.Wallet_RPC_NS.Wallet_NS;
-using System.Data;
-using System.Reflection.Metadata;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text.Json;
-using System.Runtime;
-using System.Windows.Input;
 using System.Windows;
 using Minter_UI.CollectionInformation_ns;
+using Minter_UI.UI_NS;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -28,7 +20,7 @@ namespace Minter_UI.Tasks_NS
     {
         internal static bool MintingInProgress = false;
         private static object MintingInProgressLock = new object();
-        internal static async Task MintNfts_Task(CancellationToken cancle)
+        internal static async Task MintNfts_Task(CancellationToken cancle, MintingPreview_ViewModel uiView)
         {
             lock (MintingInProgressLock)
             {
@@ -62,7 +54,7 @@ namespace Minter_UI.Tasks_NS
                 if (walletBalance.wallet_balance.spendable_balance > Settings.All.MintingFee+1) 
                 {
                     // start mint task
-                    _ = Task.Run(() => MintNft(nftToBeMinted, royaltyAdress, cancle)).ConfigureAwait(false);
+                    _ = Task.Run(() => MintNft(nftToBeMinted, royaltyAdress, cancle, uiView)).ConfigureAwait(false);
                 }
                 else if (walletBalance.wallet_balance.unconfirmed_wallet_balance != 0)
                 {
@@ -153,7 +145,11 @@ namespace Minter_UI.Tasks_NS
             }
             return stillPendingTransactions;
         }
-        private static async Task MintNft(KeyValuePair<string, FileInfo> nftToBeMinted, string royaltyAdress, CancellationToken cancel)
+        private static async Task MintNft(
+            KeyValuePair<string, FileInfo> nftToBeMinted, 
+            string royaltyAdress,
+            CancellationToken cancel, 
+            MintingPreview_ViewModel uiView)
         {
             // get nft name and identifier key
             string nftFullName = Path.GetFileNameWithoutExtension(nftToBeMinted.Value.FullName);
@@ -169,6 +165,14 @@ namespace Minter_UI.Tasks_NS
             rpc.wallet_id = GlobalVar.NftWallet_ID;
             rpc.royalty_address = royaltyAdress;
             // send mint transaction
+            foreach (MintingItem item in uiView.Items)
+            {
+                if (item.Key == key)
+                {
+                    item.IsMinting = true;
+                    break;
+                }
+            }
             NftMintNFT_Response response = await WalletApi.NftMintNft_Async(rpc);
             /// save spend bundle to validate transaction completeness
             string transactionPath = Path.Combine(Directories.PendingTransactions.FullName, nftFullName,".mint");
@@ -186,6 +190,19 @@ namespace Minter_UI.Tasks_NS
                 File.Delete(transactionPath);
                 /// remove pending transaction
                 _ = CollectionInformation.Information.PendingTransactions.Remove(key,out _);
+                MintingItem? itemToRemove = null;
+                foreach (MintingItem item in uiView.Items)
+                {
+                    if (item.Key == key)
+                    {
+                        itemToRemove = item;
+                        break;
+                    }
+                }
+                if (itemToRemove != null)
+                {
+                    uiView.Items.Remove(itemToRemove);
+                }
             }
         }
     }

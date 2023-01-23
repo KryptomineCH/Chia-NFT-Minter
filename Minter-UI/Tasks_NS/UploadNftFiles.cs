@@ -10,6 +10,7 @@ using System.Threading;
 using System.Linq;
 using System.Windows;
 using Minter_UI.CollectionInformation_ns;
+using Minter_UI.UI_NS;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -17,7 +18,7 @@ namespace Minter_UI.Tasks_NS
     {
         internal static bool UploadingInProgress = false;
         private static object UploadingInProgressLock = new object();
-        internal static async Task UploadAndGenerateRpcs_Task(CancellationToken cancle)
+        internal static async Task UploadAndGenerateRpcs_Task(CancellationToken cancle, MintingPreview_ViewModel uiView)
         {
             if (NftStorageAccount.Client == null)
             {
@@ -49,6 +50,13 @@ namespace Minter_UI.Tasks_NS
                 if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
                 {
                     // upload files
+                    foreach (MintingItem item in uiView.Items)
+                    {
+                        if (item.Key == key)
+                        {
+                            item.IsUploading = true;
+                        }
+                    }
                     /// upload nft file
                     List<string> nftlinkList = new List<string>();
                     Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nftFullName));
@@ -106,6 +114,14 @@ namespace Minter_UI.Tasks_NS
                     /// manage collection information
                     CollectionInformation.Information.MissingRPCs.Remove(nftToBeUploaded.Key, out _);
                     CollectionInformation.Information.ReadyToMint[nftToBeUploaded.Key] = nftToBeUploaded.Value;
+                    foreach (MintingItem item in uiView.Items)
+                    {
+                        if (item.Key == key)
+                        {
+                            item.IsUploading = false;
+                            item.IsUploaded = true;
+                        }
+                    }
                 }
                 else
                 { // no metadata found!

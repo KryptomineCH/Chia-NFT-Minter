@@ -53,7 +53,11 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <local:MintingPreview_Control Data="{Binding Data}" IsMinting="{Binding IsMinting}"  IsUploading="{Binding IsUploading}"/>
+                    <local:MintingPreview_Control 
+                        Data="{Binding Data}" 
+                        IsMinting="{Binding IsMinting}"  
+                        IsUploading="{Binding IsUploading}" 
+                        IsUploaded="{Binding IsUploaded}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
