@@ -151,12 +151,20 @@ namespace Minter_UI.UI_NS
                     {
                         GlobalVar.FullSync = false;
                         GetNftWallets();
+                        
                     }
                     // obtain sync status and write it to globalvar
                     GlobalVar.SyncStatus.Value = await WalletApi.GetSyncStatus_Async();
                     // update SyncStatus Label in UI
                     if (GlobalVar.SyncStatus.Value.success)
                     {
+                        GetNextAddress_RPC rpc = new GetNextAddress_RPC()
+                        {
+                            new_address = false,
+                            wallet_id = 1
+                        };
+                        GetNextAddress_Response adress = await WalletApi.GetNextAddress_Async(rpc);
+                        GlobalVar.PrimaryWalletAdress = adress.address;
                         if (GlobalVar.SyncStatus.Value.synced)
                         {
                             this.StatusLabel.Content = "Synced";
@@ -271,6 +279,7 @@ namespace Minter_UI.UI_NS
                     {
                         DidGetDid_Response didWallet = WalletApi.DidGetDid_Sync(new WalletID_RPC { wallet_id = info.id });
                         WalletID_Response id = WalletApi.NftGetByDID_Sync(new DidID_RPC() { did_id = didWallet.my_did} );
+                        GlobalVar.NftWallet_ID = id.wallet_id;
                     }
                 }
             }

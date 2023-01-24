@@ -20,11 +20,12 @@ namespace Minter_UI.UI_NS
         public Metadata_Control()
         {
             InitializeComponent();
-            if (CollectionInformation.Information.MissingMetadata.Count == 0)
+            if (CollectionInformation.Information.MissingMetadata.Count == 0 &&
+                CollectionInformation.Information.MetadataFiles.Count > 0)
             {
                 LoadNextExistingMetadata();
             }
-            else
+            else if (CollectionInformation.Information.MissingMetadata.Count > 0)
             {
                 LoadNextMissingMetadata();
             }

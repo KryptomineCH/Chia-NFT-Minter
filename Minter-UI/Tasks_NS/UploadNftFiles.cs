@@ -1,5 +1,4 @@
 ﻿using Chia_NFT_Minter.CollectionInformation_ns;
-using Chia_NFT_Minter;
 using CHIA_RPC.Wallet_RPC_NS.NFT;
 using Minter_UI.Settings_NS;
 using NFT.Storage.Net;
@@ -11,6 +10,8 @@ using System.Linq;
 using System.Windows;
 using Minter_UI.CollectionInformation_ns;
 using Minter_UI.UI_NS;
+using System.Windows.Threading;
+using System;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -18,7 +19,10 @@ namespace Minter_UI.Tasks_NS
     {
         internal static bool UploadingInProgress = false;
         private static object UploadingInProgressLock = new object();
-        internal static async Task UploadAndGenerateRpcs_Task(CancellationToken cancle, MintingPreview_ViewModel uiView)
+        internal static async Task UploadAndGenerateRpcs_Task(
+            CancellationToken cancle, 
+            MintingPreview_ViewModel uiView,
+            DispatcherObject dispatcherObject)
         {
             if (NftStorageAccount.Client == null)
             {
@@ -27,7 +31,10 @@ namespace Minter_UI.Tasks_NS
             }
             lock(UploadingInProgressLock)
             {
-                if (UploadingInProgress) return;
+                if (UploadingInProgress)
+                {
+                    return;
+                }
                 UploadingInProgress = true;
             }
             string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
@@ -39,9 +46,9 @@ namespace Minter_UI.Tasks_NS
             {
                 KeyValuePair<string, FileInfo> nftToBeUploaded = CollectionInformation.Information.MissingRPCs.First();
                 // get nft name and identifier key
-                string nftFullName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.FullName);
+                string nftFullName = nftToBeUploaded.Value.FullName;
                 string nftName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.Name);
-                string key = nftFullName;
+                string key = nftName;
                 if (Settings.All != null && !Settings.All.CaseSensitiveFileHandling)
                 {
                     key = key.ToLower();
@@ -50,17 +57,22 @@ namespace Minter_UI.Tasks_NS
                 if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
                 {
                     // upload files
-                    foreach (MintingItem item in uiView.Items)
+                    dispatcherObject.Dispatcher.Invoke(new Action(() =>
                     {
-                        if (item.Key == key)
+                        foreach (MintingItem item in uiView.Items)
                         {
-                            item.IsUploading = true;
+                            if (item.Key == key)
+                            {
+                                item.IsUploading = true;
+                                break;
+                            }
                         }
-                    }
+                    }));
                     /// upload nft file
                     List<string> nftlinkList = new List<string>();
-                    Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nftFullName));
-                    nftUploadTask.Wait(cancle);
+                    FileInfo nft = CollectionInformation.Information.NftFiles[key];
+                    Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nft.FullName));
+                    await nftUploadTask.ConfigureAwait(false); ;
                     if (cancle.IsCancellationRequested)
                     {
                         goto CancleJump;
@@ -70,7 +82,7 @@ namespace Minter_UI.Tasks_NS
                     List<string> metalinkList = new List<string>();
                     Task<NFT_File> metaUploadTask =
                         Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.Information.MetadataFiles[key]));
-                    metaUploadTask.Wait(cancle);
+                    await metaUploadTask.ConfigureAwait(false); ;
                     if (cancle.IsCancellationRequested)
                     {
                         goto CancleJump;
@@ -83,7 +95,7 @@ namespace Minter_UI.Tasks_NS
                         string customLink = Settings.All.CustomServerURL;
                         if (!customLink.EndsWith("/")) customLink += "/";
                         /// finalize custom uri
-                        nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nftName);
+                        nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nft.Name);
                         metalinkList.Add(
                             customLink + Directories.Metadata.Name + "/" + CollectionInformation.Information.MetadataFiles[key].Name);
                     }
@@ -110,18 +122,22 @@ namespace Minter_UI.Tasks_NS
                         rpc.fee = Settings.All.MintingFee;
                     }
                     /// save rpc
-                    rpc.Save(Path.Combine(Directories.Rpcs.FullName, (nftFullName + ".rpc")));
+                    rpc.Save(Path.Combine(Directories.Rpcs.FullName, (nftName + ".rpc")));
                     /// manage collection information
                     CollectionInformation.Information.MissingRPCs.Remove(nftToBeUploaded.Key, out _);
                     CollectionInformation.Information.ReadyToMint[nftToBeUploaded.Key] = nftToBeUploaded.Value;
-                    foreach (MintingItem item in uiView.Items)
+                    dispatcherObject.Dispatcher.Invoke(new Action(() =>
                     {
-                        if (item.Key == key)
+                        foreach (MintingItem item in uiView.Items)
                         {
-                            item.IsUploading = false;
-                            item.IsUploaded = true;
+                            if (item.Key == key)
+                            {
+                                item.IsUploading = false;
+                                item.IsUploaded = true;
+                                break;
+                            }
                         }
-                    }
+                    }));
                 }
                 else
                 { // no metadata found!

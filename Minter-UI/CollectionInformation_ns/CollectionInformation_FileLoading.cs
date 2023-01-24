@@ -59,7 +59,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                     newInfo.ReadyToMint[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));
                 }
             }
-            //newInfo.NftFileInfos = newInfo.NftFiles.Values.ToArray();
+            { }
         }
         /// <summary>
         /// Loads a file list from directory

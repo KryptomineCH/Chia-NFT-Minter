@@ -6,16 +6,18 @@ using System.Runtime.CompilerServices;
 
 namespace Minter_UI.UI_NS
 {
-    public class MintingItem
+    public class MintingItem : INotifyPropertyChanged
     {
         public MintingItem() { 
             IsUploading = false;
+            IsUploaded = false;
             IsMinting = false;
         }
         public MintingItem(string imageURI)
         {
             Data = imageURI;
             IsUploading = false;
+            IsUploaded = false;
             IsMinting = false;
         }
         private string _data;
