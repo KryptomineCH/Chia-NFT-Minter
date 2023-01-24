@@ -51,10 +51,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NFT.Storage.Net\NFT.Storage.Net\NFT.Storage.Net.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Resources\Application_Icon.png" />
   </ItemGroup>
 
