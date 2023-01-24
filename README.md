@@ -1,4 +1,4 @@
-<div dir="rtl"> DOWNLOAD ↗️</div> 
+<div dir="rtl"> DOWNLOAD ↗️ </div> 
 
 
 Chia-NFT-Minter is a utility to generate metadata, collection, rpcs, offerings and to bulkmint nfts
