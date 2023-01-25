@@ -58,16 +58,29 @@ namespace Minter_UI.CollectionInformation_ns
                 PendingTransactions.Attributes = FileAttributes.Hidden;
             }
         }
-        private static void HideFolders()
+        private static void HideFoldersAndFiles()
         {
             string[] hideFolderList = new[]
             {
                 "DawnCache",
                 "GPUCache"
             };
+            string[] hideFileList = new[]
+            {
+                "debug.txt",
+                "errors.txt"
+            };
             foreach (string folder in hideFolderList)
             {
                 DirectoryInfo hideThis = new DirectoryInfo(folder);
+                if (hideThis.Exists)
+                {
+                    hideThis.Attributes = FileAttributes.Hidden;
+                }
+            }
+            foreach (string file in hideFileList)
+            {
+                FileInfo hideThis = new FileInfo(file);
                 if (hideThis.Exists)
                 {
                     hideThis.Attributes = FileAttributes.Hidden;
