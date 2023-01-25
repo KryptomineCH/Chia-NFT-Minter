@@ -11,6 +11,7 @@ namespace Minter_UI.CollectionInformation_ns
         static Directories()
         {
             InitializeDirectories();
+            HideFolders();
         }
         /// <summary>
         /// this directory stores the NFT files. Eg, the artwork, image, video or document
@@ -55,6 +56,22 @@ namespace Minter_UI.CollectionInformation_ns
             {
                 PendingTransactions.Create();
                 PendingTransactions.Attributes = FileAttributes.Hidden;
+            }
+        }
+        private static void HideFolders()
+        {
+            string[] hideFolderList = new[]
+            {
+                "DawnCache",
+                "GPUCache"
+            };
+            foreach (string folder in hideFolderList)
+            {
+                DirectoryInfo hideThis = new DirectoryInfo(folder);
+                if (hideThis.Exists)
+                {
+                    hideThis.Attributes = FileAttributes.Hidden;
+                }
             }
         }
     }

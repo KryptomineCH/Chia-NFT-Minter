@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Minter_UI.UI_NS" 
-             xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="#201E11" Foreground="#998826">
     <UserControl.Resources>
@@ -24,8 +24,10 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <wpf:WebView2 x:Name="logoImageDisplay" Grid.Column="0" Grid.Row="1" DefaultBackgroundColor="Transparent"></wpf:WebView2>
-        <wpf:WebView2 x:Name="headerImageDisplay" Grid.Column="0" Grid.Row="0" DefaultBackgroundColor="Transparent"></wpf:WebView2>
+        <cef:ChromiumWebBrowser x:Name="logoImageDisplay" Grid.Column="0" Grid.Row="1" Background="Transparent">
+            </cef:ChromiumWebBrowser>
+            <cef:ChromiumWebBrowser x:Name="headerImageDisplay" Grid.Column="0" Grid.Row="0" Background="Transparent">
+                </cef:ChromiumWebBrowser>
         <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
             <Label Content="Collection Name" Foreground="#998826"></Label>
             <TextBox x:Name="CollectionName_TextBox"></TextBox>

@@ -52,7 +52,7 @@ namespace Minter_UI.UI_NS
                     (file.Extension == ".png" || file.Extension == ".jpg" || file.Extension == ".webp"
                     ))
                 {
-                    this.headerImageDisplay.Source = new System.Uri(file.FullName);
+                    this.headerImageDisplay.Address = file.FullName;
                     HeaderImageFile = file;
                 }
                 else if
@@ -60,7 +60,7 @@ namespace Minter_UI.UI_NS
                     (file.Extension == ".png" || file.Extension == ".jpg" || file.Extension == ".webp"
                     ))
                 {
-                    this.logoImageDisplay.Source = new System.Uri(file.FullName);
+                    this.logoImageDisplay.Address = file.FullName;
                     LogoImageFile = file;
                 }
             }
@@ -68,13 +68,13 @@ namespace Minter_UI.UI_NS
             {
                 File.WriteAllBytes("banner.png", Properties.Resources.missing_collection_banner);
                 HeaderImageFile = new FileInfo("banner.png");
-                this.headerImageDisplay.Source = new System.Uri(HeaderImageFile.FullName);
+                this.headerImageDisplay.Address = HeaderImageFile.FullName;
             }
             if (LogoImageFile == null)
             {
                 File.WriteAllBytes("logo.png", Properties.Resources.missing_collection_logo);
                 LogoImageFile = new FileInfo("logo.png");
-                this.logoImageDisplay.Source = new System.Uri(LogoImageFile.FullName);
+                this.logoImageDisplay.Address = LogoImageFile.FullName;
             }
             // copy existing nft metadata if no collection information file exists bot anormal info exists
             if (!CollectionInformationFile.Exists)

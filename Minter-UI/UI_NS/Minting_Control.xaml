@@ -44,11 +44,7 @@
                     <controls:VirtualizingWrapPanel
                                     Orientation="Vertical"
                                     SpacingMode="Uniform"
-                                    StretchItems="False"
-                                    ScrollLineDelta="{Binding ScrollLineDelta, Mode=OneWay}"
-                                    MouseWheelDelta="{Binding MouseWheelDelta, Mode=OneWay}"
-                                    ScrollLineDeltaItem="{Binding ScrollLineDeltaItem, Mode=OneWay}"
-                                    MouseWheelDeltaItem="{Binding MouseWheelDeltaItem, Mode=OneWay}"/>
+                                    StretchItems="False"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>

@@ -12,12 +12,14 @@ namespace Minter_UI
     {
         public MainWindow()
         {
-            #if DEBUG
+#if DEBUG && PUBLISH
             if (System.Diagnostics.Debugger.IsAttached == false)
             {
                 System.Diagnostics.Debugger.Launch();
             }
-            #endif
+
+#endif
+
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 Exception ex = (Exception)args.ExceptionObject;

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Minter-UI": {
+      "commandName": "Project",
+      "jsWebView2Debugging": false,
+      "nativeDebugging": false,
+      "sqlDebugging": false
+    }
+  }
+}

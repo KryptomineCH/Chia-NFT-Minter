@@ -3,32 +3,41 @@
   <PropertyGroup>
 	  <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
       <OutputType>WinExe</OutputType>
-      <TargetFramework>net7.0-windows</TargetFramework>
+      <TargetFramework>net6.0-windows</TargetFramework>
       <RootNamespace>Minter_UI</RootNamespace>
       <Nullable>enable</Nullable>
       <UseWPF>true</UseWPF>
       <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
       <Platforms>AnyCPU;x64</Platforms>
 	  <Deterministic>false</Deterministic>
-	  <AssemblyVersion>0.0.*</AssemblyVersion>
-	  <FileVersion>0.0.*</FileVersion>
+	  <AssemblyVersion>0.1.3</AssemblyVersion>
+	  <FileVersion>0.1.3</FileVersion>
 	  <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
+	  <AnalysisLevel>latest-all</AnalysisLevel>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <ErrorReport>prompt</ErrorReport>
+	  <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	  <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>embedded</DebugType>
+    <Optimize>False</Optimize>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>embedded</DebugType>
+    <Optimize>False</Optimize>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebugType>embedded</DebugType>
+    <Optimize>False</Optimize>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebugType>embedded</DebugType>
+    <Optimize>False</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,11 +49,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BitmapHelper_Net" Version="1.0.0" />
+    <PackageReference Include="BitmapHelper_Net" Version="1.0.1" />
+    <PackageReference Include="cef.redist.x64" Version="109.1.11" />
     <PackageReference Include="CefSharp.Wpf.NETCore" Version="109.1.110" />
-    <PackageReference Include="Chia-Client-API" Version="1.6.2.5" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1462.37" />
-    <PackageReference Include="Multithreading_Library" Version="1.0.0" />
+    <PackageReference Include="Chia-Client-API" Version="1.6.2.6" />
+    <PackageReference Include="Multithreading_Library" Version="1.0.1" />
     <PackageReference Include="NFT.Storage.Net" Version="1.0.0.1" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="VirtualizingWrapPanel" Version="1.5.7" />

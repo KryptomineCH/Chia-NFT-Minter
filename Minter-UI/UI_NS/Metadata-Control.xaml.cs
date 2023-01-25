@@ -50,11 +50,11 @@ namespace Minter_UI.UI_NS
             // load image
             if (CollectionInformation.Information.NftPreviewFiles.ContainsKey(key))
             {
-                ImageWebView.Source = new Uri(CollectionInformation.Information.NftPreviewFiles[key].FullName);
+                ImageWebView.Address = CollectionInformation.Information.NftPreviewFiles[key].FullName;
             }
             else
             {
-                ImageWebView.Source = new Uri(CollectionInformation.Information.NftFiles[key].FullName);
+                ImageWebView.Address = CollectionInformation.Information.NftFiles[key].FullName;
             }
             // load metadata
             if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))

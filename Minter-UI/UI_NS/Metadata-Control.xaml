@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Minter_UI.UI_NS" xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:local="clr-namespace:Minter_UI.UI_NS" 
+             xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -25,7 +26,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <wpf:WebView2 x:Name="ImageWebView" Grid.Column="0" Grid.Row="0" DefaultBackgroundColor="Transparent"></wpf:WebView2>
+        <cef:ChromiumWebBrowser x:Name="ImageWebView" Grid.Column="0" Grid.Row="0" Background="Transparent"></cef:ChromiumWebBrowser>
         <StackPanel Grid.Column="1" Grid.RowSpan="2">
             <Label Content="Name" Foreground="#998826"></Label>
             <TextBox x:Name="NftName_TextBox"></TextBox>
