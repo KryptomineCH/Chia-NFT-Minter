@@ -11,7 +11,7 @@ namespace Minter_UI.CollectionInformation_ns
         static Directories()
         {
             InitializeDirectories();
-            HideFolders();
+            HideFoldersAndFiles();
         }
         /// <summary>
         /// this directory stores the NFT files. Eg, the artwork, image, video or document
