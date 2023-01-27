@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using Minter_UI.Tasks_NS;
 
 namespace Minter_UI.UI_NS
 {
@@ -27,9 +28,10 @@ namespace Minter_UI.UI_NS
         private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
         internal MintingPreview_ViewModel _viewModel;
 
-        private void RefreshPreviews(bool reloadDirs = true)
+        private async void RefreshPreviews(bool reloadDirs = true)
         {
             bool caseSensitive = true;
+            await MintNftFiles.CheckPendingTransactions().ConfigureAwait(false);
             if (Settings.All != null)
             {
                 caseSensitive = Settings.All.CaseSensitiveFileHandling;

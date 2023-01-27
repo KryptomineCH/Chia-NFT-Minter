@@ -12,13 +12,16 @@ namespace Minter_UI
     {
         public MainWindow()
         {
-#if DEBUG && PUBLISH
-            if (System.Diagnostics.Debugger.IsAttached == false)
-            {
-                System.Diagnostics.Debugger.Launch();
-            }
-
-#endif
+            #if DEBUG
+            //if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioVersion"))
+            //    && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VS_VERSION_INFO")))
+            //{
+                if (System.Diagnostics.Debugger.IsAttached == false)
+                {
+                    System.Diagnostics.Debugger.Launch();
+                }
+            //}
+            #endif
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {

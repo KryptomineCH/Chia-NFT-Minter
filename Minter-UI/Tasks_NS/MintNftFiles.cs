@@ -33,6 +33,7 @@ namespace Minter_UI.Tasks_NS
             }
             try
             {
+                CheckPendingTransactions();
                 string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
                 if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
                 {
@@ -61,20 +62,15 @@ namespace Minter_UI.Tasks_NS
                     if (walletBalance.wallet_balance.spendable_balance > Settings.All.MintingFee + 1)
                     {
                         // start mint task
-                        _ = Task.Run(() => MintNft(
+                        Task mint = Task.Run(() => MintNft(
                             nftToBeMinted,
                             royaltyAdress,
                             cancle,
                             uiView,
                             dispatcherObject
-                            )).ContinueWith(t => {
-                                if (t.IsFaulted)
-                                {
-                                    // Handle exception here
-                                    MessageBox.Show($"An Error Ocurred: {t.Exception}");
-                                }
-                            }, TaskContinuationOptions.OnlyOnFaulted)
-                            .ConfigureAwait(false);
+                            ));
+                        await mint.ConfigureAwait(false);
+                        await Task.Delay(500);
                     }
                     else if (walletBalance.wallet_balance.unconfirmed_wallet_balance != 0)
                     {
@@ -99,6 +95,13 @@ namespace Minter_UI.Tasks_NS
                 }
             CancleJump:;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There has been an error while minting!" +
+                            $"{Environment.NewLine}" +
+                            $"{Environment.NewLine}" + 
+                            ex.ToString());
+            }
             finally
             {
                 lock (MintingInProgressLock)
@@ -119,7 +122,7 @@ namespace Minter_UI.Tasks_NS
         /// </summary>
         /// <param name="hoursAfterTransactionConsideredStuck">The amount of hours after which a pending transaction is considered stuck. Default is 0.25 hours.</param>
         /// <returns>The number of still pending transactions.</returns>
-        private static async Task<int> CheckPendingTransactions(double hoursAfterTransactionConsideredStuck = 0.25)
+        internal static async Task<int> CheckPendingTransactions(double hoursAfterTransactionConsideredStuck = 0.25)
         {
             FileInfo[] files = Directories.PendingTransactions.GetFiles("*.mint");
             int stillPendingTransactions = 0;
@@ -188,6 +191,7 @@ namespace Minter_UI.Tasks_NS
             NftMintNFT_RPC rpc = NftMintNFT_RPC.Load(rpcSourcePath);
             rpc.wallet_id = GlobalVar.NftWallet_ID;
             rpc.royalty_address = royaltyAdress;
+            rpc.fee = Settings.All.MintingFee;
             // send mint transaction
             dispatcherObject.Dispatcher.Invoke(new Action(() =>
             {
@@ -200,12 +204,12 @@ namespace Minter_UI.Tasks_NS
                     }
                 }
             }));
-            NftMintNFT_Response response = await WalletApi.NftMintNft_Async(rpc).ConfigureAwait(false); ;
+            NftMintNFT_Response response = await WalletApi.NftMintNft_Async(rpc).ConfigureAwait(false);
             /// save spend bundle to validate transaction completeness
             string transactionPath = Path.Combine(Directories.PendingTransactions.FullName, nftName+".mint");
             response.Save(transactionPath);
             // wait for mint to complete
-            NftGetInfo_Response nftInfo = await WalletApi.NftAwaitMintComplete_Async(response, cancel).ConfigureAwait(false);
+            NftGetInfo_Response nftInfo = await WalletApi.NftAwaitMintComplete_Async(response, cancel,refreshInterwallSeconds:30).ConfigureAwait(false);
             /// validate mint
             if (nftInfo.success)
             { /// mint was successful

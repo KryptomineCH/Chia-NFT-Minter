@@ -10,8 +10,8 @@
       <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
       <Platforms>AnyCPU;x64</Platforms>
 	  <Deterministic>false</Deterministic>
-	  <AssemblyVersion>0.1.4</AssemblyVersion>
-	  <FileVersion>0.1.4</FileVersion>
+	  <AssemblyVersion>0.2.0</AssemblyVersion>
+	  <FileVersion>0.2.0</FileVersion>
 	  <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
 	  <AnalysisLevel>latest-all</AnalysisLevel>
 	  <IncludeSymbols>True</IncludeSymbols>
@@ -52,7 +52,7 @@
     <PackageReference Include="BitmapHelper_Net" Version="1.0.1" />
     <PackageReference Include="cef.redist.x64" Version="109.1.11" />
     <PackageReference Include="CefSharp.Wpf.NETCore" Version="109.1.110" />
-    <PackageReference Include="Chia-Client-API" Version="1.6.2.6" />
+    <PackageReference Include="Chia-Client-API" Version="1.6.2.7" />
     <PackageReference Include="Multithreading_Library" Version="1.0.1" />
     <PackageReference Include="NFT.Storage.Net" Version="1.0.0.1" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
