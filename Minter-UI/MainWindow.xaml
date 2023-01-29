@@ -34,6 +34,9 @@
             <TabItem Header="Minting" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <ui:Minting_Control Background="#111009"></ui:Minting_Control>
             </TabItem>
+            <TabItem Header="Selling" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
+                <ui:Offering_Control Background="#111009"></ui:Offering_Control>
+            </TabItem>
             <TabItem Header="Settings" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <settings:Settings_Control Background="#111009"></settings:Settings_Control>
             </TabItem>

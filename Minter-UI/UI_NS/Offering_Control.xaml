@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Minter_UI.UI_NS.Offering_Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Minter_UI.UI_NS" xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/TextBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/ScrollBarStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/CheckBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/ComboBoxStyle_Dark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ListView
+            Margin="0,2,0,0"
+            VirtualizingPanel.CacheLengthUnit="Page"
+            VirtualizingPanel.CacheLength="2"
+            VirtualizingPanel.ScrollUnit="Item"
+            VirtualizingPanel.VirtualizationMode="Recycling"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            ScrollViewer.CanContentScroll="True"
+            ItemsSource="{Binding Items}" 
+            Background="#111009"
+            BorderBrush="Transparent">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <controls:VirtualizingWrapPanel
+                                    Orientation="Vertical"
+                                    SpacingMode="Uniform"
+                                    StretchItems="False"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:MintingPreview_Control 
+                        Data="{Binding Data}" 
+                        IsMinting="{Binding IsMinting}"  
+                        IsUploading="{Binding IsUploading}" 
+                        IsUploaded="{Binding IsUploaded}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!-- Mint button footer -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <Label Content="Price" Foreground="#e0cf6c"></Label>
+                <TextBox x:Name="PriceTextBox" Text="0.25" Foreground="#e0cf6c" MinWidth="2cm"></TextBox>
+                <Label Content="xch" Foreground="#e0cf6c"></Label>
+                <Button x:Name="Offer_Button" Content="Create Offers!" Click="Offer_Button_Click" Background="#697a1f"  Foreground="#e0cf6c"></Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,24 +1,25 @@
-﻿using System.IO;
+﻿using Chia_NFT_Minter.CollectionInformation_ns;
+using Minter_UI.Settings_NS;
+using Minter_UI.Tasks_NS;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Minter_UI.Settings_NS;
-using Chia_NFT_Minter.CollectionInformation_ns;
-using System.Threading;
 using System.Windows.Media;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using Minter_UI.Tasks_NS;
-using System;
+using System.Windows.Threading;
 
 namespace Minter_UI.UI_NS
 {
     /// <summary>
-    /// Interaction logic for Minting_Control.xaml
+    /// Interaction logic for Offering_Control.xaml
     /// </summary>
-    public partial class Minting_Control : UserControl
+    public partial class Offering_Control : UserControl
     {
-        public Minting_Control()
+        public Offering_Control()
         {
             _viewModel = new MintingPreview_ViewModel();
             _viewModel.Items = new ObservableCollection<MintingItem>();
@@ -26,9 +27,8 @@ namespace Minter_UI.UI_NS
             InitializeComponent();
             RefreshPreviews(false);
         }
-        private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
         internal MintingPreview_ViewModel _viewModel;
-
+        private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
         private async void RefreshPreviews(bool reloadDirs = true)
         {
             bool caseSensitive = true;
@@ -45,10 +45,11 @@ namespace Minter_UI.UI_NS
             {
                 this._viewModel.Items.Clear();
             }));
+            
             //return;
             List<FileInfo> additions = new List<FileInfo>();
-            additions.AddRange(CollectionInformation.Information.ReadyToMint.Values);
-            additions.AddRange(CollectionInformation.Information.MissingRPCs.Values);
+            additions.AddRange(CollectionInformation.Information.ReadyToOffer.Values);
+            additions.AddRange(CollectionInformation.Information.OfferedFiles.Values);
             foreach (FileInfo nftFile in additions)
             {
                 string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
@@ -69,22 +70,17 @@ namespace Minter_UI.UI_NS
                     data = CollectionInformation.Information.NftFiles[key].FullName;
                 }
                 MintingItem item = new MintingItem(data);
-                if (CollectionInformation.Information.RpcFiles.ContainsKey(key)
-                    && !CollectionInformation.Information.PendingTransactions.ContainsKey(key))
+                if (CollectionInformation.Information.OfferedFiles.ContainsKey(key))
                 {
                     item.IsUploaded = true;
                 }
-                else if (CollectionInformation.Information.PendingTransactions.ContainsKey(key))
-                {
-                    item.IsMinting = true;
-                }
-
                 this.Dispatcher.Invoke(new Action(() =>
                 {
                     this._viewModel.Items.Add(item);
                 }));
+                
+                { }
             }
-            { }
         }
         /// <summary>
         /// initiates a refresh
@@ -103,40 +99,32 @@ namespace Minter_UI.UI_NS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void Mint_Button_Click(object sender, RoutedEventArgs e)
+        private async void Offer_Button_Click(object sender, RoutedEventArgs e)
         {
             if (Tasks_NS.MintNftFiles.MintingInProgress || Tasks_NS.UploadNftFiles.UploadingInProgress)
             {
-                Mint_Button.IsEnabled = false;
-                Mint_Button.Content = "Stopping";
+                Offer_Button.IsEnabled = false;
+                Offer_Button.Content = "Stopping";
                 CancleProcessing.Cancel();
-                Mint_Button.Background = Brushes.DarkKhaki;
+                Offer_Button.Background = Brushes.DarkKhaki;
                 return;
             }
             else
             {
                 CancleProcessing = new CancellationTokenSource();
-                _ = Tasks_NS.UploadNftFiles.UploadAndGenerateRpcs_Task(
-                    CancleProcessing.Token, 
+                _ = Tasks_NS.CreateNftOffers.OfferNfts_Task(
+                    CancleProcessing.Token,
                     _viewModel,
                     this).ContinueWith(t => {
                         if (t.IsFaulted)
                         {
                             // Handle exception here
-                            MessageBox.Show($"An exception occurred: {t.Exception}");
+                            _ = MessageBox.Show($"An exception occurred: {t.Exception}");
                         }
                     }, TaskContinuationOptions.OnlyOnFaulted)
                             .ConfigureAwait(false);
-                _ = Tasks_NS.MintNftFiles.MintNfts_Task(CancleProcessing.Token, _viewModel, this).ContinueWith(t => {
-                    if (t.IsFaulted)
-                    {
-                        // Handle exception here
-                        MessageBox.Show($"An exception occurred: {t.Exception}");
-                    }
-                }, TaskContinuationOptions.OnlyOnFaulted)
-                            .ConfigureAwait(false);
-                Mint_Button.Content = "Stop!";
-                Mint_Button.Background = Brushes.Red;
+                Offer_Button.Content = "Stop!";
+                Offer_Button.Background = Brushes.Red;
                 await UpdateButtonAfterStartingTasks();
             }
         }
@@ -147,9 +135,9 @@ namespace Minter_UI.UI_NS
                 await Task.Delay(1000);
             }
 
-            Mint_Button.Content = "Mint!";
-            Mint_Button.Background = new SolidColorBrush(ColorHelper.ColorConverter.FromHex("#697a1f"));
-            Mint_Button.IsEnabled = true;
+            Offer_Button.Content = "Mint!";
+            Offer_Button.Background = new SolidColorBrush(ColorHelper.ColorConverter.FromHex("#697a1f"));
+            Offer_Button.IsEnabled = true;
         }
     }
 }
