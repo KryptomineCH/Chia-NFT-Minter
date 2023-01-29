@@ -71,7 +71,5 @@
                 <Button x:Name="Mint_Button" Content="Mint!" Click="Mint_Button_Click" Background="#697a1f"  Foreground="#e0cf6c"></Button>
             </StackPanel>
         </Grid>
-        
-        
     </Grid>
 </UserControl>
