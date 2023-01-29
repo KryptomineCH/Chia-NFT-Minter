@@ -10,6 +10,7 @@
             LicenseURL = "https://bafkreicc3peq64kpclsssu344iroadtsvbloo7ofbkzdyyrqhybhvmblve.ipfs.nftstorage.link/";
             LicenseURL_Backup = "https://nft.kryptomine.ch/Kryptomine.ch_NFT_CreativeCommons_Attribution_License.pdf";
             PrimaryWallet = ulong.MaxValue;
+            OfferingPrice = (decimal)0.25;
         }
         // Metadata
         public string? CustomServerURL { get; set; }
@@ -20,5 +21,7 @@
         public ulong? PrimaryWallet { get; set; }
         public string? DidWallet { get; set; }
         public ulong MintingFee { get; set; }
+        // Offering
+        public decimal OfferingPrice { get; set; }
     }
 }
