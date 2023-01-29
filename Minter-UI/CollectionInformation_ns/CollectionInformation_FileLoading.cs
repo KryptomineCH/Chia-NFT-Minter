@@ -60,10 +60,10 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                     string caseSensitiveFileName = Path.GetFileNameWithoutExtension(newInfo.NftFiles[key].FullName) + ".rpc";
                     newInfo.ReadyToMint[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));
                 }
+                /// gather nfts which are minted already but not offered
                 else if (newInfo.MintedFiles.ContainsKey(key) && !newInfo.OfferedFiles.ContainsKey(key))
                 {
-                    string caseSensitiveFileName = Path.GetFileNameWithoutExtension(newInfo.NftFiles[key].FullName) + ".offer";
-                    newInfo.ReadyToMint[key] = new FileInfo(Path.Combine(Directories.Metadata.FullName, caseSensitiveFileName));
+                    newInfo.ReadyToOffer[key] = newInfo.MintedFiles[key];
                 }
             }
             { }
