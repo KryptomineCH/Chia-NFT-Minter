@@ -54,6 +54,18 @@ namespace Minter_UI.Tasks_NS
                     // save offer file
                     string nftName = Path.GetFileNameWithoutExtension(nftToBeOffered_File.Value.Name);
                     string key = nftName;
+                    // update ui
+                    dispatcherObject.Dispatcher.Invoke(new Action(() =>
+                    {
+                        foreach (MintingItem item in uiView.Items)
+                        {
+                            if (item.Key == key)
+                            {
+                                item.IsUploading = true;
+                                break;
+                            }
+                        }
+                    }));
                     if (!Settings.All.CaseSensitiveFileHandling)
                     {
                         key = key.ToLower();
@@ -62,6 +74,19 @@ namespace Minter_UI.Tasks_NS
                     offer.Save(offerFilePath.FullName);
                     /// add successful mint to collection information
                     CollectionInformation.Information.OfferedFiles[key] = offerFilePath;
+                    // update ui
+                    dispatcherObject.Dispatcher.Invoke(new Action(() =>
+                    {
+                        foreach (MintingItem item in uiView.Items)
+                        {
+                            if (item.Key == key)
+                            {
+                                item.IsUploading = false;
+                                item.IsUploaded = true;
+                                break;
+                            }
+                        }
+                    }));
                 }
             }
             catch (Exception ex)
