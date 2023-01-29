@@ -36,7 +36,7 @@ namespace Minter_UI.CollectionInformation_ns
         /// <summary>
         /// the offers directory can be used to store offer files
         /// </summary>
-        public static DirectoryInfo Offers = new DirectoryInfo("offers");
+        public static DirectoryInfo Offered = new DirectoryInfo("offers");
         /// <summary>
         /// 
         /// </summary>
@@ -50,7 +50,7 @@ namespace Minter_UI.CollectionInformation_ns
             if (!Preview.Exists) Preview.Create();
             if (!Metadata.Exists) Metadata.Create();
             if (!Rpcs.Exists) Rpcs.Create();
-            if (!Offers.Exists) Offers.Create();
+            if (!Offered.Exists) Offered.Create();
             if (!Minted.Exists) Minted.Create();
             if (!PendingTransactions.Exists)
             {

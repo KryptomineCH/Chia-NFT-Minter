@@ -22,7 +22,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
             Directories.Rpcs.Refresh();
             Directories.Metadata.Refresh();
             Directories.Minted.Refresh();
-            Directories.Offers.Refresh();
+            Directories.Offered.Refresh();
             // load base directories
             /// nft base files (images, documents, ...)
             newInfo.NftFiles = LoadDirectory(dirInfo: Directories.Nfts, caseSensitive: caseSensitive);
@@ -37,7 +37,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
             newInfo.PendingTransactions = LoadDirectory(dirInfo: Directories.PendingTransactions, caseSensitive: caseSensitive, fileTypes: new[] { ".mint" }, mustBeContainedWithin: newInfo.NftFiles);
             /// finished nfts
             newInfo.MintedFiles = LoadDirectory(dirInfo: Directories.Minted, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc",".nft" }, mustBeContainedWithin: newInfo.NftFiles);
-            newInfo.OfferedFiles = LoadDirectory(dirInfo: Directories.Minted, caseSensitive: caseSensitive, fileTypes: new[] { ".offer",".json", ".rpc", ".nft" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.OfferedFiles = LoadDirectory(dirInfo: Directories.Offered, caseSensitive: caseSensitive, fileTypes: new[] { ".offer",".json", ".rpc", ".nft" }, mustBeContainedWithin: newInfo.NftFiles);
             // generate arbitrary information which can be calculated using the base directories.
             // eg: nft has metadata information, but no rpc and mint has not been validated -> ready to mint
             foreach (string key in newInfo.NftFiles.Keys)
