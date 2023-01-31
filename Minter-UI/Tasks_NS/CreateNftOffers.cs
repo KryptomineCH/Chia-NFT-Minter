@@ -70,7 +70,7 @@ namespace Minter_UI.Tasks_NS
                     {
                         key = key.ToLower();
                     }
-                    FileInfo offerFilePath = new FileInfo(Path.Combine(Directories.Offers.FullName, nftName + ".offer"));
+                    FileInfo offerFilePath = new FileInfo(Path.Combine(Directories.Offered.FullName, nftName + ".offer"));
                     offer.Save(offerFilePath.FullName);
                     /// add successful mint to collection information
                     CollectionInformation.Information.OfferedFiles[key] = offerFilePath;
