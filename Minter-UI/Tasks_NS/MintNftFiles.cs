@@ -33,7 +33,7 @@ namespace Minter_UI.Tasks_NS
             }
             try
             {
-                CheckPendingTransactions();
+                CheckPendingTransactions(cancle);
                 string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
                 if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
                 {
@@ -44,13 +44,12 @@ namespace Minter_UI.Tasks_NS
                     MessageBox.Show($"Software not licensed, not in sync or royalty address couldnt be found{Environment.NewLine}" +
                         $"1.9% Fees will go to KryptoMine");
                 }
-                while (!cancle.IsCancellationRequested &&
-                    (!CollectionInformation.Information.ReadyToMint.IsEmpty || UploadNftFiles.UploadingInProgress))
+                while (!cancle.IsCancellationRequested)
                 {
                     // if there are no nfts to be minted, wait for more
                     if (CollectionInformation.Information.ReadyToMint.IsEmpty)
                     {
-                        await Task.Delay(1000).ConfigureAwait(false);
+                        await Task.Delay(2000, cancle).ConfigureAwait(false);
                         continue;
                     }
                     // get nft to be minted
@@ -70,18 +69,18 @@ namespace Minter_UI.Tasks_NS
                             dispatcherObject
                             ));
                         await mint.ConfigureAwait(false);
-                        await Task.Delay(500);
+                        await Task.Delay(500, cancle).ConfigureAwait(false);
                     }
                     else if (walletBalance.wallet_balance.unconfirmed_wallet_balance != 0)
                     {
                         // there seem to be transactions ongoing which block cash
-                        int ongoingTransactions = await CheckPendingTransactions();
+                        int ongoingTransactions = await CheckPendingTransactions(cancle).ConfigureAwait(false);
                         if (ongoingTransactions == 0)
                         {
                             // no ongoing transactions, all transactions seem stuck!
-                            await WalletApi.DeleteUnconfirmedTransactions_Async(1);
+                            await WalletApi.DeleteUnconfirmedTransactions_Async(1).ConfigureAwait(false);
                         }
-                        await Task.Delay(1000).ConfigureAwait(false);
+                        await Task.Delay(1000, cancle).ConfigureAwait(false);
                     }
                     else
                     {
@@ -122,12 +121,13 @@ namespace Minter_UI.Tasks_NS
         /// </summary>
         /// <param name="hoursAfterTransactionConsideredStuck">The amount of hours after which a pending transaction is considered stuck. Default is 0.25 hours.</param>
         /// <returns>The number of still pending transactions.</returns>
-        internal static async Task<int> CheckPendingTransactions(double hoursAfterTransactionConsideredStuck = 0.25)
+        internal static async Task<int> CheckPendingTransactions(CancellationToken cancle, double hoursAfterTransactionConsideredStuck = 0.25)
         {
             FileInfo[] files = Directories.PendingTransactions.GetFiles("*.mint");
             int stillPendingTransactions = 0;
             foreach (FileInfo file in files)
             {
+                if (cancle.IsCancellationRequested) return -1;
                 // load spend bundle
                 NftMintNFT_Response spendBundle = NftMintNFT_Response.Load(file.FullName);
                 // check if nft was minted
