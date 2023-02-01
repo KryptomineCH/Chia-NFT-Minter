@@ -176,7 +176,7 @@ namespace Minter_UI.Settings_NS
             }
             if (NewerVersionAvailable)
             {
-                MessageBox.Show("the download might take a while depending on your connection speed!");
+                MessageBox.Show("The download might take a while depending on your connection speed!");
                 // download file
                 byte[] fileData = NFT.Storage.Net.API.DownloadClient.DownloadSync(DownloadURI);
                 // rename old exe
