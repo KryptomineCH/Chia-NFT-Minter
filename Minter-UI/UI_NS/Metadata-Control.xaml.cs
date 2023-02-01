@@ -285,10 +285,13 @@ namespace Minter_UI.UI_NS
             }
             metadata.Save(CurrentMetadataPath.FullName);
             // update collection information
-            //if (CollectionInformation.Information.MissingMetadata.ContainsKey())
+            if (CollectionInformation.Information.MissingMetadata.ContainsKey(key))
+            {
+                CollectionInformation.Information.MissingMetadata.Remove(key, out _);
+            }
             if (!CollectionInformation.Information.MetadataFiles.ContainsKey(key))
             {
-                CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
+                CollectionInformation.Information.MetadataFiles[key] = new FileInfo(CurrentMetadataPath.FullName);
             }
         }
 
