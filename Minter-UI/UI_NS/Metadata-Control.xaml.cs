@@ -245,6 +245,11 @@ namespace Minter_UI.UI_NS
             }
             // pre check
             string nftName = Path.GetFileNameWithoutExtension(CurrentMetadataPath.FullName);
+            string key = nftName;
+            if (!Settings_NS.Settings.All.CaseSensitiveFileHandling)
+            {
+                key = key.ToLower();
+            }
             if (CollectionInformation.Information.RpcFiles.ContainsKey(nftName))
             {
                 // nft is potentially minted!
@@ -253,7 +258,7 @@ namespace Minter_UI.UI_NS
             }
             // load collection information
             Metadata metadata = IO.Load(Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
-            // get / loand series number
+            // get / load series number
             if (CollectionInformation.Information.MetadataFiles.ContainsKey(nftName))
             {
                 // load seriesnumber from existing metadata
@@ -279,6 +284,8 @@ namespace Minter_UI.UI_NS
                 metadata.attributes.Add(((Attribute)this.Attributes_StackPanel.Children[i]).GetAttribute());
             }
             metadata.Save(CurrentMetadataPath.FullName);
+            // update collection information
+            //if (CollectionInformation.Information.MissingMetadata.ContainsKey())
             if (!CollectionInformation.Information.MetadataFiles.ContainsKey(nftName))
             {
                 CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
