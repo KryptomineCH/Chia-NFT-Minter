@@ -276,6 +276,7 @@ namespace Minter_UI.UI_NS
             else
                 metadata.sensitive_content = (bool)this.SensitiveContent_Checkbox.IsChecked;
             metadata.attributes.Clear();
+            // add attributes to metadata
             for (int i = 1; i < this.Attributes_StackPanel.Children.Count; i++)
             {
                 MetadataAttribute attribute = ((Attribute)this.Attributes_StackPanel.Children[i]).GetAttribute();
