@@ -1,6 +1,4 @@
 ﻿using Chia_Metadata;
-using Chia_Metadata_CHIP_0007_std;
-using Chia_NFT_Minter;
 using Chia_NFT_Minter.CollectionInformation_ns;
 using Minter_UI.CollectionInformation_ns;
 using System;
