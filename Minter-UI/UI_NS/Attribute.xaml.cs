@@ -2,6 +2,7 @@
 using Chia_NFT_Minter.CollectionInformation_ns;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,8 +13,10 @@ namespace Minter_UI.UI_NS
     /// </summary>
     public partial class Attribute : UserControl
     {
-        public Attribute(MetadataAttribute? attr = null)
+        public Attribute(SelectedAttributes usedAttributes, MetadataAttribute? attr = null)
         {
+            _usedAttributes = usedAttributes;
+            _usedAttributes.AttributelistChanged += (s, e) => LoadAvailableAttributes();
             InitializeComponent();
             LoadAvailableAttributes();
             if (attr != null)
@@ -21,6 +24,7 @@ namespace Minter_UI.UI_NS
                 SetAttribute(attr);
             }
         }
+        SelectedAttributes _usedAttributes = new SelectedAttributes();
         public MetadataAttribute GetAttribute()
         {
             MetadataAttribute attribute = new MetadataAttribute(this.TraitType_ComboBox.Text, this.Value_ComboBox.Text);
@@ -53,12 +57,34 @@ namespace Minter_UI.UI_NS
         /// </summary>
         private void LoadAvailableAttributes()
         {
+            if (TraitType_ComboBox == null)
+            {
+                return;
+            }
+            string customText = "";
+            string selectedItem = "";
+            customText= TraitType_ComboBox.Text;
+            if (TraitType_ComboBox.SelectedItem != null)
+            {
+                selectedItem = (string)TraitType_ComboBox.SelectedItem;
+            }
+           
             List<string> values = new List<string>();
             foreach(MetadataAttribute meta in CollectionInformation.Information.AllMetadataAttributes.Values)
             {
-                values.Add(new String(meta.trait_type));
+                if (!_usedAttributes.ContainsAttribute(meta.trait_type) ||
+                    ( meta.trait_type == selectedItem || (meta.trait_type == customText && selectedItem == "")))
+                {
+                    values.Add(new String(meta.trait_type));
+                }
             }
             this.TraitType_ComboBox.ItemsSource = values;
+
+            TraitType_ComboBox.Text = customText;
+            if (TraitType_ComboBox.Items.Contains(selectedItem))
+            {
+                TraitType_ComboBox.SelectedItem = selectedItem;
+            }
         }
         /// <summary>
         /// removes this attribute from the parent's collection (usually stackpanel or wrappanel)
@@ -71,6 +97,8 @@ namespace Minter_UI.UI_NS
         }
         public void Delete()
         {
+            _usedAttributes.AttributelistChanged -= (s, e) => LoadAvailableAttributes();
+            _usedAttributes.RemoveAttribute(this.TraitType_ComboBox.Text);
             // unregister events
             this.TraitType_ComboBox.SelectionChanged -= this.TraitType_ComboBox_SelectionChanged;
             this.Delete_Button.Click -= this.Delete_Button_Click;
@@ -124,6 +152,49 @@ namespace Minter_UI.UI_NS
                 this.MinValue_TextBox.Text = new String(CollectionInformation.Information.AllMetadataAttributes[key].min_value.ToString());
                 this.MaxValue_TextBox.Text = new String(CollectionInformation.Information.AllMetadataAttributes[key].max_value.ToString());
                 this.Value_ComboBox.ItemsSource = CollectionInformation.Information.AllMetadataAttributeValues[key].ToArray();
+            }
+            if (key != _previousValue)
+            {
+                _usedAttributes.RemoveAttribute(_previousValue);
+                _usedAttributes.AddAttribute(key);
+                _previousValue = key;
+            }
+        }
+        private string _previousValue = "";
+    }
+    public class SelectedAttributes
+    {
+        private  Dictionary<string, int> _selectedAttributes = new Dictionary<string, int>();
+        public event EventHandler AttributelistChanged;
+
+        public  bool ContainsAttribute(string attribute)
+        {
+            return _selectedAttributes.ContainsKey(attribute);
+        }
+
+        public  void AddAttribute(string attribute)
+        {
+            if (_selectedAttributes.ContainsKey(attribute))
+            {
+                _selectedAttributes[attribute]++;
+            }
+            else
+            {
+                _selectedAttributes.Add(attribute, 1);
+                AttributelistChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public  void RemoveAttribute(string attribute)
+        {
+            if (_selectedAttributes.ContainsKey(attribute))
+            {
+                _selectedAttributes[attribute]--;
+                if (_selectedAttributes[attribute] <= 0)
+                {
+                    _selectedAttributes.Remove(attribute);
+                    AttributelistChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
     }

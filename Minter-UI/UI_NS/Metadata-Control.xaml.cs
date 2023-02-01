@@ -37,7 +37,7 @@ namespace Minter_UI.UI_NS
         /// <summary>
         ///  the key specifies the attribute name. int defines how often it is beeeing used
         /// </summary>
-        Dictionary<string, int> UsedAttributes = new Dictionary<string, int>();
+        SelectedAttributes UsedAttributes = new SelectedAttributes();
         /// <summary>
         /// Load metadata information into the ui for editing
         /// </summary>
@@ -92,7 +92,7 @@ namespace Minter_UI.UI_NS
                     }
                     else
                     {
-                        this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                        this.Attributes_StackPanel.Children.Add(new Attribute(UsedAttributes, attribute));
                     }
                 }
             }
@@ -109,7 +109,7 @@ namespace Minter_UI.UI_NS
                     }
                     else
                     {
-                        this.Attributes_StackPanel.Children.Add(new Attribute(attribute));
+                        this.Attributes_StackPanel.Children.Add(new Attribute(UsedAttributes));
                     }
                 }
             }
@@ -195,7 +195,7 @@ namespace Minter_UI.UI_NS
         /// <param name="e"></param>
         private void Attributes_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Attributes_StackPanel.Children.Add(new Attribute());
+            this.Attributes_StackPanel.Children.Add(new Attribute(UsedAttributes));
         }
 
         private void PreviousExisting_Button_Click(object sender, RoutedEventArgs e)
@@ -327,4 +327,5 @@ namespace Minter_UI.UI_NS
             }
         }
     }
+    
 }

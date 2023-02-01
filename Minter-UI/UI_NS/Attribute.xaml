@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:Minter_UI.UI_NS"
              mc:Ignorable="d" 
              d:DesignHeight="110" d:DesignWidth="200" Padding="0.1cm, 0.1cm, 0, 0">
@@ -38,7 +39,6 @@
                     <TextBox x:Name="MinValue_TextBox" Grid.Row="1" Grid.Column="0"></TextBox>
                     <TextBox x:Name="MaxValue_TextBox" Grid.Row="1" Grid.Column="1"></TextBox>
                 </Grid>
-
             </StackPanel>
         </Border>
         <Button x:Name="Delete_Button" Content="X" 
