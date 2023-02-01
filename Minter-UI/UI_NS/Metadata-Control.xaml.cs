@@ -189,7 +189,7 @@ namespace Minter_UI.UI_NS
         private int ExistingNFTIndex = -1;
         private int MissingNFTIndex = -1;
         /// <summary>
-        /// adds a ner attribute to the attributes stack panel
+        /// adds a new attribute to the attributes stack panel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
