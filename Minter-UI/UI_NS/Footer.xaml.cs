@@ -9,11 +9,13 @@ using CHIA_RPC.Wallet_RPC_NS.WalletManagement_NS;
 using Minter_UI.Settings_NS;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -96,7 +98,7 @@ namespace Minter_UI.UI_NS
         /// it then propagates all nft wallets with a did 
         /// </summary>
         /// <returns></returns>
-        private async Task GetNftWallets()
+        private async Task GetNftWallets(bool fullSync = false)
         {
             // get all associated Wallets
             GetWallets_Response subWallets = await WalletApi.GetWallets_Async();
@@ -113,6 +115,11 @@ namespace Minter_UI.UI_NS
                         selectedWallet = info;
                     }
                 }
+            }
+            if (NftWallets.Count <= 0)
+            {
+                MessageBox.Show($"Warning, you do not have a digital identity yet! {Environment.NewLine}" +
+                    $"Please create a profile in the settings of the chia client. This will automatically create a digital identity for you.");
             }
             // update selector combobox
             NftWalletSelector_ComboBox.ItemsSource = NftWallets;
@@ -173,6 +180,7 @@ namespace Minter_UI.UI_NS
                             {
                                 // first full sync of the wallet! You may want to check subwallets
                                 GlobalVar.FullSync = true;
+                                GetNftWallets(fullSync: true);
                             }
                             LicenseCheck();
                         }
