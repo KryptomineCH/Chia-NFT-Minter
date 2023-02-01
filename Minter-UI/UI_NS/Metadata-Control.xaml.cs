@@ -250,7 +250,7 @@ namespace Minter_UI.UI_NS
             {
                 key = key.ToLower();
             }
-            if (CollectionInformation.Information.RpcFiles.ContainsKey(nftName))
+            if (CollectionInformation.Information.RpcFiles.ContainsKey(key))
             {
                 // nft is potentially minted!
                 MessageBox.Show($"STOP: RPC for this nft was found! {Environment.NewLine} The nft is likely minted! {Environment.NewLine} If you wish to overwrite the information, please delete {nftName}.rpc and press refresh");
@@ -259,7 +259,7 @@ namespace Minter_UI.UI_NS
             // load collection information
             Metadata metadata = IO.Load(Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
             // get / load series number
-            if (CollectionInformation.Information.MetadataFiles.ContainsKey(nftName))
+            if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
             {
                 // load seriesnumber from existing metadata
                 Metadata oldMetadata = IO.Load(CurrentMetadataPath.FullName);
@@ -286,7 +286,7 @@ namespace Minter_UI.UI_NS
             metadata.Save(CurrentMetadataPath.FullName);
             // update collection information
             //if (CollectionInformation.Information.MissingMetadata.ContainsKey())
-            if (!CollectionInformation.Information.MetadataFiles.ContainsKey(nftName))
+            if (!CollectionInformation.Information.MetadataFiles.ContainsKey(key))
             {
                 CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
             }
