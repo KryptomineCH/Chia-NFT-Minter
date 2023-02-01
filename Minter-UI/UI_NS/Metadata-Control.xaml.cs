@@ -226,11 +226,6 @@ namespace Minter_UI.UI_NS
 
         private void NextMissing_Button_Click(object sender, RoutedEventArgs e)
         {
-            //while(true)
-            //{
-            //    LoadNextMissingMetadata();
-            //    Task.Delay(200).Wait();
-            //}
             LoadNextMissingMetadata();
         }
 
