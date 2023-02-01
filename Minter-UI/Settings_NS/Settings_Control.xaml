@@ -68,5 +68,6 @@
                 Click="MintingFeeSet_Button_Click"></Button>
         <Label Content="Update" Grid.Row="12" Grid.Column="0" Foreground="#998826"></Label>
         <Button x:Name="Update_Button" Content="Update check pending..." Grid.Row="13" Click="Update_Button_Click"></Button>
+        <ProgressBar x:Name="Update_Progressbar" Grid.Row="14" Background="Black"></ProgressBar>
     </Grid>
 </UserControl>

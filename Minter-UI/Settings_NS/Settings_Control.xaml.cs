@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Minter_UI.Tasks_NS;
+using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -180,16 +182,22 @@ namespace Minter_UI.Settings_NS
                 // download file
                 byte[] fileData = NFT.Storage.Net.API.DownloadClient.DownloadSync(DownloadURI);
                 // rename old exe
-                File.Move("Minter-UI.exe", "Minter-UI-old.exe");
-                // write new exe
-                File.WriteAllBytes("Minter-UI.exe", fileData);
-                // start updated app
-                Process updatedApp = new Process();
-                updatedApp.StartInfo.FileName = "Minter-UI.exe";
-                updatedApp.Start();
-                // stop current process
-                Environment.Exit(0);
             }
+        }
+        internal void UpdateProgress(object sender, ProgressChangedEventArgs e)
+        {
+            Update_Progressbar.IsIndeterminate = false;
+            Update_Progressbar.Value = e.ProgressPercentage;
+            BackgroundWorker worker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            worker.DoWork += Update.DownloadUpdate;
+            worker.ProgressChanged += UpdateProgress;
+            worker.RunWorkerCompleted += Update.UpdateCompleted;
+            Update_Progressbar.IsIndeterminate = true;
+            worker.RunWorkerAsync(DownloadURI);
         }
     }
 }
