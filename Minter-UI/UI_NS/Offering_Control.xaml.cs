@@ -111,7 +111,20 @@ namespace Minter_UI.UI_NS
             }
             else
             {
+                // Cancle task on app close
                 CancleProcessing = new CancellationTokenSource();
+                AppDomain.CurrentDomain.ProcessExit += (sender, args) => {
+                    CancleProcessing.Cancel();
+                    CancleProcessing.Dispose();
+                };
+                // cancle task on app crash
+                AppDomain.CurrentDomain.UnhandledException += (sender, args) => {
+                    if (args.IsTerminating)
+                    {
+                        CancleProcessing.Cancel();
+                        CancleProcessing.Dispose();
+                    }
+                };
                 _ = Tasks_NS.CreateNftOffers.OfferNfts_Task(
                     CancleProcessing.Token,
                     _viewModel,

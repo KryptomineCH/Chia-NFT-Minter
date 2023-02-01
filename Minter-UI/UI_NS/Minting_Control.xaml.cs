@@ -116,6 +116,19 @@ namespace Minter_UI.UI_NS
             else
             {
                 CancleProcessing = new CancellationTokenSource();
+                // cancle task on app close
+                AppDomain.CurrentDomain.ProcessExit += (sender, args) => {
+                    CancleProcessing.Cancel();
+                    CancleProcessing.Dispose();
+                };
+                // cancle task on app crash
+                AppDomain.CurrentDomain.UnhandledException += (sender, args) => {
+                    if (args.IsTerminating)
+                    {
+                        CancleProcessing.Cancel();
+                        CancleProcessing.Dispose();
+                    }
+                };
                 _ = Tasks_NS.UploadNftFiles.UploadAndGenerateRpcs_Task(
                     CancleProcessing.Token, 
                     _viewModel,
