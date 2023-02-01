@@ -35,6 +35,10 @@ namespace Minter_UI.UI_NS
         private FileInfo? CurrentMetadataPath;
         Queue<Attribute> AttributeReuseElements = new Queue<Attribute>();
         /// <summary>
+        ///  the key specifies the attribute name. int defines how often it is beeeing used
+        /// </summary>
+        Dictionary<string, int> UsedAttributes = new Dictionary<string, int>();
+        /// <summary>
         /// Load metadata information into the ui for editing
         /// </summary>
         /// <param name="file"></param>
@@ -189,7 +193,7 @@ namespace Minter_UI.UI_NS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PrimarySubject_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
+        private void Attributes_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
         {
             this.Attributes_StackPanel.Children.Add(new Attribute());
         }
