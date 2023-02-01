@@ -278,7 +278,18 @@ namespace Minter_UI.UI_NS
             metadata.attributes.Clear();
             for (int i = 1; i < this.Attributes_StackPanel.Children.Count; i++)
             {
-                metadata.attributes.Add(((Attribute)this.Attributes_StackPanel.Children[i]).GetAttribute());
+                MetadataAttribute attribute = ((Attribute)this.Attributes_StackPanel.Children[i]).GetAttribute();
+                metadata.attributes.Add(attribute);
+                // update metadata suggestions
+                if ( !CollectionInformation.Information.AllMetadataAttributes.ContainsKey(attribute.trait_type))
+                {
+                    CollectionInformation.Information.AllMetadataAttributes[attribute.trait_type] = attribute;
+                    CollectionInformation.Information.AllMetadataAttributeValues[attribute.trait_type] = new List<string>();
+                }
+                if (CollectionInformation.Information.AllMetadataAttributeValues[attribute.trait_type].Contains(attribute.value))
+                {
+                    CollectionInformation.Information.AllMetadataAttributeValues[attribute.trait_type].Add((string)attribute.value);
+                }
             }
             metadata.Save(CurrentMetadataPath.FullName);
             // update collection information
