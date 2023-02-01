@@ -38,12 +38,18 @@ namespace Minter_UI.Tasks_NS
                 UploadingInProgress = true;
             }
             string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
-            if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
+            while(!cancle.IsCancellationRequested)
             {
-                royaltyAdress = GlobalVar.PrimaryWalletAdress;
-            }
-            while(!cancle.IsCancellationRequested && !CollectionInformation.Information.MissingRPCs.IsEmpty)
-            {
+                // if there are no nfts to be offer, wait for more
+                if (CollectionInformation.Information.MissingRPCs.IsEmpty)
+                {
+                    await Task.Delay(2000, cancle).ConfigureAwait(false);
+                    continue;
+                }
+                if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
+                {
+                    royaltyAdress = GlobalVar.PrimaryWalletAdress;
+                }
                 KeyValuePair<string, FileInfo> nftToBeUploaded = CollectionInformation.Information.MissingRPCs.First();
                 // get nft name and identifier key
                 string nftFullName = nftToBeUploaded.Value.FullName;
