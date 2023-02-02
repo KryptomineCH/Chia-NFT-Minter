@@ -10,8 +10,8 @@
       <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
       <Platforms>AnyCPU;x64</Platforms>
 	  <Deterministic>false</Deterministic>
-	  <AssemblyVersion>0.2.1</AssemblyVersion>
-	  <FileVersion>0.2.1</FileVersion>
+	  <AssemblyVersion>0.2.2</AssemblyVersion>
+	  <FileVersion>0.2.2</FileVersion>
 	  <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
 	  <AnalysisLevel>latest-all</AnalysisLevel>
 	  <IncludeSymbols>True</IncludeSymbols>
@@ -26,7 +26,9 @@
 - fix case sensitive file handling in metadata editor
 - performance improvement for large collections: implemented collection information lazy update for metadata editing
 - added a soft metadata attribute duplicate protection which can be overridden by typing the attrubute name manually
-- metadata attributes which are suggested in the drop-down now only include names which are not attached yet.</PackageReleaseNotes>
+- metadata attributes which are suggested in the drop-down now only include names which are not attached yet.
+- added update progress bar
+- fixed ui freeze when updating</PackageReleaseNotes>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -63,13 +65,9 @@
     <PackageReference Include="CefSharp.Wpf.NETCore" Version="109.1.110" />
     <PackageReference Include="Chia-Client-API" Version="1.6.2.10" />
     <PackageReference Include="Multithreading_Library" Version="1.0.1" />
-    <PackageReference Include="NFT.Storage.Net" Version="1.0.0.1" />
+    <PackageReference Include="NFT.Storage.Net" Version="1.0.1" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="VirtualizingWrapPanel" Version="1.5.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\NFT.Storage.Net\NFT.Storage.Net\NFT.Storage.Net.csproj" />
   </ItemGroup>
 
   <ItemGroup>

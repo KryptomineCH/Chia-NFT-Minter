@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -10,9 +11,12 @@ namespace Minter_UI.Tasks_NS
         internal static void DownloadUpdate(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = (BackgroundWorker)sender;
-            var progress = new Progress<double>(p => worker.ReportProgress((int)(p * 100)));
             string uri = (string)e.Argument;
-            e.Result = NFT.Storage.Net.API.DownloadClient.DownloadAsync(uri, progress).Result;
+            var progress = new Progress<float>(p =>
+            {
+                worker.ReportProgress((int)(p * 100));
+            });
+            e.Result = NFT.Storage.Net.API.DownloadClient.DownloadAsync(uri, (IProgress<float>) progress).Result;
         }
 
         internal static void UpdateCompleted(object sender, RunWorkerCompletedEventArgs e)

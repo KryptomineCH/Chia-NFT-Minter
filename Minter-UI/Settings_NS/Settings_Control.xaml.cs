@@ -178,26 +178,21 @@ namespace Minter_UI.Settings_NS
             }
             if (NewerVersionAvailable)
             {
-                MessageBox.Show("The download might take a while depending on your connection speed!");
                 // download file
-                byte[] fileData = NFT.Storage.Net.API.DownloadClient.DownloadSync(DownloadURI);
-                // rename old exe
+                BackgroundWorker worker = new BackgroundWorker
+                {
+                    WorkerReportsProgress = true,
+                    WorkerSupportsCancellation = true
+                };
+                worker.DoWork += Update.DownloadUpdate;
+                worker.ProgressChanged += UpdateProgress;
+                worker.RunWorkerCompleted += Update.UpdateCompleted;
+                worker.RunWorkerAsync(DownloadURI);
             }
         }
-        internal void UpdateProgress(object sender, ProgressChangedEventArgs e)
+        private void UpdateProgress(object sender, ProgressChangedEventArgs e)
         {
-            Update_Progressbar.IsIndeterminate = false;
             Update_Progressbar.Value = e.ProgressPercentage;
-            BackgroundWorker worker = new BackgroundWorker
-            {
-                WorkerReportsProgress = true,
-                WorkerSupportsCancellation = true
-            };
-            worker.DoWork += Update.DownloadUpdate;
-            worker.ProgressChanged += UpdateProgress;
-            worker.RunWorkerCompleted += Update.UpdateCompleted;
-            Update_Progressbar.IsIndeterminate = true;
-            worker.RunWorkerAsync(DownloadURI);
         }
     }
 }
