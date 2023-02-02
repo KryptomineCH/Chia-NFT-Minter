@@ -28,7 +28,10 @@
 - added a soft metadata attribute duplicate protection which can be overridden by typing the attrubute name manually
 - metadata attributes which are suggested in the drop-down now only include names which are not attached yet.
 - added update progress bar
-- fixed ui freeze when updating</PackageReleaseNotes>
+- fixed ui freeze when updating
+- added progress bar for auto update
+- removed info message that update may take long
+- fixed ui freeze while updating</PackageReleaseNotes>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
