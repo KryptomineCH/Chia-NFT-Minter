@@ -1,6 +1,5 @@
 ﻿using Chia_Metadata;
 using Chia_Metadata_CHIP_0007_std;
-using Chia_NFT_Minter;
 using NFT.Storage.Net;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Chia_NFT_Minter.CollectionInformation_ns;
 using Minter_UI.CollectionInformation_ns;
+using Microsoft.Win32;
 
 namespace Minter_UI.UI_NS
 {
@@ -277,5 +277,77 @@ namespace Minter_UI.UI_NS
             }
         }
         private bool LastIntParseTest = true;
+
+        private void LogoImageChange_Button_Click(object sender, RoutedEventArgs e)
+        {
+            // let user choose file
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Collection Logo (*.png, *.jpg)|*.png;*.jpg";
+            fileDialog.FilterIndex = 1;
+            fileDialog.Multiselect = false;
+
+            if (fileDialog.ShowDialog() == true)
+            {
+                // Get the selected file's path
+                FileInfo newlogo = new FileInfo(fileDialog.FileName);
+
+                if (LogoImageFile != null)
+                {
+                    // get new filename
+                    string filename = Path.GetFileNameWithoutExtension(LogoImageFile.Name);
+                    filename += newlogo.Extension;
+                    FileInfo newLogoFile = new FileInfo(filename);
+                    LogoImageFile.Refresh();
+                    if (LogoImageFile.Exists)
+                    {
+                        LogoImageFile.Delete();
+                        newlogo.CopyTo(newLogoFile.FullName);
+                        LogoImageFile = newLogoFile;
+                        this.logoImageDisplay.Address = newLogoFile.FullName;
+                    }
+                    else
+                    {
+                        newLogoFile.CopyTo(newLogoFile.FullName);
+                        LogoImageFile = newLogoFile;
+                        this.logoImageDisplay.Address = newLogoFile.FullName;
+                    }
+                }
+            }
+        }
+
+        private void BannerImageChange_Button_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Collection Banner (*.png, *.jpg)|*.png;*.jpg";
+            fileDialog.FilterIndex = 1;
+
+            if (fileDialog.ShowDialog() == true)
+            {
+                // Get the selected file's path
+                FileInfo newBannerSelected = new FileInfo(fileDialog.FileName);
+
+                if (HeaderImageFile != null)
+                {
+                    // get new filename
+                    string filename = Path.GetFileNameWithoutExtension(HeaderImageFile.Name);
+                    filename += newBannerSelected.Extension;
+                    FileInfo newbannerImage = new FileInfo(filename);
+                    HeaderImageFile.Refresh();
+                    if (HeaderImageFile.Exists)
+                    {
+                        HeaderImageFile.Delete();
+                        newBannerSelected.CopyTo(newbannerImage.FullName);
+                        HeaderImageFile = newbannerImage;
+                        this.headerImageDisplay.Address = newbannerImage.FullName;
+                    }
+                    else
+                    {
+                        newBannerSelected.CopyTo(newbannerImage.FullName);
+                        HeaderImageFile = newbannerImage;
+                        this.headerImageDisplay.Address = newbannerImage.FullName;
+                    }
+                }
+            }
+        }
     }
 }

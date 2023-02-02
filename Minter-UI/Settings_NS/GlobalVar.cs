@@ -1,6 +1,7 @@
 ﻿using CHIA_RPC.Wallet_RPC_NS.KeyManagement;
 using CHIA_RPC.Wallet_RPC_NS.WalletNode_NS;
 using Multithreading_Library.DataTransfer;
+using System.Windows.Media;
 
 namespace Minter_UI
 {

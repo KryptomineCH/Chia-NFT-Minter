@@ -10,7 +10,7 @@
         xmlns:ui1="clr-namespace:Minter_UI.Settings_NS" 
         xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
-        Title="KryptoMine NftMinter" Height="450" Width="800" Icon="/Resources/Application_Icon.png" Background="#201E11">
+        Title="KryptoMine NftMinter" Height="650" Width="1100" Icon="/Resources/Application_Icon.png" Background="#201E11">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

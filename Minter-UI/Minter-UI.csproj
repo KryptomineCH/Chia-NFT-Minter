@@ -56,6 +56,8 @@
 
   <ItemGroup>
     <None Remove="Resources\Application_Icon.png" />
+    <None Remove="Resources\ChangeImageIcon.png" />
+    <None Remove="Resources\ChangeImageIcon_mouseover.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,7 +65,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BitmapHelper_Net" Version="1.0.1" />
+    <Resource Include="Resources\ChangeImageIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BitmapHelper_Net" Version="1.0.2" />
     <PackageReference Include="cef.redist.x64" Version="109.1.11" />
     <PackageReference Include="CefSharp.Wpf.NETCore" Version="109.1.110" />
     <PackageReference Include="Chia-Client-API" Version="1.6.2.10" />
@@ -74,7 +80,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\OneDrive\Projects\Libraries\BitmapHelper_Net\BitmapHelper_Net\BitmapHelper_Net.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\Application_Icon.png" />
+    <Resource Include="Resources\ChangeImageIcon_mouseover.png" />
   </ItemGroup>
 
   <ItemGroup>

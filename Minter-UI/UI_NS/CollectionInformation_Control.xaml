@@ -24,10 +24,51 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <cef:ChromiumWebBrowser x:Name="logoImageDisplay" Grid.Column="0" Grid.Row="1" Background="Transparent">
-            </cef:ChromiumWebBrowser>
-            <cef:ChromiumWebBrowser x:Name="headerImageDisplay" Grid.Column="0" Grid.Row="0" Background="Transparent">
-                </cef:ChromiumWebBrowser>
+        <cef:ChromiumWebBrowser x:Name="logoImageDisplay" Grid.Column="0" Grid.Row="0" Background="Transparent"/>
+
+        <Button x:Name="LogoImageChange_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0"
+                Panel.ZIndex="2" Click="LogoImageChange_Button_Click"
+                Background="Transparent" BorderBrush="Transparent" Margin="0.5cm,0.5cm">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter Content="{TemplateBinding Content}" />
+                </ControlTemplate>
+            </Button.Template>
+            <Image Width="1cm" Height="1cm" Panel.ZIndex="2">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Source" Value="pack://application:,,,/Resources/ChangeImageIcon.png"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Source" Value="pack://application:,,,/Resources/ChangeImageIcon_mouseover.png"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Button>
+        <cef:ChromiumWebBrowser x:Name="headerImageDisplay" Grid.Column="0" Grid.Row="1" Background="Transparent" />
+        <Button x:Name="BannerImageChange_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1"
+                Panel.ZIndex="2" Click="BannerImageChange_Button_Click" 
+                Background="Transparent" BorderBrush="Transparent" Margin="0.5cm,0.5cm">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter Content="{TemplateBinding Content}" />
+                </ControlTemplate>
+            </Button.Template>
+            <Image Width="1cm" Height="1cm" Panel.ZIndex="2">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Source" Value="pack://application:,,,/Resources/ChangeImageIcon.png"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Source" Value="pack://application:,,,/Resources/ChangeImageIcon_mouseover.png"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Button>
         <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
             <Label Content="Collection Name" Foreground="#998826"></Label>
             <TextBox x:Name="CollectionName_TextBox"></TextBox>
@@ -43,9 +84,63 @@
                 <Label Content="Series Total" Grid.Column="1" Foreground="#998826"></Label>
                 <TextBox x:Name="SeriesTotal_TextBox" Text="10000" TextChanged="SeriesTotal_TextBox_TextChanged"></TextBox>
             </Grid>
-            <Button x:Name="CollectionAttributes_AddButton" Content="Add Attribute" Background="#5d995d" Click="CollectionAttributes_AddButton_Click"></Button>
+            <Button x:Name="CollectionAttributes_AddButton" Content="Add Attribute"
+                     BorderBrush="Transparent" Margin="0.1cm"
+                    Click="CollectionAttributes_AddButton_Click">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="4"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#5d995d"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <StackPanel x:Name="CollectionAttributes_StackPanel" Orientation="Vertical"></StackPanel>
-            <Button x:Name="SaveCollection_Button" Content="Save" Background="#697a1f" Click="SaveCollection_Button_Click"></Button>
+            <Button x:Name="SaveCollection_Button" Content="Save" 
+                    BorderBrush="Transparent" Margin="0.1cm"
+                    Click="SaveCollection_Button_Click">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="4"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#697a1f"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>
