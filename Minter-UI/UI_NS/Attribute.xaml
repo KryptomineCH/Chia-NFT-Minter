@@ -10,8 +10,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                   Source="Styles/ComboBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/ComboBoxStyle_Dark.xaml"/>
                 <ResourceDictionary Source="Styles/TextBoxStyle_Dark.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -36,8 +35,8 @@
                     </Grid.RowDefinitions>
                     <Label Content="Min" Grid.Column="0" Foreground="#e0cf6c"></Label>
                     <Label Content="Max" Grid.Column="1" Foreground="#e0cf6c"></Label>
-                    <TextBox x:Name="MinValue_TextBox" Grid.Row="1" Grid.Column="0"></TextBox>
-                    <TextBox x:Name="MaxValue_TextBox" Grid.Row="1" Grid.Column="1"></TextBox>
+                    <TextBox x:Name="MinValue_TextBox" Grid.Row="1" Grid.Column="0" TextChanged="MinValue_TextBox_TextChanged"></TextBox>
+                    <TextBox x:Name="MaxValue_TextBox" Grid.Row="1" Grid.Column="1" TextChanged="MaxValue_TextBox_TextChanged"></TextBox>
                 </Grid>
             </StackPanel>
         </Border>

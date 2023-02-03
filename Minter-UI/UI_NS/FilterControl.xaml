@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="Minter_UI.UI_NS.FilterControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Minter_UI.UI_NS"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/TextBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/ScrollBarStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/CheckBoxStyle_Dark.xaml"/>
+                <ResourceDictionary Source="Styles/ComboBoxStyle_Dark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <WrapPanel Grid.Row="0">
+            <Button x:Name="Refresh_Button" Content="Refresh" BorderBrush="Black" Background="#697a1f" Click="Refresh_Button_Click"/>
+            <Label Content="Name" Foreground="#998826"></Label>
+            <TextBox x:Name="Namefilter_TextBox" Foreground="#998826" TextChanged="Namefilter_TextBox_TextChanged"></TextBox>
+            <CheckBox x:Name="All_CheckBox" Content="All" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="All_CheckBox_Checked"></CheckBox>
+            <CheckBox x:Name="ExistingMetadata_CheckBox" Content="With Metadata" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="ExistingMetadata_CheckBox_Checked"></CheckBox>
+            <CheckBox x:Name="Uploaded_CheckBox" Content="Uploaded" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="Uploaded_CheckBox_Checked"></CheckBox>
+            <CheckBox x:Name="PendingMint_CheckBox" Content="Pending Mint" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="PendingMint_CheckBox_Checked"></CheckBox>
+            <CheckBox x:Name="Minted_CheckBox" Content="Minted" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="Minted_CheckBox_Checked"></CheckBox>
+            <CheckBox x:Name="Offered_CheckBox" Content="Offered" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="Offered_CheckBox_Checked"></CheckBox>
+        </WrapPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <WrapPanel Grid.Column="0">
+                <Label Content="Included Attributes" Foreground="#998826"></Label>
+                <WrapPanel x:Name="IncludedAttributes_WrapPanel" Grid.Row="1" Orientation="Horizontal">
+                    <Button x:Name="IncludedAttributes_TagTanel_AddButton" Content="+" Background="#5d995d" Click="IncludedAttributes_TagTanel_AddButton_Click"></Button>
+                </WrapPanel>
+            </WrapPanel>
+            <WrapPanel Grid.Column="1">
+                <Label Content="Excluded Attributes" Foreground="#998826"></Label>
+                <WrapPanel x:Name="ExcludedAttributes_WrapPanel" Grid.Row="1" Orientation="Horizontal">
+                    <Button x:Name="ExcludedAttributes_TagTanel_AddButton" Content="+" Background="#CF6679" Click="ExcludedAttributes_TagTanel_AddButton_Click"></Button>
+                </WrapPanel>
+            </WrapPanel>
+        </Grid>
+        <ProgressBar x:Name="Filter_ProgressBar" Grid.Row="2"></ProgressBar>
+    </Grid>
+</UserControl>

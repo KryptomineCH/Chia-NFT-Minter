@@ -18,20 +18,8 @@
 	  <ErrorReport>prompt</ErrorReport>
 	  <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	  <PublishTrimmed>false</PublishTrimmed>
-	  <PackageReleaseNotes>- added notification that a Digital Identity needs to be created if the wallet does not have a did
-- mint nft files will now run until the stop button is pressed.
-- added bettesr cancellation request for minting process
-- uploading will now run until cancellation is requested.
-- improved handling when app is beeng closed or crashes (infinite tasks should now stop)
-- fix case sensitive file handling in metadata editor
-- performance improvement for large collections: implemented collection information lazy update for metadata editing
-- added a soft metadata attribute duplicate protection which can be overridden by typing the attrubute name manually
-- metadata attributes which are suggested in the drop-down now only include names which are not attached yet.
-- added update progress bar
-- fixed ui freeze when updating
-- added progress bar for auto update
-- removed info message that update may take long
-- fixed ui freeze while updating</PackageReleaseNotes>
+	  <PackageReleaseNotes>- added import buttons
+- reworked window design</PackageReleaseNotes>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

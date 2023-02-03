@@ -85,6 +85,7 @@ namespace Minter_UI.UI_NS
             {
                 TraitType_ComboBox.SelectedItem = selectedItem;
             }
+            OnAttributeChanged(EventArgs.Empty);
         }
         /// <summary>
         /// removes this attribute from the parent's collection (usually stackpanel or wrappanel)
@@ -159,8 +160,44 @@ namespace Minter_UI.UI_NS
                 _usedAttributes.AddAttribute(key);
                 _previousValue = key;
             }
+            OnAttributeChanged(EventArgs.Empty);
         }
         private string _previousValue = "";
+        private void MinValue_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            OnAttributeChanged(EventArgs.Empty);
+        }
+
+        private void MaxValue_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            OnAttributeChanged(EventArgs.Empty);
+        }
+
+        public delegate void EventHandler(object sender, EventArgs e);
+
+        public event EventHandler AttributeChanged;
+
+        public void UnsubscribeFromParentControl()
+        {
+            if (this.Parent is IParentControl parentControl)
+            {
+                parentControl.AttributeChanged -= ParentControl_AttributeChanged;
+            }
+        }
+
+        private void ParentControl_AttributeChanged(object sender, EventArgs e)
+        {
+            // Event handling code
+        }
+        protected void OnAttributeChanged(EventArgs e)
+        {
+            if (AttributeChanged != null)
+            {
+                AttributeChanged(this, e);
+            }
+        }
+
+        
     }
     public class SelectedAttributes
     {
@@ -197,5 +234,10 @@ namespace Minter_UI.UI_NS
                 }
             }
         }
+    }
+    // Parent control interface
+    public interface IParentControl
+    {
+        event EventHandler AttributeChanged;
     }
 }
