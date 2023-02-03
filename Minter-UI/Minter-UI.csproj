@@ -58,6 +58,8 @@
     <None Remove="Resources\Application_Icon.png" />
     <None Remove="Resources\ChangeImageIcon.png" />
     <None Remove="Resources\ChangeImageIcon_mouseover.png" />
+    <None Remove="Resources\import_Icon.png" />
+    <None Remove="Resources\import_Icon_mouseover.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -86,6 +88,8 @@
   <ItemGroup>
     <Resource Include="Resources\Application_Icon.png" />
     <Resource Include="Resources\ChangeImageIcon_mouseover.png" />
+    <Resource Include="Resources\import_Icon.png" />
+    <Resource Include="Resources\import_Icon_mouseover.png" />
   </ItemGroup>
 
   <ItemGroup>
