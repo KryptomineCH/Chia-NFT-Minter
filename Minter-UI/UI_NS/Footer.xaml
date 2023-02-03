@@ -24,8 +24,34 @@
             <ComboBox x:Name="NftWalletSelector_ComboBox" Foreground="White" SelectionChanged="NftWalletSelector_ComboBox_SelectionChanged"></ComboBox>
             <Label Content="License"  Foreground="White"></Label>
             <Label x:Name="License_Label" Content="Unverified" Foreground="LightGray"></Label>
-            <Button x:Name="ObtainLicense_Button" Content="Obtain License" 
-                    BorderBrush="Black" Background="#697a1f" Foreground="DarkBlue" Click="ObtainLicense_Button_Click"></Button>
+            <Button x:Name="ObtainLicense_Button" Content=" Obtain License " Margin="0.1cm"
+                    BorderBrush="Black" Foreground="DarkBlue"  
+                    Click="ObtainLicense_Button_Click">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="4"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#697a1f"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Label Content="Status: " Foreground="white"></Label>
             <Label x:Name="StatusLabel" Content="Initializing" Foreground="LightGray"></Label>
         </StackPanel>

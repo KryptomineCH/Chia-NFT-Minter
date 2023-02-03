@@ -1,5 +1,6 @@
 ﻿using Chia_Metadata;
 using Chia_NFT_Minter.CollectionInformation_ns;
+using Microsoft.Win32;
 using Minter_UI.CollectionInformation_ns;
 using System;
 using System.Collections.Generic;
@@ -331,6 +332,96 @@ namespace Minter_UI.UI_NS
                     $"The software assumes they are already minted.");
             }
         }
+        private void ImportMedia_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Collection Files (img, vid, doc, meta, mint, rpc)|*";
+            fileDialog.FilterIndex = 1;
+            fileDialog.Multiselect = true;
+            if (Settings_NS.Settings.All.LastImportPath != null && Directory.Exists(Settings_NS.Settings.All.LastImportPath))
+            {
+                fileDialog.InitialDirectory = Settings_NS.Settings.All.LastImportPath;
+            }
+
+            if (fileDialog.ShowDialog() == true)
+            {
+                string[] filePaths = fileDialog.FileNames;
+                // Get the selected file's path
+                List<FileInfo> filesToImport = new List<FileInfo>();
+                // Merge File and directory infos
+                foreach (string filePath in filePaths)
+                {
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        FileInfo file = new FileInfo(filePath);
+                        if (file.Attributes.HasFlag(FileAttributes.Hidden))
+                        {
+                            continue;
+                        }
+                        filesToImport.Add(file);
+                    }
+                    else if (System.IO.Directory.Exists(filePath))
+                    {
+                        DirectoryInfo di = new DirectoryInfo(filePath);
+                        FileInfo[] files = di.GetFiles("*.*", SearchOption.AllDirectories)
+                        .Where(f => (f.Attributes & FileAttributes.Hidden) == 0)
+                        .ToArray();
+                    }
+                }
+                // save directory path for next opening
+                if (filesToImport.Count > 0)
+                {
+                    Settings_NS.Settings.All.LastImportPath = filesToImport[0].Directory.FullName;
+                    Settings_NS.Settings.Save();
+                }
+                // import Files
+                foreach (FileInfo file in filesToImport)
+                {
+                    string type = file.Extension;
+                    if (file.Extension == null || file.Extension == "")
+                    {
+                        continue;
+                    }
+                    else if (file.Extension == ".nft")
+                    {
+                        file.CopyTo(Path.Combine(Directories.Minted.FullName, file.Name), overwrite: true);
+                    }
+                    else if (file.Extension == ".mint")
+                    {
+                        file.CopyTo(Path.Combine(Directories.PendingTransactions.FullName, file.Name), overwrite: true);
+                    }
+                    else if (file.Extension == ".offer")
+                    {
+                        file.CopyTo(Path.Combine(Directories.Offered.FullName, file.Name), overwrite: true);
+                    }
+                    else if (file.Extension == ".rpc")
+                    {
+                        file.CopyTo(Path.Combine(Directories.Rpcs.FullName, file.Name), overwrite: true);
+                    }
+                    else if (file.Extension == ".metadata" || file.Name == "CollectionInfo.json")
+                    {
+                        file.CopyTo(Path.Combine(Directories.Metadata.FullName, file.Name), overwrite: true);
+                    }
+                    else if (file.Extension == ".json")
+                    {
+                        try
+                        {
+                            Metadata test = Chia_Metadata.IO.Load(file.FullName);
+                            file.CopyTo(Path.Combine(Directories.Metadata.FullName, file.Name), overwrite: true);
+                        }
+                        catch
+                        {
+                            MessageBox.Show($"the file {file.Name} could not be imported! It does not seem to be a valid metadata file!");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        file.CopyTo(Path.Combine(Directories.Nfts.FullName, file.Name), overwrite: true);
+                    }
+                }
+            }
+        }
     }
-    
 }

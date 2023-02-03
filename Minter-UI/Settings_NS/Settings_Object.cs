@@ -23,5 +23,6 @@
         public ulong MintingFee { get; set; }
         // Offering
         public decimal OfferingPrice { get; set; }
+        public string LastImportPath { get; set; }
     }
 }

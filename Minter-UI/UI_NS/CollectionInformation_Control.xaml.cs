@@ -320,6 +320,7 @@ namespace Minter_UI.UI_NS
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Filter = "Collection Banner (*.png, *.jpg)|*.png;*.jpg";
             fileDialog.FilterIndex = 1;
+            fileDialog.Multiselect = false;
 
             if (fileDialog.ShowDialog() == true)
             {

@@ -29,7 +29,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
             /// metadata files
             newInfo.MetadataFiles = LoadDirectory(
                 dirInfo: Directories.Metadata, caseSensitive: caseSensitive, 
-                fileTypes: new[] { ".json"},fileNameFilter: new[] { "CollectionInfo.json" }, mustBeContainedWithin: newInfo.NftFiles
+                fileTypes: new[] { ".json",".metadata"},fileNameFilter: new[] { "CollectionInfo.json" }, mustBeContainedWithin: newInfo.NftFiles
                 );
             /// rpc files (uploaded to nft.storage)
             newInfo.RpcFiles = LoadDirectory(dirInfo: Directories.Rpcs, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc" }, mustBeContainedWithin: newInfo.NftFiles);

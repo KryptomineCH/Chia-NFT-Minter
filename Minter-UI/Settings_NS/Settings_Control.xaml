@@ -41,20 +41,93 @@
         <Label Content="NFT.Storage Api Key" Grid.Row="0" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="NftStorageApiKey_TextBox" Grid.Row="1" Grid.Column="0"></TextBox>
         <Button x:Name="NftStorageApiKeySet_Button" Content="Set" Grid.Row="1" Grid.Column="1" 
-                Background="#697a1f"
-                Click="NftStorageApiKeySet_Button_Click"></Button>
+                Click="NftStorageApiKeySet_Button_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Button.Resources>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#697a1f"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Green"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
         <Label Content="nft collection custom web base address" Grid.Row="2" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="NftCustomLink_TextBox" Grid.Row="3" Grid.Column="0"></TextBox>
         <Button x:Name="NftCustomLinkSet_Button" Content="Set" Grid.Row="3" Grid.Column="1" 
-                Background="#697a1f"
-                Click="NftCustomLinkSet_Button_Click"></Button>
+                Click="NftCustomLinkSet_Button_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Button.Resources>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#697a1f"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Green"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <Label Content="Weblink to license files for specifying the terms of using your nfts" 
                Grid.Row="6" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="LicenseLink_TextBox" Grid.Row="7" Grid.Column="0"></TextBox>
         <TextBox x:Name="LicenseLink2_TextBox" Grid.Row="8" Grid.Column="0"></TextBox>
         <Button x:Name="LicenseLinkSet_Button" Content="Set" Grid.Row="8" Grid.Column="1" 
-                Background="#697a1f"
-                Click="LicenseLinkSet_Button_Click"></Button>
+                Click="LicenseLinkSet_Button_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Button.Resources>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#697a1f"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Green"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <WrapPanel Grid.Row="9">
             <CheckBox x:Name="CaseSensitiveFilehandling_CheckBox" 
                       IsChecked="True" Content="Case Sensitive File Handling" Grid.Column="0" 
@@ -64,10 +137,59 @@
         <Label Content="Minting Fee" Grid.Row="10" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="MintingFee_TextBox" Text="1000" Grid.Row="11" Grid.Column="0" Foreground="#998826"></TextBox>
         <Button x:Name="MintingFeeSet_Button" Content="Set" Grid.Row="11" Grid.Column="1" 
-                Background="#697a1f"
-                Click="MintingFeeSet_Button_Click"></Button>
+                Click="MintingFeeSet_Button_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Button.Resources>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#697a1f"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Green"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <Label Content="Update" Grid.Row="12" Grid.Column="0" Foreground="#998826"></Label>
-        <Button x:Name="Update_Button" Content="Update check pending..." Grid.Row="13" Click="Update_Button_Click"></Button>
+        <Button x:Name="Update_Button" Content="Update check pending..." Grid.Row="13" Click="Update_Button_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Button.Resources>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#5d995d"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Green"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <ProgressBar x:Name="Update_Progressbar" Grid.Row="14" Background="Black"></ProgressBar>
     </Grid>
 </UserControl>
