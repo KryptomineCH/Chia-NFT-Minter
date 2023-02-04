@@ -1,12 +1,10 @@
-﻿using Minter_UI.CollectionInformation_ns;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
-namespace Chia_NFT_Minter.CollectionInformation_ns
+namespace Minter_UI.CollectionInformation_ns
 {
     public static partial class CollectionInformation
     {
@@ -32,11 +30,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                 {
                     // get key
                     string name = Path.GetFileNameWithoutExtension(info.Name);
-                    string key = name;
-                    if (!caseSensitive)
-                    {
-                        key = key.ToLower();
-                    }
+                    string key = GetKeyFromFile(info);
                     FileInfo previewFile = new FileInfo(Path.Combine(Directories.Preview.FullName, name + ".jpg"));
                     if (!previewFile.Exists)
                     {

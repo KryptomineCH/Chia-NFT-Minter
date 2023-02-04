@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Chia_NFT_Minter.CollectionInformation_ns;
 using Minter_UI.CollectionInformation_ns;
 using Microsoft.Win32;
 
@@ -238,11 +237,14 @@ namespace Minter_UI.UI_NS
                 FileInfo? metadata_FileInfo;
                 if (CollectionInformation.Information.MetadataFiles.TryGetValue(unmintedNFT_Key, out metadata_FileInfo))
                 {
-                    Metadata metaData = IO.Load(metadata_FileInfo.FullName);
-                    metaData.collection = CollectionMetadata.collection;
-                    metaData.series_total = CollectionMetadata.series_total;
-                    metaData.Save(metadata_FileInfo.FullName);
-                    updatedMetadata++;
+                    Metadata metaData;
+                    if (CollectionInformation.GetMetadataFromCache(unmintedNFT_Key, out metaData))
+                    {
+                        metaData.collection = CollectionMetadata.collection;
+                        metaData.series_total = CollectionMetadata.series_total;
+                        metaData.Save(metadata_FileInfo.FullName);
+                        updatedMetadata++;
+                    } 
                 }
             }
             if (CollectionInformation.Information.RpcFiles.Count > 0)

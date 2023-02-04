@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Minter_UI.Settings_NS;
-using Chia_NFT_Minter.CollectionInformation_ns;
 using System.Threading;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using Minter_UI.Tasks_NS;
 using System;
+using Minter_UI.CollectionInformation_ns;
 
 namespace Minter_UI.UI_NS
 {
@@ -52,11 +52,7 @@ namespace Minter_UI.UI_NS
             foreach (FileInfo nftFile in additions)
             {
                 string nftName = Path.GetFileNameWithoutExtension(nftFile.FullName);
-                string key = nftName;
-                if (!caseSensitive)
-                {
-                    key = key.ToLower();
-                }
+                string key = CollectionInformation.GetKeyFromFile(nftFile);
 
                 // add nft to ui
                 string data;

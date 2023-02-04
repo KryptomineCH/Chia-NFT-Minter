@@ -1,4 +1,4 @@
-﻿using Chia_NFT_Minter.CollectionInformation_ns;
+﻿using Minter_UI.CollectionInformation_ns;
 using System;
 using System.Collections.Generic;
 using System.IO;

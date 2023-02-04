@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 
-namespace Chia_NFT_Minter.CollectionInformation_ns
+namespace Minter_UI.CollectionInformation_ns
 {
     /// <summary>
     /// Collectioninformation scans through the file collection and provides information about metadata, missing files and ready to mint nfts
@@ -8,6 +9,19 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
     public static partial class CollectionInformation
     {
         public static CollectionInformation_Object Information = new CollectionInformation_Object();
+        public static string GetKeyFromFile(FileInfo file)
+        {
+            return GetKeyFromFile(file.Name);
+        }
+        public static string GetKeyFromFile(string path)
+        {
+            string key = Path.GetFileNameWithoutExtension(path);
+            if (!Settings_NS.Settings.All.CaseSensitiveFileHandling)
+            {
+                key = key.ToLower();
+            }
+            return key;
+        }
         public static void ReloadAll(bool caseSensitive)
         {
             lock (IsLoadingLock)

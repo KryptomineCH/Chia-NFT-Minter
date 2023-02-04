@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Minter_UI.CollectionInformation_ns;
+using System;
 using System.IO;
 using System.Windows;
-using Chia_NFT_Minter.CollectionInformation_ns;
 
 
 namespace Minter_UI

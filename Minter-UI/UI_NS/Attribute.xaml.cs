@@ -1,5 +1,5 @@
 ﻿using Chia_Metadata;
-using Chia_NFT_Minter.CollectionInformation_ns;
+using Minter_UI.CollectionInformation_ns;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,6 +98,7 @@ namespace Minter_UI.UI_NS
         }
         public void Delete()
         {
+            ((Panel)this.Parent).Children.Remove(this);
             _usedAttributes.AttributelistChanged -= (s, e) => LoadAvailableAttributes();
             _usedAttributes.RemoveAttribute(this.TraitType_ComboBox.Text);
             // unregister events
@@ -135,7 +136,7 @@ namespace Minter_UI.UI_NS
             this.UnregisterName("Main_Grid");
             this.UnregisterName("Delete_Button");
             // remove self from parent
-            ((Panel)this.Parent).Children.Remove(this);
+            
         }
         /// <summary>
         /// resets min and max vailue

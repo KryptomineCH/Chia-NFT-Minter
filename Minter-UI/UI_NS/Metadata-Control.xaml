@@ -22,12 +22,16 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <cef:ChromiumWebBrowser x:Name="ImageWebView" Grid.Column="0" Grid.Row="0" Background="Transparent"></cef:ChromiumWebBrowser>
-        <Button x:Name="ImportMedia_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0"
+        <!-- Filters -->
+        <local:FilterControl x:Name="Filters" Grid.Row="0" Grid.ColumnSpan="2"></local:FilterControl>
+        <!-- Image preview -->
+        <cef:ChromiumWebBrowser x:Name="ImageWebView" Grid.Row="1" Background="Transparent"></cef:ChromiumWebBrowser>
+        <!-- Import Button -->
+        <Button x:Name="ImportMedia_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1"
                 Panel.ZIndex="2" Click="ImportMedia_Button_Click" 
                 Background="Transparent" BorderBrush="Transparent" Margin="0.5cm,0.5cm">
             <Button.Template>
@@ -48,53 +52,87 @@
                 </Image.Style>
             </Image>
         </Button>
-        <StackPanel Grid.Column="1" Grid.RowSpan="2">
-            <Label Content="Name" Foreground="#998826"></Label>
-            <TextBox x:Name="NftName_TextBox"></TextBox>
-            <CheckBox x:Name="SensitiveContent_Checkbox" Content="Sensitive Content (18+)" Foreground="#998826"></CheckBox>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-            </Grid>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Description" Foreground="#998826"></Label>
-                <Button x:Name="UpdateAllDescriptions" Content="Update all Descriptions" 
-                    BorderBrush="Black" Background="#697a1f"
-                    Click="UpdateAllDescriptionsButton_Click"></Button>
-            </StackPanel>
-            <TextBox x:Name="Description_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
-            <Button x:Name="RefreshCollectionButton" Content="Refresh Collection" 
-                    BorderBrush="Black" Background="#697a1f"
-                    Click="RefreshCollectionButton_Click"></Button>
-        </StackPanel>
-        <!-- nft attributes -->
-        <WrapPanel x:Name="Attributes_StackPanel" Grid.Row="1" Orientation="Horizontal">
-            <Button x:Name="Attributes_TagTanel_AddButton" Content="+" Background="#5d995d" Click="Attributes_TagTanel_AddButton_Click"></Button>
-        </WrapPanel>
-        <!-- interaction buttons -->
-        <Grid Grid.Row="3" Grid.ColumnSpan="2">
+        <!-- Metadata -->
+        <Grid Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button x:Name="PreviousExisting_Button" Content="prev. Existing" Grid.Column="0" Click="PreviousExisting_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
-            <Button x:Name="PreviousMissing_Button" Content="prev. Missing" Grid.Column="1" Click="PreviousMissing_Button_Click" Background="#591f7a" Foreground="#e0cf6c"></Button>
-            <Button x:Name="Save_Button" Content="Save" Grid.Column="2" Click="Save_Button_Click" Background="#697a1f" Foreground="Gold" ></Button>
-            <Button x:Name="SaveAndNextMissing_Button" Content="Save - next Missing" Grid.Column="3" Click="SaveAndNextMissing_Button_Click" Background="#697a1f" Foreground="Gold" ></Button>
-            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Column="4" Click="SaveAndNext_Button_Click" Background="#697a1f" Foreground="Gold"></Button>
-            <Button x:Name="NextMissing_Button" Content="next. Missing" Grid.Column="5" Click="NextMissing_Button_Click" Background="#591f7a" Foreground="#e0cf6c"></Button>
-            <Button x:Name="NextExisting_Button" Content="next. Existing" Grid.Column="6" Click="NextExisting_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
+                <!-- Name ahd sensitive content -->
+                <Label Content="Name" Foreground="#998826"></Label>
+                <TextBox x:Name="NftName_TextBox"></TextBox>
+                <CheckBox x:Name="SensitiveContent_Checkbox" Content="Sensitive Content (18+)" Foreground="#998826"></CheckBox>
+                <!-- Description -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Description" Foreground="#998826"></Label>
+                    <Button x:Name="UpdateAllDescriptions" Content="Update all Descriptions" 
+                    BorderBrush="Black" Background="#697a1f"
+                    Click="UpdateAllDescriptionsButton_Click"></Button>
+                </StackPanel>
+                <TextBox x:Name="Description_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
+                <!-- nft attributes -->
+                <WrapPanel x:Name="Attributes_StackPanel" Orientation="Horizontal">
+                    <Button x:Name="Attributes_TagTanel_AddButton" Content="+" Background="#5d995d" Click="Attributes_TagTanel_AddButton_Click"></Button>
+                </WrapPanel>
+            </StackPanel>
+            <!-- save button -->
+            <Button x:Name="Save_Button" Content="Save" Grid.Row="1" Grid.Column="0"  Click="Save_Button_Click" Background="#697a1f" Foreground="Gold" ></Button>
+            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Row="1" Grid.Column="1"  Click="SaveAndNext_Button_Click" Background="#697a1f" Foreground="Gold" ></Button>
         </Grid>
+        <ListView
+                x:Name="NFTselection_ListView"
+                SelectionChanged="NFTselection_ListView_SelectionChanged"
+                Margin="0,2,0,0"
+            Grid.Row="2"
+                VirtualizingPanel.CacheLengthUnit="Page"
+                VirtualizingPanel.CacheLength="2"
+                VirtualizingPanel.ScrollUnit="Item"
+                VirtualizingPanel.VirtualizationMode="Recycling"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                ScrollViewer.CanContentScroll="True"
+                ItemsSource="{Binding Items}" 
+                Background="#111009"
+                BorderBrush="Transparent"
+                SelectionMode="Single">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:MintingPreview_Control 
+                        Data="{Binding Data}" 
+                        IsMinting="{Binding IsMinting}"  
+                        IsUploading="{Binding IsUploading}" 
+                        IsUploaded="{Binding IsUploaded}"
+                        Height="2cm"
+                        Width="2cm"
+                        IsEnabled="False"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>

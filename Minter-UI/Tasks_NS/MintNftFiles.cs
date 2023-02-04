@@ -1,5 +1,4 @@
-﻿using Chia_NFT_Minter.CollectionInformation_ns;
-using CHIA_RPC.Wallet_RPC_NS.NFT;
+﻿using CHIA_RPC.Wallet_RPC_NS.NFT;
 using Minter_UI.Settings_NS;
 using System;
 using System.Collections.Generic;
@@ -137,11 +136,7 @@ namespace Minter_UI.Tasks_NS
                     // nft was minted sucessfully
                     //string nftFullName = file.FullName;
                     string nftName = Path.GetFileNameWithoutExtension(file.Name);
-                    string key = nftName;
-                    if (!Settings.All.CaseSensitiveFileHandling)
-                    {
-                        key = key.ToLower();
-                    }
+                    string key = CollectionInformation.GetKeyFromFile(file);
                     FileInfo nftFilePath = new FileInfo(Path.Combine(Directories.Minted.FullName, nftName+".nft"));
                     nft.nft_info.Save(nftFilePath.FullName);
                     /// add successful mint to collection information
@@ -157,11 +152,7 @@ namespace Minter_UI.Tasks_NS
                     // nft was minted sucessfully
                     string nftFullName = Path.GetFileNameWithoutExtension(file.FullName);
                     string nftName = Path.GetFileNameWithoutExtension(file.Name);
-                    string key = nftFullName;
-                    if (!Settings.All.CaseSensitiveFileHandling)
-                    {
-                        key = key.ToLower();
-                    }
+                    string key = CollectionInformation.GetKeyFromFile(file);
                     _ = CollectionInformation.Information.PendingTransactions.Remove(key, out _);
                 }
                 else
@@ -181,11 +172,7 @@ namespace Minter_UI.Tasks_NS
             // get nft name and identifier key
             //string nftFullName = nftToBeMinted.Value.FullName;
             string nftName = Path.GetFileNameWithoutExtension(nftToBeMinted.Value.Name);
-            string key = nftName;
-            if (!Settings.All.CaseSensitiveFileHandling)
-            {
-                key = key.ToLower();
-            }
+            string key = CollectionInformation.GetKeyFromFile(nftToBeMinted.Value);
             // update rpc
             string rpcSourcePath = Path.Combine(Directories.Rpcs.FullName, nftName+ ".rpc");
             NftMintNFT_RPC rpc = NftMintNFT_RPC.Load(rpcSourcePath);

@@ -1,4 +1,5 @@
-﻿using Minter_UI.Settings_NS;
+﻿using Minter_UI.CollectionInformation_ns;
+using Minter_UI.Settings_NS;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -21,6 +22,9 @@ namespace Minter_UI.UI_NS
             IsMinting = false;
         }
         private string _data;
+        /// <summary>
+        /// this is the imageURI of the Item
+        /// </summary>
         public string Data { get
             {
                 return _data;
@@ -28,7 +32,7 @@ namespace Minter_UI.UI_NS
             set
             {
                 _data = value;
-                string key = Path.GetFileNameWithoutExtension(Data);
+                string key = CollectionInformation.GetKeyFromFile(Data);
                 bool caseSensitive = true;
                 if (Settings.All != null)
                 {

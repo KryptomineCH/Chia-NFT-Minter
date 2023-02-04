@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Chia_NFT_Minter.CollectionInformation_ns
+namespace Minter_UI.CollectionInformation_ns
 {
     public class CollectionInformation_Object
     {

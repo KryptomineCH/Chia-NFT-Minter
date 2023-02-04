@@ -5,14 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
              xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="200" Height="200" Width="200">
+             d:DesignHeight="400" d:DesignWidth="400">
     <Border x:Name="MarkingBorder" CornerRadius="22" Margin="2" BorderBrush="#1c1c1c" BorderThickness="5">
         <Border.Effect>
             <DropShadowEffect Color="Black" Opacity="0.5" />
         </Border.Effect>
         <Grid>
             <Border Name="mask" CornerRadius="20" Background="Black"/>
-            <cef:ChromiumWebBrowser x:Name="Browser" >
+            <cef:ChromiumWebBrowser x:Name="Browser">
                 <cef:ChromiumWebBrowser.OpacityMask>
                     <VisualBrush Visual="{Binding ElementName=mask}"/>
                 </cef:ChromiumWebBrowser.OpacityMask>

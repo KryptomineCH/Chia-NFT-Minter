@@ -1,9 +1,11 @@
-﻿using Chia_Metadata;
-using Chia_NFT_Minter.CollectionInformation_ns;
+﻿using CefSharp.DevTools.CSS;
+using Chia_Metadata;
+using Minter_UI.CollectionInformation_ns;
 using Minter_UI.Tasks_NS;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -22,7 +24,7 @@ namespace Minter_UI.UI_NS
         {
             InitializeComponent();
         }
-        public Dictionary<string, FileInfo> FilteredNFTs = new Dictionary<string, FileInfo>();
+        public MintingPreview_ViewModel FilteredNFTs = new MintingPreview_ViewModel();
         StatusFilter StatusFilteredNFTs = new StatusFilter();
         Dictionary<string, FileInfo> NameFilteredNFTs = new Dictionary<string, FileInfo>();
 
@@ -74,7 +76,6 @@ namespace Minter_UI.UI_NS
                 PendingMint_CheckBox.IsChecked = false;
                 Minted_CheckBox.IsChecked = false;
                 Offered_CheckBox.IsChecked = false;
-                All_CheckBox.IsChecked = false;
             }
             RefreshStatusFilters();
         }
@@ -92,17 +93,12 @@ namespace Minter_UI.UI_NS
                 PendingMint_CheckBox.IsChecked = false;
                 Minted_CheckBox.IsChecked = false;
                 Offered_CheckBox.IsChecked = false;
-                All_CheckBox.IsChecked = false;
             }
             RefreshStatusFilters();
         }
 
         private void PendingMint_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            if (!(bool)PendingMint_CheckBox.IsChecked)
-            { 
-                All_CheckBox.IsChecked = false;
-            }
             RefreshStatusFilters();
         }
 
@@ -115,17 +111,12 @@ namespace Minter_UI.UI_NS
             else
             {
                 Offered_CheckBox.IsChecked = false;
-                All_CheckBox.IsChecked = false;
             }
             RefreshStatusFilters();
         }
 
         private void Offered_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            if (!(bool)Offered_CheckBox.IsChecked)
-            { 
-                All_CheckBox.IsChecked = false;
-            }
             RefreshStatusFilters();
         }
 
@@ -172,7 +163,7 @@ namespace Minter_UI.UI_NS
             NameFilteredNFTs.Clear();
             if (Namefilter_TextBox.Text.Trim() == "")
             {
-                NameFilteredNFTs = StatusFilteredNFTs.StatusFilteredNFTs;
+                NameFilteredNFTs = new Dictionary<string, FileInfo>(StatusFilteredNFTs.StatusFilteredNFTs);
             }
             else
             {
@@ -195,11 +186,19 @@ namespace Minter_UI.UI_NS
         }
         private void RefreshAttributeFilters()
         {
-            FilteredNFTs.Clear();
+            FilteredNFTs.Items.Clear();
             if (this.ExcludedAttributes_WrapPanel.Children.Count <= 1 &&
                 this.IncludedAttributes_WrapPanel.Children.Count <= 1)
             {
-                FilteredNFTs = NameFilteredNFTs;
+                foreach (KeyValuePair<string,FileInfo> nft in NameFilteredNFTs)
+                {
+                    MintingItem mintingItem = new MintingItem(nft.Value.FullName);
+                    if (CollectionInformation.Information.MetadataFiles.ContainsKey(nft.Key))
+                    {
+                        mintingItem.IsUploaded = true;
+                    }
+                    FilteredNFTs.Items.Add(mintingItem);
+                }
                 return;
             }
             // load dictionaries
@@ -208,12 +207,12 @@ namespace Minter_UI.UI_NS
             for (int i = 1; i < this.ExcludedAttributes_WrapPanel.Children.Count; i++)
             {
                 MetadataAttribute attribute = ((Attribute)this.ExcludedAttributes_WrapPanel.Children[i]).GetAttribute();
-                inclusions.Add(attribute.trait_type, attribute);
+                exclusions.Add(attribute.trait_type, attribute);
             }
             for (int i = 1; i < this.IncludedAttributes_WrapPanel.Children.Count; i++)
             {
                 MetadataAttribute attribute = ((Attribute)this.IncludedAttributes_WrapPanel.Children[i]).GetAttribute();
-                exclusions.Add(attribute.trait_type, attribute);
+                inclusions.Add(attribute.trait_type, attribute);
             }
             // apply Filter
             MetadataAttribute excludeFilterAttribute_temp;
@@ -224,39 +223,82 @@ namespace Minter_UI.UI_NS
                 FileInfo metadataFile;                
                 if (CollectionInformation.Information.MetadataFiles.TryGetValue(nft.Key, out metadataFile))
                 {
-                    Metadata metadata = Chia_Metadata.IO.Load(metadataFile.FullName);
+                    Metadata metadata;
+                    if (!CollectionInformation.GetMetadataFromCache(nft.Key, out metadata))
+                    {
+                        continue;
+                    }
                     include = false;
                     foreach (MetadataAttribute attribute in metadata.attributes)
                     {
+                        string attributeValueString = attribute.value.ToString();
+                        double? attributeValue = null;
+                        try
+                        {
+                            attributeValue = double.Parse(attributeValueString);
+                        }
+                        catch
+                        {
+
+                        }
                         if (exclusions.TryGetValue(attribute.trait_type, out excludeFilterAttribute_temp))
                         {
-                            // might be to exclude
-                            if (((string)excludeFilterAttribute_temp.value == null || (string)excludeFilterAttribute_temp.value == "" || Regex.IsMatch((string)attribute.value, (string)excludeFilterAttribute_temp.value))
-                                && (excludeFilterAttribute_temp.min_value == null || excludeFilterAttribute_temp.min_value <= (int)attribute.value)
-                                && (excludeFilterAttribute_temp.max_value == null || excludeFilterAttribute_temp.max_value >= (int)attribute.value))
+                            string filterValueString = excludeFilterAttribute_temp.value.ToString();
+                            if (attributeValue != null)
+                            {
+                                // check if Min/max are to be excluded
+                                if ((excludeFilterAttribute_temp.min_value != null && (attributeValue == null|| attributeValue < excludeFilterAttribute_temp.min_value))
+                                    || (excludeFilterAttribute_temp.max_value != null && (attributeValue == null ||  attributeValue > excludeFilterAttribute_temp.max_value)))
+                                {
+                                    // its in exclusions, dont check any further!
+                                    include = false;
+                                    // exclusions have priority, so here is stop!
+                                    break;
+                                }
+                            }
+                            // check if the valuestring is to be excluded
+                            if (filterValueString == null || filterValueString == "" || Regex.IsMatch(attributeValueString, filterValueString))
                             {
                                 // its in exclusions, dont check any further!
                                 include = false;
                                 // exclusions have priority, so here is stop!
                                 break;
                             }
+
                         }
                         if (inclusions.TryGetValue(attribute.trait_type, out includeFilterAttribute_temp))
                         {
-                            // might be to include
-                            if (((string)includeFilterAttribute_temp.value == null || (string)includeFilterAttribute_temp.value == "" || Regex.IsMatch((string)attribute.value, (string)includeFilterAttribute_temp.value))
-                                && (includeFilterAttribute_temp.min_value == null || includeFilterAttribute_temp.min_value <= (int)attribute.value)
-                                && (includeFilterAttribute_temp.max_value == null || includeFilterAttribute_temp.max_value >= (int)attribute.value))
+                            string filterValueString = includeFilterAttribute_temp.value.ToString();
+                            if (attributeValueString != null)
                             {
-                                // its in exclusions, dont check any further!
-                                include = true;
-                                // do not break here, there might be an exclusion which is taking priority.
+                                // check if Min/max are to be included
+                                if ( // value string matches
+                                    ((filterValueString == null || filterValueString == "" || Regex.IsMatch(attributeValueString, filterValueString)))
+                                    || // value is between min and max
+                                    ((includeFilterAttribute_temp.min_value != null && includeFilterAttribute_temp.min_value <= attributeValue)
+                                        && (includeFilterAttribute_temp.max_value != null && includeFilterAttribute_temp.max_value >= attributeValue))
+                                )
+                                {
+                                    // its in exclusions, dont check any further!
+                                    include = true;
+                                    // do not break here, there might be an exclusion which is taking priority.
+                                }
                             }
+                            // might be to include
                         }
                     }
                     if (include)
                     {
-                        FilteredNFTs[nft.Key] = nft.Value;
+                        MintingItem mintingItem = new MintingItem(nft.Value.FullName);
+                        if (CollectionInformation.Information.MintedFiles.ContainsKey(nft.Key))
+                        {
+                            mintingItem.IsMinting = true;
+                        }
+                        else if (CollectionInformation.Information.MetadataFiles.ContainsKey(nft.Key))
+                        {
+                            mintingItem.IsUploaded = true;
+                        }
+                        FilteredNFTs.Items.Add(mintingItem);
                     }
                 }
             }

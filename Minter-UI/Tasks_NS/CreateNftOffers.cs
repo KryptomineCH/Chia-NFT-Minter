@@ -1,5 +1,4 @@
 ﻿using Chia_Client_API.Wallet_NS.WalletAPI_NS;
-using Chia_NFT_Minter.CollectionInformation_ns;
 using CHIA_RPC.Wallet_RPC_NS.Wallet_NS;
 using Minter_UI.CollectionInformation_ns;
 using Minter_UI.UI_NS;
@@ -53,7 +52,7 @@ namespace Minter_UI.Tasks_NS
                     OfferFile offer = await WalletApi.CreateOfferForIds(offer_rpc).ConfigureAwait(false);
                     // save offer file
                     string nftName = Path.GetFileNameWithoutExtension(nftToBeOffered_File.Value.Name);
-                    string key = nftName;
+                    string key = CollectionInformation.GetKeyFromFile(nftToBeOffered_File.Value);
                     // update ui
                     dispatcherObject.Dispatcher.Invoke(new Action(() =>
                     {
@@ -66,10 +65,6 @@ namespace Minter_UI.Tasks_NS
                             }
                         }
                     }));
-                    if (!Settings.All.CaseSensitiveFileHandling)
-                    {
-                        key = key.ToLower();
-                    }
                     FileInfo offerFilePath = new FileInfo(Path.Combine(Directories.Offered.FullName, nftName + ".offer"));
                     offer.Save(offerFilePath.FullName);
                     /// add successful mint to collection information

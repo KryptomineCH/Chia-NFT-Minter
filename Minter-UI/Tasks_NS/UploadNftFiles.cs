@@ -1,5 +1,4 @@
-﻿using Chia_NFT_Minter.CollectionInformation_ns;
-using CHIA_RPC.Wallet_RPC_NS.NFT;
+﻿using CHIA_RPC.Wallet_RPC_NS.NFT;
 using Minter_UI.Settings_NS;
 using NFT.Storage.Net;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using Minter_UI.CollectionInformation_ns;
 using Minter_UI.UI_NS;
 using System.Windows.Threading;
 using System;
+using CollectionInformation = Minter_UI.CollectionInformation_ns.CollectionInformation;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -54,11 +54,7 @@ namespace Minter_UI.Tasks_NS
                 // get nft name and identifier key
                 string nftFullName = nftToBeUploaded.Value.FullName;
                 string nftName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.Name);
-                string key = nftName;
-                if (Settings.All != null && !Settings.All.CaseSensitiveFileHandling)
-                {
-                    key = key.ToLower();
-                }
+                string key = CollectionInformation.GetKeyFromFile(nftToBeUploaded.Value);
                 // check if this nft has metadata and is not yet uploaded
                 if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
                 {

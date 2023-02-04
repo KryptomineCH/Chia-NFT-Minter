@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Chia_NFT_Minter.CollectionInformation_ns
-{
+namespace Minter_UI.CollectionInformation_ns
+{ 
     public static partial class CollectionInformation
     {
         /// <summary>
@@ -22,9 +22,13 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                 newInfo.AllMetadataAttributes = new ConcurrentDictionary<string, MetadataAttribute>();
             }
                     ConcurrentDictionary<string, int> attributeOcurrences = new ConcurrentDictionary<string, int>();
-            foreach (FileInfo fi in newInfo.MetadataFiles.Values)
+            foreach (FileInfo file in newInfo.MetadataFiles.Values)
             {
-                Metadata data = IO.Load(fi.FullName);
+                Metadata data;
+                if (!CollectionInformation.GetMetadataFromCache(file, out data))
+                {
+                    continue;
+                }
                 // update last known collection metadata
                 newInfo.CollectionNumbers.Add((int)data.series_number);
                 newInfo.CollectionNumbers = newInfo.CollectionNumbers.OrderBy(x => x).ToList();

@@ -1,12 +1,9 @@
-﻿
-
-using Minter_UI.CollectionInformation_ns;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Chia_NFT_Minter.CollectionInformation_ns
+namespace Minter_UI.CollectionInformation_ns
 {
     public static partial class CollectionInformation
     {
@@ -107,11 +104,7 @@ namespace Chia_NFT_Minter.CollectionInformation_ns
                     continue;
                 }
                 /// get key
-                string key = Path.GetFileNameWithoutExtension(file.Name);
-                if (!caseSensitive)
-                {
-                    key = key.ToLower();
-                }
+                string key = GetKeyFromFile(file);
                 if (mustBeContainedWithin != null && !mustBeContainedWithin.ContainsKey(key)) continue;
                 /// add files
                 files[key] = file;

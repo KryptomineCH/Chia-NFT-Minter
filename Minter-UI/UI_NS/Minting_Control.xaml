@@ -53,7 +53,9 @@
                         Data="{Binding Data}" 
                         IsMinting="{Binding IsMinting}"  
                         IsUploading="{Binding IsUploading}" 
-                        IsUploaded="{Binding IsUploaded}"/>
+                        IsUploaded="{Binding IsUploaded}"
+                        Height="5cm"
+                        Width="5cm"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
