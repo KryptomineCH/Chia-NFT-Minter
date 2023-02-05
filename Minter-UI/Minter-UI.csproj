@@ -22,7 +22,8 @@
 - reworked window design
 - multiple buxfixes and cleanups
 - reworked metadata editing
-- implemented collection filtering</PackageReleaseNotes>
+- implemented collection filtering
+- updated nft.wtorage api key display settings</PackageReleaseNotes>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
