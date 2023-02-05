@@ -25,10 +25,19 @@ namespace Minter_UI.UI_NS
             _viewModel.Items = new ObservableCollection<MintingItem>();
             this.DataContext = _viewModel;
             InitializeComponent();
-            RefreshPreviews(false);
         }
         internal MintingPreview_ViewModel _viewModel;
         private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
+        bool Initialized = false;
+        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            UserControl userControl = sender as UserControl;
+            if (userControl.IsVisible && !Initialized)
+            {
+                RefreshPreviews(false);
+                Initialized = true;
+            }
+        }
         private async void RefreshPreviews(bool reloadDirs = true)
         {
             await MintNftFiles.CheckPendingTransactions(CancellationToken.None).ConfigureAwait(false);
