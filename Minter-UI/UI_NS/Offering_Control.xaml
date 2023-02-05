@@ -68,13 +68,63 @@
                 <ColumnDefinition Width="auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Column="0">
-                <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click" Background="#1f487a" Foreground="#e0cf6c"></Button>
+                <Button x:Name="Refresh_Button" Content="Refresh" Click="Refresh_Button_Click" Foreground="#e0cf6c" Padding="0.1cm">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#1f487a"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#3478cb"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="2">
                 <Label Content="Price" Foreground="#e0cf6c"></Label>
                 <TextBox x:Name="PriceTextBox" Text="0.25" Foreground="#e0cf6c" MinWidth="2cm"></TextBox>
                 <Label Content="xch" Foreground="#e0cf6c"></Label>
-                <Button x:Name="Offer_Button" Content="Create Offers!" Click="Offer_Button_Click" Background="#697a1f"  Foreground="#e0cf6c"></Button>
+                <Button x:Name="Offer_Button" Content="Create Offers!" Click="Offer_Button_Click" Foreground="#e0cf6c" Padding="0.1cm">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#697a1f"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Green"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
         </Grid>
     </Grid>

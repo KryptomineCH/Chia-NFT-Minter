@@ -23,7 +23,32 @@
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row="0">
-            <Button x:Name="Refresh_Button" Content="Refresh" BorderBrush="Black" Background="#697a1f" Click="Refresh_Button_Click"/>
+            <Button x:Name="Refresh_Button" Content="Refresh" BorderBrush="Black" Click="Refresh_Button_Click">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="4"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#5d995d"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Label Content="Name" Foreground="#998826"></Label>
             <TextBox x:Name="Namefilter_TextBox" Foreground="#998826" TextChanged="Namefilter_TextBox_TextChanged"></TextBox>
             <CheckBox x:Name="All_CheckBox" Content="All" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" IsChecked="True" Click="All_CheckBox_Checked"></CheckBox>

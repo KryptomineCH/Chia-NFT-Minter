@@ -85,8 +85,33 @@
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Description" Foreground="#998826"></Label>
                     <Button x:Name="UpdateAllDescriptions" Content="Update all Descriptions" 
-                    BorderBrush="Black" Background="#697a1f"
-                    Click="UpdateAllDescriptionsButton_Click"></Button>
+                    BorderBrush="Black"
+                    Click="UpdateAllDescriptionsButton_Click">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="#5d995d"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Green"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </StackPanel>
                 <TextBox x:Name="Description_TextBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
                 <!-- nft attributes -->
@@ -95,8 +120,58 @@
                 </WrapPanel>
             </StackPanel>
             <!-- save button -->
-            <Button x:Name="Save_Button" Content="Save" Grid.Row="1" Grid.Column="0"  Click="Save_Button_Click" Background="#697a1f" Foreground="Gold" ></Button>
-            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Row="1" Grid.Column="1"  Click="SaveAndNext_Button_Click" Background="#697a1f" Foreground="Gold" ></Button>
+            <Button x:Name="Save_Button" Content="Save" Grid.Row="1" Grid.Column="0"  Click="Save_Button_Click" Margin="0.1cm,0,0,0.1cm">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="4"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#5d995d"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Row="1" Grid.Column="1"  Click="SaveAndNext_Button_Click" Margin="0.1cm,0,0,0.1cm">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="4"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#5d995d"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Grid>
         <ListView
                 x:Name="NFTselection_ListView"
@@ -107,7 +182,7 @@
                 VirtualizingPanel.CacheLength="2"
                 VirtualizingPanel.ScrollUnit="Item"
                 VirtualizingPanel.VirtualizationMode="Recycling"
-                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollBarVisibility="auto"
                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                 ScrollViewer.CanContentScroll="True"
                 ItemsSource="{Binding Items}" 
