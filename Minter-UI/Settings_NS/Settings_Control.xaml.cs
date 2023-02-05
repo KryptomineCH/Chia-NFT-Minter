@@ -21,12 +21,13 @@ namespace Minter_UI.Settings_NS
         public Settings_Control()
         {
             InitializeComponent();
-            if (NftStorageAccount.ApiKey != "")
+            if (NftStorageAccount.ApiKey != null && NftStorageAccount.ApiKey != "")
             {
                 NftStorageApiKeySet_Button.Background = Brushes.LightBlue;
             }
             if (Settings.All != null)
             {
+                this.NftStorageApiKey_TextBox.Text = NftStorageAccount.ApiKey;
                 this.NftCustomLink_TextBox.Text = Settings.All.CustomServerURL;
                 this.LicenseLink_TextBox.Text = Settings.All.LicenseURL;
                 this.LicenseLink2_TextBox.Text = Settings.All.LicenseURL_Backup;
