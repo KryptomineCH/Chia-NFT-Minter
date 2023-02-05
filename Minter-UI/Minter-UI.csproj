@@ -19,7 +19,10 @@
 	  <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	  <PublishTrimmed>false</PublishTrimmed>
 	  <PackageReleaseNotes>- added import buttons
-- reworked window design</PackageReleaseNotes>
+- reworked window design
+- multiple buxfixes and cleanups
+- reworked metadata editing
+- implemented collection filtering</PackageReleaseNotes>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

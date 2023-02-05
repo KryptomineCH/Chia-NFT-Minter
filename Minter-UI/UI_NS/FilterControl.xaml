@@ -26,7 +26,7 @@
             <Button x:Name="Refresh_Button" Content="Refresh" BorderBrush="Black" Background="#697a1f" Click="Refresh_Button_Click"/>
             <Label Content="Name" Foreground="#998826"></Label>
             <TextBox x:Name="Namefilter_TextBox" Foreground="#998826" TextChanged="Namefilter_TextBox_TextChanged"></TextBox>
-            <CheckBox x:Name="All_CheckBox" Content="All" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="All_CheckBox_Checked"></CheckBox>
+            <CheckBox x:Name="All_CheckBox" Content="All" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" IsChecked="True" Click="All_CheckBox_Checked"></CheckBox>
             <CheckBox x:Name="ExistingMetadata_CheckBox" Content="With Metadata" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="ExistingMetadata_CheckBox_Checked"></CheckBox>
             <CheckBox x:Name="Uploaded_CheckBox" Content="Uploaded" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="Uploaded_CheckBox_Checked"></CheckBox>
             <CheckBox x:Name="PendingMint_CheckBox" Content="Pending Mint" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="PendingMint_CheckBox_Checked"></CheckBox>

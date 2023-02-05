@@ -12,7 +12,7 @@ namespace Minter_UI.CollectionInformation_ns
         /// </summary>
         /// <param name="caseSensitive">A boolean value indicating whether or not the directory and file searching should be case sensitive.</param>
         /// <param name="newInfo">An object of type CollectionInformation_Object that will hold the information gathered from the directories.</param>
-        private static void ReLoadDirectories(bool caseSensitive, CollectionInformation_Object newInfo)
+        private static void ReLoadDirectories(CollectionInformation_Object newInfo)
         {
             // refresh directory Informations
             Directories.Nfts.Refresh();
@@ -22,19 +22,19 @@ namespace Minter_UI.CollectionInformation_ns
             Directories.Offered.Refresh();
             // load base directories
             /// nft base files (images, documents, ...)
-            newInfo.NftFiles = LoadDirectory(dirInfo: Directories.Nfts, caseSensitive: caseSensitive);
+            newInfo.NftFiles = LoadDirectory(dirInfo: Directories.Nfts);
             /// metadata files
             newInfo.MetadataFiles = LoadDirectory(
-                dirInfo: Directories.Metadata, caseSensitive: caseSensitive, 
+                dirInfo: Directories.Metadata, 
                 fileTypes: new[] { ".json",".metadata"},fileNameFilter: new[] { "CollectionInfo.json" }, mustBeContainedWithin: newInfo.NftFiles
                 );
             /// rpc files (uploaded to nft.storage)
-            newInfo.RpcFiles = LoadDirectory(dirInfo: Directories.Rpcs, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.RpcFiles = LoadDirectory(dirInfo: Directories.Rpcs, fileTypes: new[] { ".json", ".rpc" }, mustBeContainedWithin: newInfo.NftFiles);
             /// started mints which have not yet been validated for completeness
-            newInfo.PendingTransactions = LoadDirectory(dirInfo: Directories.PendingTransactions, caseSensitive: caseSensitive, fileTypes: new[] { ".mint" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.PendingTransactions = LoadDirectory(dirInfo: Directories.PendingTransactions, fileTypes: new[] { ".mint" }, mustBeContainedWithin: newInfo.NftFiles);
             /// finished nfts
-            newInfo.MintedFiles = LoadDirectory(dirInfo: Directories.Minted, caseSensitive: caseSensitive, fileTypes: new[] { ".json", ".rpc",".nft" }, mustBeContainedWithin: newInfo.NftFiles);
-            newInfo.OfferedFiles = LoadDirectory(dirInfo: Directories.Offered, caseSensitive: caseSensitive, fileTypes: new[] { ".offer",".json", ".rpc", ".nft" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.MintedFiles = LoadDirectory(dirInfo: Directories.Minted, fileTypes: new[] { ".json", ".rpc",".nft" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.OfferedFiles = LoadDirectory(dirInfo: Directories.Offered, fileTypes: new[] { ".offer",".json", ".rpc", ".nft" }, mustBeContainedWithin: newInfo.NftFiles);
             // generate arbitrary information which can be calculated using the base directories.
             // eg: nft has metadata information, but no rpc and mint has not been validated -> ready to mint
             foreach (string key in newInfo.NftFiles.Keys)
@@ -75,8 +75,7 @@ namespace Minter_UI.CollectionInformation_ns
         /// <param name="mustBeContainedWithin">another fileindex dictionary which is the true source. If the file doesnt exist there, exclude it</param>
         /// <returns></returns>
         private static ConcurrentDictionary<string,FileInfo> LoadDirectory(
-            DirectoryInfo dirInfo, 
-            bool caseSensitive, 
+            DirectoryInfo dirInfo,  
             string[]? fileTypes = null, 
             string[]? fileNameFilter = null, 
             ConcurrentDictionary<string, FileInfo>? mustBeContainedWithin = null)

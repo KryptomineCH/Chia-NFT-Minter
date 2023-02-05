@@ -22,19 +22,19 @@ namespace Minter_UI.CollectionInformation_ns
             }
             return key;
         }
-        public static void ReloadAll(bool caseSensitive)
+        public static void ReloadAll()
         {
             lock (IsLoadingLock)
             {
                 if (LoadTask == null || LoadTask.IsCompleted)
                 {
-                    LoadTask = Task.Run(() => ReloadAll_Async(caseSensitive));
+                    LoadTask = Task.Run(() => ReloadAll_Async());
                 }
             }
             LoadTask.Wait();
             return;
         }
-        public static async Task ReloadAll_Async(bool caseSensitive)
+        public static async Task ReloadAll_Async()
         {
             lock (IsLoadingLock)
             {
@@ -46,9 +46,9 @@ namespace Minter_UI.CollectionInformation_ns
                 IsLoading = true;
             }
             CollectionInformation_Object newInfo = new CollectionInformation_Object();
-            ReLoadDirectories(caseSensitive, newInfo);
+            ReLoadDirectories(newInfo);
             GetAttributes(newInfo);
-            _ = Task.Run(() => GeneratePreviews(caseSensitive, newInfo));
+            _ = Task.Run(() => GeneratePreviews(newInfo));
             Information = newInfo;
             IsLoading = false;
         }

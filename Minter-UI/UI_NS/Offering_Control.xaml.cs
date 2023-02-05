@@ -31,15 +31,10 @@ namespace Minter_UI.UI_NS
         private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
         private async void RefreshPreviews(bool reloadDirs = true)
         {
-            bool caseSensitive = true;
             await MintNftFiles.CheckPendingTransactions(CancellationToken.None).ConfigureAwait(false);
-            if (Settings.All != null)
-            {
-                caseSensitive = Settings.All.CaseSensitiveFileHandling;
-            }
             if (reloadDirs)
             {
-                CollectionInformation.ReloadAll(caseSensitive);
+                CollectionInformation.ReloadAll();
             }
             this.Dispatcher.Invoke(new Action(() =>
             {

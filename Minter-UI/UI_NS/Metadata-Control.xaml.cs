@@ -1,11 +1,13 @@
 ﻿using Chia_Metadata;
 using Microsoft.Win32;
 using Minter_UI.CollectionInformation_ns;
+using Minter_UI.Tasks_NS;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml.Serialization;
@@ -24,17 +26,6 @@ namespace Minter_UI.UI_NS
             this.DataContext = _viewModel;
             InitializeComponent();
             this.Filters.FilteredNFTs = _viewModel;
-            //if (CollectionInformation.Information.MissingMetadata.Count == 0 &&
-            //    CollectionInformation.Information.MetadataFiles.Count > 0)
-            //{
-            //    LoadNextExistingMetadata();
-            //}
-            //else if (CollectionInformation.Information.MissingMetadata.Count > 0)
-            //{
-            //    LoadNextMissingMetadata();
-            //}
-            
-            
         }
         internal MintingPreview_ViewModel _viewModel;
         private FileInfo? CurrentMetadataPath;
@@ -43,6 +34,16 @@ namespace Minter_UI.UI_NS
         ///  the key specifies the attribute name. int defines how often it is beeeing used
         /// </summary>
         SelectedAttributes UsedAttributes = new SelectedAttributes();
+        bool Initialized = false;
+        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            UserControl userControl = sender as UserControl;
+            if (userControl.IsVisible && ! Initialized)
+            {
+                Filters.RefreshStatusFilters();
+                Initialized = true;
+            }
+        }
         /// <summary>
         /// Load metadata information into the ui for editing
         /// </summary>
@@ -222,7 +223,7 @@ namespace Minter_UI.UI_NS
 
         private void RefreshCollectionButton_Click(object sender, RoutedEventArgs e)
         {
-            CollectionInformation.ReloadAll(Settings_NS.Settings.All.CaseSensitiveFileHandling);
+            CollectionInformation.ReloadAll();
         }
 
         private void UpdateAllDescriptionsButton_Click(object sender, RoutedEventArgs e)
@@ -252,13 +253,14 @@ namespace Minter_UI.UI_NS
             MintingItem selectedItem = (MintingItem)(sender as ListView).SelectedItem;
             LoadInformation(selectedItem);
         }
-        private void ImportMedia_Button_Click(object sender, RoutedEventArgs e)
+        private async void ImportMedia_Button_Click(object sender, RoutedEventArgs e)
         {
 
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Filter = "Collection Files (img, vid, doc, meta, mint, rpc)|*";
             fileDialog.FilterIndex = 1;
             fileDialog.Multiselect = true;
+
             if (Settings_NS.Settings.All.LastImportPath != null && Directory.Exists(Settings_NS.Settings.All.LastImportPath))
             {
                 fileDialog.InitialDirectory = Settings_NS.Settings.All.LastImportPath;
@@ -267,80 +269,18 @@ namespace Minter_UI.UI_NS
             if (fileDialog.ShowDialog() == true)
             {
                 string[] filePaths = fileDialog.FileNames;
-                // Get the selected file's path
-                List<FileInfo> filesToImport = new List<FileInfo>();
-                // Merge File and directory infos
-                foreach (string filePath in filePaths)
-                {
-                    if (System.IO.File.Exists(filePath))
+                // execute the import task without blocking the ui
+                var progressBar = (ProgressBar)ImportMedia_Button.Template.FindName("ImportProgress_ProgressBar", ImportMedia_Button);
+                progressBar.Visibility = Visibility.Visible;
+                Progress<float> progress = new Progress<float>(p => progressBar.Value = p);
+                Task.Run(() => ImportFiles.Import(filePaths, progress))
+                    .ContinueWith((t) => 
                     {
-                        FileInfo file = new FileInfo(filePath);
-                        if (file.Attributes.HasFlag(FileAttributes.Hidden))
-                        {
-                            continue;
-                        }
-                        filesToImport.Add(file);
-                    }
-                    else if (System.IO.Directory.Exists(filePath))
-                    {
-                        DirectoryInfo di = new DirectoryInfo(filePath);
-                        FileInfo[] files = di.GetFiles("*.*", SearchOption.AllDirectories)
-                        .Where(f => (f.Attributes & FileAttributes.Hidden) == 0)
-                        .ToArray();
-                    }
-                }
-                // save directory path for next opening
-                if (filesToImport.Count > 0)
-                {
-                    Settings_NS.Settings.All.LastImportPath = filesToImport[0].Directory.FullName;
-                    Settings_NS.Settings.Save();
-                }
-                // import Files
-                foreach (FileInfo file in filesToImport)
-                {
-                    string type = file.Extension;
-                    if (file.Extension == null || file.Extension == "")
-                    {
-                        continue;
-                    }
-                    else if (file.Extension == ".nft")
-                    {
-                        file.CopyTo(Path.Combine(Directories.Minted.FullName, file.Name), overwrite: true);
-                    }
-                    else if (file.Extension == ".mint")
-                    {
-                        file.CopyTo(Path.Combine(Directories.PendingTransactions.FullName, file.Name), overwrite: true);
-                    }
-                    else if (file.Extension == ".offer")
-                    {
-                        file.CopyTo(Path.Combine(Directories.Offered.FullName, file.Name), overwrite: true);
-                    }
-                    else if (file.Extension == ".rpc")
-                    {
-                        file.CopyTo(Path.Combine(Directories.Rpcs.FullName, file.Name), overwrite: true);
-                    }
-                    else if (file.Extension == ".metadata" || file.Name == "CollectionInfo.json")
-                    {
-                        file.CopyTo(Path.Combine(Directories.Metadata.FullName, file.Name), overwrite: true);
-                    }
-                    else if (file.Extension == ".json")
-                    {
-                        try
-                        {
-                            Metadata test = Chia_Metadata.IO.Load(file.FullName);
-                            file.CopyTo(Path.Combine(Directories.Metadata.FullName, file.Name), overwrite: true);
-                        }
-                        catch
-                        {
-                            MessageBox.Show($"the file {file.Name} could not be imported! It does not seem to be a valid metadata file!");
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        file.CopyTo(Path.Combine(Directories.Nfts.FullName, file.Name), overwrite: true);
-                    }
-                }
+                        Dispatcher.Invoke(() => {
+                            progressBar.Visibility = Visibility.Collapsed;
+                            Filters.RefreshStatusFilters();
+                        });
+                    });
             }
         }
     }

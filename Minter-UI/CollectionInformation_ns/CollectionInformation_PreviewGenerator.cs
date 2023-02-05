@@ -11,7 +11,7 @@ namespace Minter_UI.CollectionInformation_ns
         private static volatile bool PreviewGenerationRunning = false;
         private static object PreviewGenerationLock = new object();
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        private static async Task GeneratePreviews(bool caseSensitive, CollectionInformation_Object newInfo)
+        private static async Task GeneratePreviews(CollectionInformation_Object newInfo)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             lock (PreviewGenerationLock)

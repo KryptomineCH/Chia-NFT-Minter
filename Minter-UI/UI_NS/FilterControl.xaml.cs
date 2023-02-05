@@ -32,6 +32,7 @@ namespace Minter_UI.UI_NS
 
         private void Refresh_Button_Click(object sender, RoutedEventArgs e)
         {
+            CollectionInformation.ReloadAll();
             RefreshStatusFilters();
         }
 
@@ -145,7 +146,7 @@ namespace Minter_UI.UI_NS
             RefreshAttributeFilters();
         }
 
-        private void RefreshStatusFilters()
+        internal void RefreshStatusFilters()
         {
             StatusFilteredNFTs.RefreshStatusFilter(
                 includeAllImages: (bool) All_CheckBox.IsChecked,

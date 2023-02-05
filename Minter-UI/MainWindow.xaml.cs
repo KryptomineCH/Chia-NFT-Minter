@@ -37,12 +37,7 @@ namespace Minter_UI
             };
             InitializeComponent();
             // load collection information once
-            bool caseSensitive = true;
-            if (Settings_NS.Settings.All != null)
-            {
-                caseSensitive = Settings_NS.Settings.All.CaseSensitiveFileHandling;
-            }
-            CollectionInformation.ReloadAll(caseSensitive);
+            CollectionInformation.ReloadAll();
         }
     }
 }
