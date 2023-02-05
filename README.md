@@ -1,5 +1,4 @@
-<div dir="rtl"> DOWNLOAD ↗️ </div> 
-
+[DOWNLOAD](https://github.com/KryptomineCH/Chia-NFT-Minter/releases/latest)
 
 Chia-NFT-Minter is a utility to generate metadata, collection, rpcs, offerings and to bulkmint nfts
 
