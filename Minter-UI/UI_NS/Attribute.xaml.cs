@@ -13,10 +13,13 @@ namespace Minter_UI.UI_NS
     /// </summary>
     public partial class Attribute : UserControl
     {
-        public Attribute(SelectedAttributes usedAttributes, MetadataAttribute? attr = null)
+        public Attribute(SelectedAttributes? usedAttributes, MetadataAttribute? attr = null)
         {
             _usedAttributes = usedAttributes;
-            _usedAttributes.AttributelistChanged += (s, e) => LoadAvailableAttributes();
+            if (_usedAttributes != null)
+            {
+                _usedAttributes.AttributelistChanged += (s, e) => LoadAvailableAttributes();
+            }
             InitializeComponent();
             LoadAvailableAttributes();
             if (attr != null)
@@ -24,7 +27,7 @@ namespace Minter_UI.UI_NS
                 SetAttribute(attr);
             }
         }
-        SelectedAttributes _usedAttributes = new SelectedAttributes();
+        SelectedAttributes? _usedAttributes = new SelectedAttributes();
         public MetadataAttribute GetAttribute()
         {
             MetadataAttribute attribute = new MetadataAttribute(this.TraitType_ComboBox.Text, this.Value_ComboBox.Text);
@@ -72,7 +75,7 @@ namespace Minter_UI.UI_NS
             List<string> values = new List<string>();
             foreach(MetadataAttribute meta in CollectionInformation.Information.AllMetadataAttributes.Values)
             {
-                if (!_usedAttributes.ContainsAttribute(meta.trait_type) ||
+                if (_usedAttributes == null || !_usedAttributes.ContainsAttribute(meta.trait_type) ||
                     ( meta.trait_type == selectedItem || (meta.trait_type == customText && selectedItem == "")))
                 {
                     values.Add(new String(meta.trait_type));
@@ -98,9 +101,12 @@ namespace Minter_UI.UI_NS
         }
         public void Delete()
         {
+            if (_usedAttributes != null)
+            {
+                _usedAttributes.AttributelistChanged -= (s, e) => LoadAvailableAttributes();
+                _usedAttributes.RemoveAttribute(this.TraitType_ComboBox.Text);
+            }
             ((Panel)this.Parent).Children.Remove(this);
-            _usedAttributes.AttributelistChanged -= (s, e) => LoadAvailableAttributes();
-            _usedAttributes.RemoveAttribute(this.TraitType_ComboBox.Text);
             // unregister events
             this.TraitType_ComboBox.SelectionChanged -= this.TraitType_ComboBox_SelectionChanged;
             this.Delete_Button.Click -= this.Delete_Button_Click;
@@ -157,13 +163,24 @@ namespace Minter_UI.UI_NS
             }
             if (key != _previousValue)
             {
-                _usedAttributes.RemoveAttribute(_previousValue);
-                _usedAttributes.AddAttribute(key);
+                if (_usedAttributes != null)
+                {
+                    _usedAttributes.RemoveAttribute(_previousValue);
+                    _usedAttributes.AddAttribute(key);
+                }
                 _previousValue = key;
             }
-            OnAttributeChanged(EventArgs.Empty);
+            
         }
         private string _previousValue = "";
+        private void TraitType_ComboBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            OnAttributeChanged(EventArgs.Empty);
+        }
+        private void Value_ComboBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            OnAttributeChanged(EventArgs.Empty);
+        }
         private void MinValue_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             OnAttributeChanged(EventArgs.Empty);

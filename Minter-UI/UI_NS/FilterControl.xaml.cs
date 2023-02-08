@@ -1,13 +1,10 @@
-﻿using CefSharp.DevTools.CSS;
-using Chia_Metadata;
+﻿using Chia_Metadata;
 using Minter_UI.CollectionInformation_ns;
 using Minter_UI.Tasks_NS;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml.Linq;
@@ -24,9 +21,15 @@ namespace Minter_UI.UI_NS
         {
             InitializeComponent();
         }
-        public MintingPreview_ViewModel FilteredNFTs = new MintingPreview_ViewModel();
-        StatusFilter StatusFilteredNFTs = new StatusFilter();
-        Dictionary<string, FileInfo> NameFilteredNFTs = new Dictionary<string, FileInfo>();
+        // Declare the delegate (if using non-generic delegate).
+        public delegate void FilteringCompletedEventHandler(object sender, EventArgs e);
+        // Declare the event using the delegate.
+        public event FilteringCompletedEventHandler FilteringCompleted;
+        // filter variables
+        internal StatusFilter statusFilter = new StatusFilter();
+        internal NameFilter nameFilter = new NameFilter();
+        internal AttributeFilter attributeFilter = new AttributeFilter();
+
 
         //public event EventHandler AttributeChanged;
 
@@ -124,7 +127,7 @@ namespace Minter_UI.UI_NS
         SelectedAttributes selectedIncludeAttributes = new SelectedAttributes();
         private void IncludedAttributes_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
         {
-            Attribute childControl = new Attribute(selectedExcludeAttributes);
+            Attribute childControl = new Attribute(usedAttributes: null);
             childControl.AttributeChanged += ParentControl_AttributeChanged;
             IncludedAttributes_WrapPanel.Children.Add(childControl);
 
@@ -135,7 +138,7 @@ namespace Minter_UI.UI_NS
 
         private void ExcludedAttributes_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
         {
-            Attribute childControl = new Attribute(selectedIncludeAttributes);
+            Attribute childControl = new Attribute(usedAttributes: null);
             childControl.AttributeChanged += ParentControl_AttributeChanged;
             ExcludedAttributes_WrapPanel.Children.Add(childControl);
 
@@ -146,162 +149,127 @@ namespace Minter_UI.UI_NS
             RefreshAttributeFilters();
         }
 
-        internal void RefreshStatusFilters()
+        CancellationTokenSource cancelStatusFiltering = new CancellationTokenSource();
+        bool IsStatusFiltering = false;
+        SemaphoreSlim IsStatusFiltering_Lock = new SemaphoreSlim(1,1);
+        
+        internal async void RefreshStatusFilters()
         {
-            StatusFilteredNFTs.RefreshStatusFilter(
-                includeAllImages: (bool) All_CheckBox.IsChecked,
-                includeExistingMetadataImages: (bool)ExistingMetadata_CheckBox.IsChecked,
-                includeUploadedImages: (bool)Uploaded_CheckBox.IsChecked,
-                includePendingMints: (bool)PendingMint_CheckBox.IsChecked,
-                includeMintedImages: (bool)Minted_CheckBox.IsChecked,
-                includeOfferedImages: (bool)Offered_CheckBox.IsChecked,
-                progress: new Progress<int>(),
-                cancellation: CancellationToken.None).ConfigureAwait(false);
-            RefreshNameFilters();
+            if (!await IsStatusFiltering_Lock.WaitAsync(0).ConfigureAwait(false))
+            {
+                if (cancelStatusFiltering.IsCancellationRequested)
+                {
+                    return;
+                }
+                cancelStatusFiltering.Cancel();
+                await IsStatusFiltering_Lock.WaitAsync().ConfigureAwait(false);
+            }
+            try {
+                IsStatusFiltering = true;
+                var progress = new Progress<float>(p => Filter_ProgressBar.Value = p * 100);
+                await statusFilter.RefreshStatusFilter(
+                    includeAllImages: (bool)All_CheckBox.IsChecked,
+                    includeExistingMetadataImages: (bool)ExistingMetadata_CheckBox.IsChecked,
+                    includeUploadedImages: (bool)Uploaded_CheckBox.IsChecked,
+                    includePendingMints: (bool)PendingMint_CheckBox.IsChecked,
+                    includeMintedImages: (bool)Minted_CheckBox.IsChecked,
+                    includeOfferedImages: (bool)Offered_CheckBox.IsChecked,
+                    progress,
+                    cancellation: cancelStatusFiltering.Token).ConfigureAwait(false);
+                if (!cancelStatusFiltering.IsCancellationRequested)
+                {
+                    IsStatusFiltering = false;
+                    RefreshNameFilters(continuationTask: true);
+                }
+            }
+            finally
+            {
+                cancelStatusFiltering = new CancellationTokenSource();
+                IsStatusFiltering = false;
+                IsStatusFiltering_Lock.Release();
+            }
         }
-        private void RefreshNameFilters()
+
+        CancellationTokenSource cancelNameFiltering = new CancellationTokenSource();
+        bool IsNameFiltering = false;
+        SemaphoreSlim IsNameFiltering_Lock = new SemaphoreSlim(1,1);
+        private async void RefreshNameFilters(bool continuationTask = false)
         {
-            NameFilteredNFTs.Clear();
-            if (Namefilter_TextBox.Text.Trim() == "")
+            if (!await IsNameFiltering_Lock.WaitAsync(0).ConfigureAwait(false))
             {
-                NameFilteredNFTs = new Dictionary<string, FileInfo>(StatusFilteredNFTs.StatusFilteredNFTs);
+                if (cancelNameFiltering.IsCancellationRequested || IsStatusFiltering)
+                {
+                    return;
+                }
+                cancelNameFiltering.Cancel();
+                await IsNameFiltering_Lock.WaitAsync().ConfigureAwait(false);
             }
-            else
+            try
             {
-                string name = Namefilter_TextBox.Text;
-                name = name.Replace("*", ".*");
-                name = name.Replace("..*", ".*");
-                if (Settings_NS.Settings.All.CaseSensitiveFileHandling!)
+                var progress = new Progress<float>(p => Filter_ProgressBar.Value = p * 100);
+                await nameFilter.RefreshNameFilter(
+                    Namefilter_TextBox.Text,
+                    statusFilter,
+                    progress,
+                    cancelNameFiltering.Token).ConfigureAwait(false);
+                if (!cancelNameFiltering.IsCancellationRequested)
                 {
-                    name = name.ToLower();
-                }
-                foreach (KeyValuePair<string, FileInfo> nft in StatusFilteredNFTs.StatusFilteredNFTs)
-                {
-                    if (Regex.IsMatch(nft.Key, name))
-                    {
-                        NameFilteredNFTs[nft.Key] = nft.Value;
-                    }
+                    IsNameFiltering = false;
+                    RefreshAttributeFilters(continuationTask: true);
                 }
             }
-            RefreshAttributeFilters();
+            finally
+            {
+                cancelNameFiltering = new CancellationTokenSource();
+                IsNameFiltering = false;
+                IsNameFiltering_Lock.Release();
+            }
         }
-        private void RefreshAttributeFilters()
+        CancellationTokenSource cancelAttributeFiltering = new CancellationTokenSource();
+        SemaphoreSlim IsAttributeFiltering_Lock = new SemaphoreSlim(1,1);
+        private async void RefreshAttributeFilters(bool continuationTask = false)
         {
-            FilteredNFTs.Items.Clear();
-            if (this.ExcludedAttributes_WrapPanel.Children.Count <= 1 &&
-                this.IncludedAttributes_WrapPanel.Children.Count <= 1)
+            if (!await IsAttributeFiltering_Lock.WaitAsync(0).ConfigureAwait(false))
             {
-                foreach (KeyValuePair<string,FileInfo> nft in NameFilteredNFTs)
+                if (cancelAttributeFiltering.IsCancellationRequested || IsStatusFiltering)
                 {
-                    MintingItem mintingItem = new MintingItem(nft.Value.FullName);
-                    if (CollectionInformation.Information.MetadataFiles.ContainsKey(nft.Key))
-                    {
-                        mintingItem.IsUploaded = true;
-                    }
-                    FilteredNFTs.Items.Add(mintingItem);
+                    return;
                 }
-                return;
+                cancelAttributeFiltering.Cancel();
+                await IsAttributeFiltering_Lock.WaitAsync().ConfigureAwait(false);
             }
-            // load dictionaries
-            Dictionary<string,MetadataAttribute> inclusions = new Dictionary<string,MetadataAttribute>();
-            Dictionary<string,MetadataAttribute> exclusions = new Dictionary<string,MetadataAttribute>();
-            for (int i = 1; i < this.ExcludedAttributes_WrapPanel.Children.Count; i++)
+            try
             {
-                MetadataAttribute attribute = ((Attribute)this.ExcludedAttributes_WrapPanel.Children[i]).GetAttribute();
-                exclusions.Add(attribute.trait_type, attribute);
-            }
-            for (int i = 1; i < this.IncludedAttributes_WrapPanel.Children.Count; i++)
-            {
-                MetadataAttribute attribute = ((Attribute)this.IncludedAttributes_WrapPanel.Children[i]).GetAttribute();
-                inclusions.Add(attribute.trait_type, attribute);
-            }
-            // apply Filter
-            MetadataAttribute excludeFilterAttribute_temp;
-            MetadataAttribute includeFilterAttribute_temp;
-            bool include;
-            foreach (KeyValuePair<string, FileInfo> nft in NameFilteredNFTs)
-            {
-                FileInfo metadataFile;                
-                if (CollectionInformation.Information.MetadataFiles.TryGetValue(nft.Key, out metadataFile))
+                // load dictionaries
+                List<MetadataAttribute> inclusions = new List<MetadataAttribute>();
+                List<MetadataAttribute> exclusions = new List<MetadataAttribute>();
+                for (int i = 1; i < this.ExcludedAttributes_WrapPanel.Children.Count; i++)
                 {
-                    Metadata metadata;
-                    if (!CollectionInformation.GetMetadataFromCache(nft.Key, out metadata))
-                    {
-                        continue;
-                    }
-                    include = false;
-                    foreach (MetadataAttribute attribute in metadata.attributes)
-                    {
-                        string attributeValueString = attribute.value.ToString();
-                        double? attributeValue = null;
-                        try
-                        {
-                            attributeValue = double.Parse(attributeValueString);
-                        }
-                        catch
-                        {
-
-                        }
-                        if (exclusions.TryGetValue(attribute.trait_type, out excludeFilterAttribute_temp))
-                        {
-                            string filterValueString = excludeFilterAttribute_temp.value.ToString();
-                            if (attributeValue != null)
-                            {
-                                // check if Min/max are to be excluded
-                                if ((excludeFilterAttribute_temp.min_value != null && (attributeValue == null|| attributeValue < excludeFilterAttribute_temp.min_value))
-                                    || (excludeFilterAttribute_temp.max_value != null && (attributeValue == null ||  attributeValue > excludeFilterAttribute_temp.max_value)))
-                                {
-                                    // its in exclusions, dont check any further!
-                                    include = false;
-                                    // exclusions have priority, so here is stop!
-                                    break;
-                                }
-                            }
-                            // check if the valuestring is to be excluded
-                            if (filterValueString == null || filterValueString == "" || Regex.IsMatch(attributeValueString, filterValueString))
-                            {
-                                // its in exclusions, dont check any further!
-                                include = false;
-                                // exclusions have priority, so here is stop!
-                                break;
-                            }
-
-                        }
-                        if (inclusions.TryGetValue(attribute.trait_type, out includeFilterAttribute_temp))
-                        {
-                            string filterValueString = includeFilterAttribute_temp.value.ToString();
-                            if (attributeValueString != null)
-                            {
-                                // check if Min/max are to be included
-                                if ( // value string matches
-                                    ((filterValueString == null || filterValueString == "" || Regex.IsMatch(attributeValueString, filterValueString)))
-                                    || // value is between min and max
-                                    ((includeFilterAttribute_temp.min_value != null && includeFilterAttribute_temp.min_value <= attributeValue)
-                                        && (includeFilterAttribute_temp.max_value != null && includeFilterAttribute_temp.max_value >= attributeValue))
-                                )
-                                {
-                                    // its in exclusions, dont check any further!
-                                    include = true;
-                                    // do not break here, there might be an exclusion which is taking priority.
-                                }
-                            }
-                            // might be to include
-                        }
-                    }
-                    if (include)
-                    {
-                        MintingItem mintingItem = new MintingItem(nft.Value.FullName);
-                        if (CollectionInformation.Information.MintedFiles.ContainsKey(nft.Key))
-                        {
-                            mintingItem.IsMinting = true;
-                        }
-                        else if (CollectionInformation.Information.MetadataFiles.ContainsKey(nft.Key))
-                        {
-                            mintingItem.IsUploaded = true;
-                        }
-                        FilteredNFTs.Items.Add(mintingItem);
-                    }
+                    MetadataAttribute attribute = ((Attribute)this.ExcludedAttributes_WrapPanel.Children[i]).GetAttribute();
+                    exclusions.Add(attribute);
                 }
+                for (int i = 1; i < this.IncludedAttributes_WrapPanel.Children.Count; i++)
+                {
+                    MetadataAttribute attribute = ((Attribute)this.IncludedAttributes_WrapPanel.Children[i]).GetAttribute();
+                    inclusions.Add(attribute);
+                }
+                var progress = new Progress<float>(p => Filter_ProgressBar.Value = p * 100);
+                // apply Filter
+                await attributeFilter.RefreshAttributeFilter(
+                    inclusions,
+                    exclusions,
+                    nameFilter,
+                    progress,
+                    cancelAttributeFiltering.Token).ConfigureAwait(false);
+                if (!cancelAttributeFiltering.IsCancellationRequested)
+                {
+                    FilteringCompleted(this, EventArgs.Empty);
+                }
+            }
+            finally
+            {
+                cancelAttributeFiltering = new CancellationTokenSource();
+                IsAttributeFiltering_Lock.Release();
             }
         }
     }

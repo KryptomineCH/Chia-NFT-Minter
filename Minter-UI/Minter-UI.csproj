@@ -66,9 +66,9 @@
     <PackageReference Include="BitmapHelper_Net" Version="1.0.2" />
     <PackageReference Include="cef.redist.x64" Version="109.1.11" />
     <PackageReference Include="CefSharp.Wpf.NETCore" Version="109.1.110" />
-    <PackageReference Include="Chia-Client-API" Version="1.6.2.10" />
+    <PackageReference Include="Chia-Client-API" Version="1.6.2.12" />
     <PackageReference Include="Multithreading_Library" Version="1.0.1" />
-    <PackageReference Include="NFT.Storage.Net" Version="1.0.1" />
+    <PackageReference Include="NFT.Storage.Net" Version="1.0.1.2" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
     <PackageReference Include="VirtualizingWrapPanel" Version="1.5.7" />
@@ -76,6 +76,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\..\OneDrive\Projects\Libraries\BitmapHelper_Net\BitmapHelper_Net\BitmapHelper_Net.csproj" />
+    <ProjectReference Include="..\..\Chia-Metadata\Chia-Metadata\Chia-Metadata.csproj" />
   </ItemGroup>
 
   <ItemGroup>

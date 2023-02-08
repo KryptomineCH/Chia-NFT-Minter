@@ -25,11 +25,13 @@ namespace Minter_UI.UI_NS
             _viewModel.Items = new ObservableCollection<MintingItem>();
             this.DataContext = _viewModel;
             InitializeComponent();
-            this.Filters.FilteredNFTs = _viewModel;
+            this.Filters.attributeFilter.AttributeFilteredNFTs = _viewModel;
+            this.Filters.FilteringCompleted += OnFilteringCompleted;
         }
         internal MintingPreview_ViewModel _viewModel;
         private FileInfo? CurrentMetadataPath;
         Queue<Attribute> AttributeReuseElements = new Queue<Attribute>();
+        
         /// <summary>
         ///  the key specifies the attribute name. int defines how often it is beeeing used
         /// </summary>
@@ -145,6 +147,10 @@ namespace Minter_UI.UI_NS
             SaveMetadata();
             NextNft();
         }
+        private void OnFilteringCompleted(object sender, EventArgs e)
+        {
+            NFTselection_ListView.SelectedIndex = 0;
+        }
         private void NextNft()
         {
             int index = NFTselection_ListView.SelectedIndex;
@@ -192,12 +198,12 @@ namespace Minter_UI.UI_NS
                 metadata.sensitive_content = false;
             else
                 metadata.sensitive_content = (bool)this.SensitiveContent_Checkbox.IsChecked;
-            metadata.attributes.Clear();
+            metadata.attributes = new MetadataAttribute[] { };
             // add attributes to metadata
             for (int i = 1; i < this.Attributes_StackPanel.Children.Count; i++)
             {
                 MetadataAttribute attribute = ((Attribute)this.Attributes_StackPanel.Children[i]).GetAttribute();
-                metadata.attributes.Add(attribute);
+                metadata.AddAttribute(attribute);
                 // update metadata suggestions
                 if ( !CollectionInformation.Information.AllMetadataAttributes.ContainsKey(attribute.trait_type))
                 {

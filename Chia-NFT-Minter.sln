@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chia-Metadata", "..\Chia-Metadata\Chia-Metadata\Chia-Metadata.csproj", "{13DB2D50-3663-4F79-94A9-50E0811EF77B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,14 @@ Global
 		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Release|x64.ActiveCfg = Release|x64
 		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Release|x64.Build.0 = Release|x64
+		{13DB2D50-3663-4F79-94A9-50E0811EF77B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13DB2D50-3663-4F79-94A9-50E0811EF77B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13DB2D50-3663-4F79-94A9-50E0811EF77B}.Debug|x64.ActiveCfg = Debug|x64
+		{13DB2D50-3663-4F79-94A9-50E0811EF77B}.Debug|x64.Build.0 = Debug|x64
+		{13DB2D50-3663-4F79-94A9-50E0811EF77B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13DB2D50-3663-4F79-94A9-50E0811EF77B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13DB2D50-3663-4F79-94A9-50E0811EF77B}.Release|x64.ActiveCfg = Release|x64
+		{13DB2D50-3663-4F79-94A9-50E0811EF77B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

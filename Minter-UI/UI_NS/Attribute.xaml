@@ -22,8 +22,8 @@
         </Grid.ColumnDefinitions>
         <Border Padding="0.15cm" CornerRadius="5,0,0,5" Background="#2E2A10">
             <StackPanel x:Name="Stack_Panel"  Orientation="Vertical" Grid.Row="0">
-                <ComboBox x:Name="TraitType_ComboBox" IsEditable="True" Text="TraitType" SelectionChanged="TraitType_ComboBox_SelectionChanged"></ComboBox>
-                <ComboBox x:Name="Value_ComboBox" IsEditable="True" Text="Value"></ComboBox>
+                <ComboBox x:Name="TraitType_ComboBox" IsEditable="True" Text="TraitType" SelectionChanged="TraitType_ComboBox_SelectionChanged" TextBoxBase.TextChanged="TraitType_ComboBox_TextChanged"></ComboBox>
+                <ComboBox x:Name="Value_ComboBox" IsEditable="True" Text="Value" TextBoxBase.TextChanged="Value_ComboBox_TextChanged"></ComboBox>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
