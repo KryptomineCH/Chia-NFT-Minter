@@ -15,10 +15,26 @@ using Minter_UI.Settings_NS;
 
 namespace Minter_UI.Tasks_NS
 {
+    /// <summary>
+    /// The internal class `CreateNftOffers` is used for offering NFTs for sale.
+    /// </summary>
     internal class CreateNftOffers
     {
+        /// <summary>
+        /// A static boolean variable to track if offering is in progress.
+        /// </summary>
         internal static bool OfferingInProgress = false;
+        /// <summary>
+        /// A static object used to lock the `OfferingInProgress` variable.
+        /// </summary>
         private static object OfferingInProgressLock = new object();
+        /// <summary>
+        /// The `OfferNfts_Task` method is used to offer NFTs for sale.
+        /// </summary>
+        /// <param name="cancle">The `CancellationToken` used to cancel the task.</param>
+        /// <param name="uiView">The `MintingPreview_ViewModel` instance used for UI updates.</param>
+        /// <param name="dispatcherObject">The `DispatcherObject` used for UI updates.</param>
+        /// <returns>A `Task` that represents the asynchronous operation.</returns>
         internal static async Task OfferNfts_Task(
             CancellationToken cancle,
             MintingPreview_ViewModel uiView,
@@ -26,11 +42,13 @@ namespace Minter_UI.Tasks_NS
         {
             lock (OfferingInProgressLock)
             {
+                // if offering is already in progress, dont start the task twice, instead, return
                 if (OfferingInProgress) return;
                 OfferingInProgress = true;
             }
             try
             {
+                // repeat until the task is cancelled
                 while (!cancle.IsCancellationRequested)
                 {
                     // if there are no nfts to be offer, wait for more
@@ -42,6 +60,11 @@ namespace Minter_UI.Tasks_NS
                     // get nft to be offered
                     KeyValuePair<string, FileInfo> nftToBeOffered_File = CollectionInformation.Information.ReadyToOffer.First();
                     _ = CollectionInformation.Information.ReadyToOffer.Remove(nftToBeOffered_File.Key, out _);
+                    // if the file is not an NFT file, continue
+                    if (!nftToBeOffered_File.Value.Name.EndsWith(".nft"))
+                    {
+                        continue;
+                    }
                     Nft nftToBeOffered = Nft.Load(nftToBeOffered_File.Value.FullName);
                     // calculate chia offer price
                     long mojosPrice = (long)(Settings.All.OfferingPrice * 1000000000000);
@@ -66,7 +89,7 @@ namespace Minter_UI.Tasks_NS
                         }
                     }));
                     FileInfo offerFilePath = new FileInfo(Path.Combine(Directories.Offered.FullName, nftName + ".offer"));
-                    offer.Save(offerFilePath.FullName);
+                    offer.Export(offerFilePath.FullName);
                     /// add successful mint to collection information
                     CollectionInformation.Information.OfferedFiles[key] = offerFilePath;
                     // update ui
@@ -93,6 +116,7 @@ namespace Minter_UI.Tasks_NS
             }
             finally
             {
+                // WrapDirection up the offering process
                 lock (OfferingInProgressLock)
                 {
                     OfferingInProgress = false;

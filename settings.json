@@ -4,5 +4,6 @@
   "CaseSensitiveFileHandling": false,
   "PrimaryWallet": 2394761549,
   "DidWallet": "Storage",
-  "MintingFee": 10000
+  "MintingFee": 10000,
+  "OfferingPrice": 0.25
 }

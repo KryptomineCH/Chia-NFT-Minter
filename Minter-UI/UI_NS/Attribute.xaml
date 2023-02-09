@@ -8,6 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="110" d:DesignWidth="200" Padding="0.1cm, 0.1cm, 0, 0">
     <UserControl.Resources>
+        <!-- Styles -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/ComboBoxStyle_Dark.xaml"/>
@@ -20,7 +21,9 @@
             <ColumnDefinition MinWidth="2.5cm"></ColumnDefinition>
             <ColumnDefinition Width="0.5cm"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        <!-- round corners on the right -->
         <Border Padding="0.15cm" CornerRadius="5,0,0,5" Background="#2E2A10">
+            <!-- input fields -->
             <StackPanel x:Name="Stack_Panel"  Orientation="Vertical" Grid.Row="0">
                 <ComboBox x:Name="TraitType_ComboBox" IsEditable="True" Text="TraitType" SelectionChanged="TraitType_ComboBox_SelectionChanged" TextBoxBase.TextChanged="TraitType_ComboBox_TextChanged"></ComboBox>
                 <ComboBox x:Name="Value_ComboBox" IsEditable="True" Text="Value" TextBoxBase.TextChanged="Value_ComboBox_TextChanged"></ComboBox>
@@ -40,6 +43,7 @@
                 </Grid>
             </StackPanel>
         </Border>
+        <!-- remove button -->
         <Button x:Name="Delete_Button" Content="X" 
                 Foreground="DarkRed"
                 Grid.Column="1" Click="Delete_Button_Click">

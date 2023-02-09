@@ -7,10 +7,35 @@ using System.Threading.Tasks;
 
 namespace Minter_UI.Tasks_NS
 {
+    /// <summary>
+    /// this class contains the status filter which is the initial filter
+    /// It is the fastest filter so it should be executed first. 
+    /// </summary>
+    /// <remarks>it does so by utilizing the collection information dictionaries</remarks>
     internal class StatusFilter
     {
+        /// <summary>
+        /// this collection will containe the filtered collection
+        /// </summary>
         internal Dictionary<string, FileInfo> StatusFilteredNFTs = new Dictionary<string, FileInfo>();
+        /// <summary>
+        ///  this variable is required as it is an iterativ filter.
+        ///  The step count can be calculated in advance
+        /// </summary>
         internal int StatusFilterSteps = 0;
+        /// <summary>
+        /// this task refreshed the filter by using the collectioninformation dictionaries. 
+        /// It is an iterative process
+        /// </summary>
+        /// <param name="includeAllImages"></param>
+        /// <param name="includeExistingMetadataImages"></param>
+        /// <param name="includeUploadedImages"></param>
+        /// <param name="includePendingMints"></param>
+        /// <param name="includeMintedImages"></param>
+        /// <param name="includeOfferedImages"></param>
+        /// <param name="progress"></param>
+        /// <param name="cancellation"></param>
+        /// <returns></returns>
         internal async Task RefreshStatusFilter(
             bool includeAllImages,
             bool includeExistingMetadataImages,
@@ -21,7 +46,9 @@ namespace Minter_UI.Tasks_NS
             IProgress<float> progress,
             CancellationToken cancellation)
         {
+            // initialize progress 
             progress.Report(0);
+            // calculate the amount of steps the filter will take to report progress.
             CalculateStatusFilterSteps(
                 includeAllImages,
                 includeExistingMetadataImages,
@@ -29,6 +56,7 @@ namespace Minter_UI.Tasks_NS
                 includePendingMints,
                 includeMintedImages,
                 includeOfferedImages);
+            // clear old collection
             StatusFilteredNFTs.Clear();
             // check if all nfts should be included
             int step = 0;
@@ -214,6 +242,17 @@ namespace Minter_UI.Tasks_NS
                 }
             }
         }
+        /// <summary>
+        /// this function calculates the steps the filter needs to take.
+        /// it is an iterative process so the step count cannot be known in advance without calculation but the calculation
+        /// is very straight forward.
+        /// </summary>
+        /// <param name="includeAllImages"></param>
+        /// <param name="includeExistingMetadataImages"></param>
+        /// <param name="includeUploadedImages"></param>
+        /// <param name="includePendingMints"></param>
+        /// <param name="includeMintedImages"></param>
+        /// <param name="includeOfferedImages"></param>
         internal void CalculateStatusFilterSteps(
             bool includeAllImages,
             bool includeExistingMetadataImages,

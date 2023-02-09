@@ -8,8 +8,14 @@ using System.Windows;
 
 namespace Minter_UI.Settings_NS
 {
+    /// <summary>
+    /// the settings class contains user configuration and some other settigns
+    /// </summary>
     internal class Settings
     {
+        /// <summary>
+        /// initialize settings (load if existing, otherwise create settings file with defaults)
+        /// </summary>
         static Settings()
         {
             if (SettingsFile.Exists)
@@ -40,9 +46,24 @@ namespace Minter_UI.Settings_NS
                 Save();
             }
         }
+        /// <summary>
+        /// path to the settigns file
+        /// </summary>
         private static FileInfo SettingsFile = new FileInfo("settings.json");
+        /// <summary>
+        /// locks the settings file for a thread safe manner
+        /// </summary>
+        /// <remarks>
+        /// only locks inside the application. the settings can still be edited with an editor of choice which might caus eissues
+        /// </remarks>
         private static object FileLock = new object();
+        /// <summary>
+        /// contains all settigns
+        /// </summary>
         internal static Settings_Object All = new Settings_Object();
+        /// <summary>
+        /// saves the settings object (All) to disk
+        /// </summary>
         internal static void Save()
         {
             lock (FileLock)

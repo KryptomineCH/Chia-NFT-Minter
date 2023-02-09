@@ -9,8 +9,17 @@ namespace Minter_UI.CollectionInformation_ns
     public static partial class CollectionInformation
     {
         /// <summary>
-        /// loads attributes and attribute stats into likelyAttributes and allmetadataattributes
+        /// this function loads the metadata dictionary and reads all metadata files (into cache). <br/>
+        /// It extracts the nft attributes and builds the following Dictionaries from it: <br/>
+        /// <list type="bullet">
+        /// <item>AllMetadataAttributes (all trait types such as "strength", "Color", "Size")</item>
+        /// <item>AllMetadataAttributeValues (all known values per trait type)</item>
+        /// <item>LikelyAttributes (trait types which are included in >50% of nfts)</item>
+        /// <item>CollectionNumbers (used to determine the next free nft collection number)</item>
+        /// <item>LastKnownNftMetadata (the metadata of the last minted nft, used for suggestion on new nfts)</item>
+        /// </list>
         /// </summary>
+        /// <param name="newInfo"></param>
         private static void GetAttributes(CollectionInformation_Object newInfo)
         {
             if (newInfo == null)
@@ -21,7 +30,8 @@ namespace Minter_UI.CollectionInformation_ns
             {
                 newInfo.AllMetadataAttributes = new ConcurrentDictionary<string, MetadataAttribute>();
             }
-                    ConcurrentDictionary<string, int> attributeOcurrences = new ConcurrentDictionary<string, int>();
+            // for counting which attribute ocurrs how often (likelyattributes)
+            ConcurrentDictionary<string, int> attributeOcurrences = new ConcurrentDictionary<string, int>();
             foreach (FileInfo file in newInfo.MetadataFiles.Values)
             {
                 Metadata data;

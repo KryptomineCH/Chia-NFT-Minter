@@ -58,6 +58,10 @@ namespace Minter_UI.CollectionInformation_ns
                 PendingTransactions.Attributes = FileAttributes.Hidden;
             }
         }
+        /// <summary>
+        /// this function hides some files which are created by application libraries.
+        /// mostly these are cache folders. no need for the user to see the cache.
+        /// </summary>
         private static void HideFoldersAndFiles()
         {
             string[] hideFolderList = new[]

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Minter_UI.Settings_NS;
 using System.Threading;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
@@ -25,9 +24,26 @@ namespace Minter_UI.UI_NS
             this.DataContext = _viewModel;
             InitializeComponent();
         }
+        /// <summary>
+        /// the token is passed to the minting and upoad task to stop them if requested by the user
+        /// </summary>
         private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
+        /// <summary>
+        /// the viewmodel is beeing hooked on by the nft preview wrappanel
+        /// and automatically updates it with its observable collection
+        /// </summary>
         internal MintingPreview_ViewModel _viewModel;
+        /// <summary>
+        /// this bool is beeing used to determine if the view has been refreshed on load yet or not.
+        /// It is used to prevent a full load every time the tab is switched.
+        /// </summary>
         bool Initialized = false;
+        /// <summary>
+        /// this function loads the nfts to display, but only on first visibility event 
+        /// (eg the tab is selected in tab control)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             UserControl userControl = sender as UserControl;
@@ -37,7 +53,10 @@ namespace Minter_UI.UI_NS
                 Initialized = true;
             }
         }
-
+        /// <summary>
+        /// this button manually refreshes the directories and previews
+        /// </summary>
+        /// <param name="reloadDirs"></param>
         private async void RefreshPreviews(bool reloadDirs = true)
         {
             await MintNftFiles.CheckPendingTransactions(CancellationToken.None).ConfigureAwait(false);
@@ -153,6 +172,11 @@ namespace Minter_UI.UI_NS
                 await UpdateButtonAfterStartingTasks();
             }
         }
+        /// <summary>
+        /// this function makes sure that the mind button transfers back to its starting state
+        /// after all subprocesses have been ended/cancelled
+        /// </summary>
+        /// <returns></returns>
         private async Task UpdateButtonAfterStartingTasks()
         {
             while (Tasks_NS.MintNftFiles.MintingInProgress || Tasks_NS.UploadNftFiles.UploadingInProgress)

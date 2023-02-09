@@ -46,6 +46,9 @@ namespace Minter_UI.CollectionInformation_ns
         /// contains all minted .nft files. These nfts are complete and the mint has been verified
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> MintedFiles = new ConcurrentDictionary<string, FileInfo>();
+        /// <summary>
+        /// this nfts have offer files
+        /// </summary>
         public ConcurrentDictionary<string, FileInfo> OfferedFiles = new ConcurrentDictionary<string, FileInfo>();
         /// <summary>
         /// contains all nft's where metadata is missing
@@ -57,6 +60,9 @@ namespace Minter_UI.CollectionInformation_ns
         /// </summary>
         /// <remarks>this is an arbitrary collection which can be generated from MetadataFiles - RpcFiles</remarks>
         public ConcurrentDictionary<string, FileInfo> MissingRPCs = new ConcurrentDictionary<string, FileInfo>();
+        /// <summary>
+        /// these nfts are minted but have not generated offer files yet
+        /// </summary>
         public ConcurrentDictionary<string, FileInfo> ReadyToOffer = new ConcurrentDictionary<string, FileInfo>();
         /// <summary>
         /// these are the nfts which have been uploaded to nftStorage and are ready for minting

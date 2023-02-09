@@ -59,6 +59,9 @@ namespace Minter_UI.Tasks_NS
                 }
             }
         }
+        /// <summary>
+        ///  initiates installation of vc redistributable
+        /// </summary>
         private static void Install()
         {
             // download and install start

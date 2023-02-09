@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <!-- Styles -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/TextBoxStyle_Dark.xaml"/>
@@ -23,6 +24,7 @@
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row="0">
+            <!-- refresh filter collection button -->
             <Button x:Name="Refresh_Button" Content="Refresh" BorderBrush="Black" Click="Refresh_Button_Click">
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
@@ -49,8 +51,10 @@
                     </Style>
                 </Button.Style>
             </Button>
+            <!-- Namefilter -->
             <Label Content="Name" Foreground="#998826"></Label>
             <TextBox x:Name="Namefilter_TextBox" Foreground="#998826" TextChanged="Namefilter_TextBox_TextChanged"></TextBox>
+            <!-- NFT Status filter selectors -->
             <CheckBox x:Name="All_CheckBox" Content="All" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" IsChecked="True" Click="All_CheckBox_Checked"></CheckBox>
             <CheckBox x:Name="ExistingMetadata_CheckBox" Content="With Metadata" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="ExistingMetadata_CheckBox_Checked"></CheckBox>
             <CheckBox x:Name="Uploaded_CheckBox" Content="Uploaded" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="Uploaded_CheckBox_Checked"></CheckBox>
@@ -58,6 +62,7 @@
             <CheckBox x:Name="Minted_CheckBox" Content="Minted" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="Minted_CheckBox_Checked"></CheckBox>
             <CheckBox x:Name="Offered_CheckBox" Content="Offered" Foreground="#998826" VerticalAlignment="Center" Margin="0.3cm,0,0,0" Click="Offered_CheckBox_Checked"></CheckBox>
         </WrapPanel>
+        <!-- Attribute Filters -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>

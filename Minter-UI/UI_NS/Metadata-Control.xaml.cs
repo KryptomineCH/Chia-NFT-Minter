@@ -10,7 +10,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Serialization;
 
 namespace Minter_UI.UI_NS
 {
@@ -28,8 +27,17 @@ namespace Minter_UI.UI_NS
             this.Filters.attributeFilter.AttributeFilteredNFTs = _viewModel;
             this.Filters.FilteringCompleted += OnFilteringCompleted;
         }
+        /// <summary>
+        /// the viewmodel is beeing used for automatic fill and updating of the virtualized wrappanel which displays the nfts
+        /// </summary>
         internal MintingPreview_ViewModel _viewModel;
+        /// <summary>
+        /// this variable contains the path of the Metadata which is currently beeing edited.
+        /// </summary>
         private FileInfo? CurrentMetadataPath;
+        /// <summary>
+        /// this queue is used because of a memory leak when destroying a control. Instead the element is refilled and reused
+        /// </summary>
         Queue<Attribute> AttributeReuseElements = new Queue<Attribute>();
         
         /// <summary>
@@ -136,21 +144,37 @@ namespace Minter_UI.UI_NS
             this.Attributes_StackPanel.Children.Add(new Attribute(UsedAttributes));
         }
 
-
+        /// <summary>
+        /// saves the current metadata to disk
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
             SaveMetadata();
         }
-
+        /// <summary>
+        /// saves the current metadata to disk and loads the next nft in the Collection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveAndNext_Button_Click(object sender, RoutedEventArgs e)
         {
             SaveMetadata();
             NextNft();
         }
+        /// <summary>
+        /// displays the first nft in the filter after filtering has been completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnFilteringCompleted(object sender, EventArgs e)
         {
             NFTselection_ListView.SelectedIndex = 0;
         }
+        /// <summary>
+        /// displays the next nft in the collection
+        /// </summary>
         private void NextNft()
         {
             int index = NFTselection_ListView.SelectedIndex;
@@ -161,6 +185,9 @@ namespace Minter_UI.UI_NS
             }
             NFTselection_ListView.SelectedIndex = index;
         }
+        /// <summary>
+        /// saves the current metadata to disk
+        /// </summary>
         private void SaveMetadata()
         {
             if (CurrentMetadataPath == null)
@@ -226,12 +253,6 @@ namespace Minter_UI.UI_NS
                 CollectionInformation.Information.MetadataFiles[key] = new FileInfo(CurrentMetadataPath.FullName);
             }
         }
-
-        private void RefreshCollectionButton_Click(object sender, RoutedEventArgs e)
-        {
-            CollectionInformation.ReloadAll();
-        }
-
         private void UpdateAllDescriptionsButton_Click(object sender, RoutedEventArgs e)
         {
             // refresh all existing Metadata
@@ -254,11 +275,23 @@ namespace Minter_UI.UI_NS
                     $"The software assumes they are already minted.");
             }
         }
+        /// <summary>
+        /// this function is beeing called when the user selects a new nft in the list. the nft will be loaded into preview to
+        /// edit its metadata
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NFTselection_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             MintingItem selectedItem = (MintingItem)(sender as ListView).SelectedItem;
             LoadInformation(selectedItem);
         }
+        /// <summary>
+        /// this button opens a file dialog and imports the according files to their corresponding folders<br/>
+        /// it also updated the collection information and refreshes the filters/view in the end to display the imported files/nfts
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ImportMedia_Button_Click(object sender, RoutedEventArgs e)
         {
 

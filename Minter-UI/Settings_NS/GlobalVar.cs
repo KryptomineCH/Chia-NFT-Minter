@@ -29,7 +29,13 @@ namespace Minter_UI
         /// The currently logged in wallet. This variable is updated from within Footer.xaml.cs
         /// </summary>
         internal static OneWrite_MultiRead<LogIn_Response> CurrentlyLoggedInWallet = new OneWrite_MultiRead<LogIn_Response>(new LogIn_Response(), 5000);
+        /// <summary>
+        /// the primary wallet adress to specify where minting fees go to
+        /// </summary>
         internal static string? PrimaryWalletAdress { get; set; }
+        /// <summary>
+        /// is updated fro mthe footer and used in various locations to determine license only material (custom receive adress when minting)
+        /// </summary>
         internal static bool Licensed = false;
         /// <summary>
         /// the wallet number of the currently selected nft wallet

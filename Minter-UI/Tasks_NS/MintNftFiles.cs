@@ -16,15 +16,32 @@ using System.Windows.Threading;
 
 namespace Minter_UI.Tasks_NS
 {
+    /// <summary>
+    /// this class contains the fire and forget task which interacts with the chia client and mints the nfts
+    /// </summary>
     internal class MintNftFiles
     {
+        /// <summary>
+        /// variable to be used to prevent duplicate task execution
+        /// </summary>
         internal static bool MintingInProgress = false;
+        /// <summary>
+        /// used to update MintingInProgress in a threadsafe matter and making sure the task is only executed once
+        /// </summary>
         private static object MintingInProgressLock = new object();
+        /// <summary>
+        /// the infinite fire and forget task which mints the nfts. can be stopped with the cancellation token
+        /// </summary>
+        /// <param name="cancle">the token to stop the task</param>
+        /// <param name="uiView">the ui viewmodel which should be updated to display the status in the ui</param>
+        /// <param name="dispatcherObject">the ui caller to execute the ui update on the correct process</param>
+        /// <returns></returns>
         internal static async Task MintNfts_Task(
             CancellationToken cancle, 
             MintingPreview_ViewModel uiView,
             DispatcherObject dispatcherObject)
         {
+            // make sure the task is only executed once
             lock (MintingInProgressLock)
             {
                 if (MintingInProgress) return;
@@ -32,7 +49,9 @@ namespace Minter_UI.Tasks_NS
             }
             try
             {
+                // remove old (stuck) transactions
                 CheckPendingTransactions(cancle);
+                // the default kryptomine royalty adress if the software is not licensed
                 string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
                 if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
                 {
@@ -43,6 +62,7 @@ namespace Minter_UI.Tasks_NS
                     MessageBox.Show($"Software not licensed, not in sync or royalty address couldnt be found{Environment.NewLine}" +
                         $"1.9% Fees will go to KryptoMine");
                 }
+                // infinite loop minting
                 while (!cancle.IsCancellationRequested)
                 {
                     // if there are no nfts to be minted, wait for more
@@ -102,6 +122,7 @@ namespace Minter_UI.Tasks_NS
             }
             finally
             {
+                // wrapping things up
                 lock (MintingInProgressLock)
                 {
                     MintingInProgress = false;
@@ -162,6 +183,16 @@ namespace Minter_UI.Tasks_NS
             }
             return stillPendingTransactions;
         }
+        /// <summary>
+        /// task to mint an nft. it can take some time so it is beeing executed async.
+        /// also validates if the mint was successful
+        /// </summary>
+        /// <param name="nftToBeMinted"></param>
+        /// <param name="royaltyAdress"></param>
+        /// <param name="cancel"></param>
+        /// <param name="uiView"></param>
+        /// <param name="dispatcherObject"></param>
+        /// <returns></returns>
         private static async Task MintNft(
             KeyValuePair<string, FileInfo> nftToBeMinted, 
             string royaltyAdress,

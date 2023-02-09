@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 
 namespace Minter_UI.UI_NS
 {
+    /// <summary>
+    /// thisitem contains the data for an nftpreview. it is beeing added to the viewmodel
+    /// </summary>
     public class MintingItem : INotifyPropertyChanged
     {
         public MintingItem() { 
@@ -21,6 +24,9 @@ namespace Minter_UI.UI_NS
             IsUploaded = false;
             IsMinting = false;
         }
+        /// <summary>
+        /// data is the image uri of the nft
+        /// </summary>
         private string _data;
         /// <summary>
         /// this is the imageURI of the Item
@@ -46,7 +52,13 @@ namespace Minter_UI.UI_NS
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// this bool specifies if the nft is currently in uploading stage, giving it a light blue border
+        /// </summary>
         private bool isUploading;
+        /// <summary>
+        /// this bool specifies if the nft is currently in uploading stage, giving it a light blue border
+        /// </summary>
         public bool IsUploading
         {
             get { return isUploading; }
@@ -56,7 +68,13 @@ namespace Minter_UI.UI_NS
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// this bool specifies if the nft is uploaded stage, giving it a dark blue border
+        /// </summary>
         private bool isUploaded;
+        /// <summary>
+        /// this bool specifies if the nft is uploaded stage, giving it a dark blue border
+        /// </summary>
         public bool IsUploaded
         {
             get { return isUploaded; }
@@ -66,7 +84,13 @@ namespace Minter_UI.UI_NS
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// this bool specifies if the nft is currently beeing minted, giving it a yellow border
+        /// </summary>
         private bool isMinting;
+        /// <summary>
+        /// this bool specifies if the nft is currently beeing minted, giving it a yellow border
+        /// </summary>
         public bool IsMinting
         {
             get { return isMinting; }
@@ -76,14 +100,27 @@ namespace Minter_UI.UI_NS
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// the key of the nft
+        /// </summary>
         public string Key { get; private set; }
+        /// <summary>
+        /// event handler which is beeing hooked onto by ui controls
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// raises the event
+        /// </summary>
+        /// <param name="propertyName"></param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+    /// <summary>
+    /// the viewmodel contains an observable collection which ui elements can hook onto in order to automatically
+    /// update their content (gallery)
+    /// </summary>
     public class MintingPreview_ViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<MintingItem> _items;

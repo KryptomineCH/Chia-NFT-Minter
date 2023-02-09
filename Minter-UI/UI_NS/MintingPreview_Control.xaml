@@ -6,12 +6,15 @@
              xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400">
+    <!-- Border to display the current state of the NFT -->
     <Border x:Name="MarkingBorder" CornerRadius="22" Margin="2" BorderBrush="#1c1c1c" BorderThickness="5">
         <Border.Effect>
             <DropShadowEffect Color="Black" Opacity="0.5" />
         </Border.Effect>
         <Grid>
+            <!-- round the corners of the browser -->
             <Border Name="mask" CornerRadius="20" Background="Black"/>
+            <!-- Chromium browser displayes the media -->
             <cef:ChromiumWebBrowser x:Name="Browser">
                 <cef:ChromiumWebBrowser.OpacityMask>
                     <VisualBrush Visual="{Binding ElementName=mask}"/>

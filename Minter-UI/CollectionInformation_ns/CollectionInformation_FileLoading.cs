@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Minter_UI.CollectionInformation_ns
 {
+    /// <summary>
+    /// Collectioninformation scans through the file collection and provides information about metadata, missing files and ready to mint nfts
+    /// </summary>
     public static partial class CollectionInformation
     {
         /// <summary>

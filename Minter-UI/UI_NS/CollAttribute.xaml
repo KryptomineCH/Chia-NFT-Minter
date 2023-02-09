@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="60" d:DesignWidth="300"  Padding="0.1cm, 0.1cm, 0, 0">
     <UserControl.Resources>
+        <!-- Styles -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
@@ -19,7 +20,9 @@
             <ColumnDefinition MinWidth="1cm"></ColumnDefinition>
             <ColumnDefinition Width="0.5cm"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        <!-- rounding on the right side -->
         <Border Padding="0.15cm" CornerRadius="5,0,0,5" Background="#2E2A10">
+            <!-- input fields -->
             <StackPanel Orientation="Vertical" Grid.Row="0">
                 <ComboBox x:Name="Type_ComboBox" 
                            Text="Type"
@@ -30,7 +33,7 @@
                 </TextBox>
             </StackPanel>
         </Border>
-        
+        <!-- delete button -->
         <Button x:Name="Delete_Button" Content="X" 
                 Foreground="DarkRed"
                 Grid.Column="1" Click="Delete_Button_Click">

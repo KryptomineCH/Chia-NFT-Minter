@@ -9,6 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              IsVisibleChanged="UserControl_IsVisibleChanged">
     <UserControl.Resources>
+        <!-- Styles -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/TextBoxStyle_Dark.xaml"/>
@@ -43,6 +44,7 @@
                     </StackPanel>
                 </ControlTemplate>
             </Button.Template>
+            <!-- Button image -->
             <Image Width="1cm" Height="1cm" Panel.ZIndex="2">
                 <Image.Style>
                     <Style TargetType="Image">
@@ -146,6 +148,7 @@
                     </Style>
                 </Button.Style>
             </Button>
+            <!-- Save and next button -->
             <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Row="1" Grid.Column="1"  Click="SaveAndNext_Button_Click" Margin="0.1cm,0,0,0.1cm">
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
@@ -173,6 +176,8 @@
                 </Button.Style>
             </Button>
         </Grid>
+        <!-- small preview list which can be used to display the next nft -->
+        <!-- is beeing filled by the filters -->
         <ListView
                 x:Name="NFTselection_ListView"
                 SelectionChanged="NFTselection_ListView_SelectionChanged"

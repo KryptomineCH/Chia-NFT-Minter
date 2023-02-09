@@ -9,7 +9,6 @@ using CHIA_RPC.Wallet_RPC_NS.WalletManagement_NS;
 using Minter_UI.Settings_NS;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -33,11 +32,21 @@ namespace Minter_UI.UI_NS
             _ = GetNftWallets();
             _ = ObtainStatusLoop(TimeSpan.FromSeconds(3));
         }
+        /// <summary>
+        /// this list contains all wallet fingerprints so that the user can choose a different wallet to mint
+        /// </summary>
         List<ulong> WalletFingerprints = new List<ulong>();
+        /// <summary>
+        /// this list contains all the dids which are available in the currently logged in wallet 
+        /// so that the user can choose the did to mint on
+        /// </summary>
         List<string> NftWallets = new List<string>();
+        /// <summary>
+        /// this function refreshes the WalletFingerprints and makes them available to the dropdown selection
+        /// </summary>
+        /// <returns></returns>
         private async Task RefreshWallets()
         {
-
             // fill wallets combobox
             WalletFingerprints.Clear();
             GetPublicKeys_Response wallets = await WalletApi.GetPublicKeys_Async();
@@ -62,11 +71,19 @@ namespace Minter_UI.UI_NS
                 this.WalletSelector_ComboBox.SelectedIndex = index;
             }
         }
-
+        /// <summary>
+        /// if the user chooses a different wallet, log in with it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WalletSelector_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _ = Login();
         }
+        /// <summary>
+        /// Login task. Is beeing called from the WalletSelector_ComboBox and runs async because the login is a long running task
+        /// </summary>
+        /// <returns></returns>
         private async Task Login()
         {
             ulong selectedWallet = (ulong)WalletSelector_ComboBox.SelectedItem;
@@ -203,6 +220,10 @@ namespace Minter_UI.UI_NS
                 }
             }
         }
+        /// <summary>
+        /// this task checks if an apropriate nft is contained in the wallet to activate the licensed software
+        /// </summary>
+        /// <returns></returns>
         private async Task LicenseCheck()
         {
             if (GlobalVar.Licensed) return;
@@ -241,7 +262,12 @@ namespace Minter_UI.UI_NS
             License_Label.Foreground = Brushes.Orange;
             License_Label.Content = "Free";
         }
-
+        /// <summary>
+        /// this button is only visible if the Software is unlicensed. Upon clicking on it, 
+        /// dexie.space is opened with the apropriate collection to obtain a license
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ObtainLicense_Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             string url = "https://dexie.space/offers/col1cpt7ey5229nmn5r7gq5z670hl8dhpue5xxg4qm3z8aj0j33d9hwqm2nltw/XCH";
@@ -271,7 +297,12 @@ namespace Minter_UI.UI_NS
                 }
             }
         }
-
+        /// <summary>
+        /// this combobox chooses the did wallet to mint on.
+        /// The function updated the selected did wallet in the globalvar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NftWalletSelector_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Settings.All.DidWallet = (string)NftWalletSelector_ComboBox.SelectedItem;
@@ -291,7 +322,6 @@ namespace Minter_UI.UI_NS
                     }
                 }
             }
-            
         }
     }
 }

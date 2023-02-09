@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Minter_UI.Settings_NS"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <!-- Styles -->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -38,6 +39,7 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
+        <!-- nft storage api key -->
         <Label Content="NFT.Storage Api Key" Grid.Row="0" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="NftStorageApiKey_TextBox" Grid.Row="1" Grid.Column="0"></TextBox>
         <Button x:Name="NftStorageApiKeySet_Button" Content="Set" Grid.Row="1" Grid.Column="1" 
@@ -67,7 +69,7 @@
                 </Style>
             </Button.Style>
         </Button>
-
+        <!-- Custom web Adress -->
         <Label Content="nft collection custom web base address" Grid.Row="2" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="NftCustomLink_TextBox" Grid.Row="3" Grid.Column="0"></TextBox>
         <Button x:Name="NftCustomLinkSet_Button" Content="Set" Grid.Row="3" Grid.Column="1" 
@@ -97,6 +99,7 @@
                 </Style>
             </Button.Style>
         </Button>
+        <!-- License Weblink -->
         <Label Content="Weblink to license files for specifying the terms of using your nfts" 
                Grid.Row="6" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="LicenseLink_TextBox" Grid.Row="7" Grid.Column="0"></TextBox>
@@ -128,12 +131,14 @@
                 </Style>
             </Button.Style>
         </Button>
+        <!-- caseSensitive file handling -->
         <WrapPanel Grid.Row="9">
             <CheckBox x:Name="CaseSensitiveFilehandling_CheckBox" 
                       IsChecked="True" Content="Case Sensitive File Handling" Grid.Column="0" 
                       Foreground="#998826"
                       Click="CaseSensitiveFilehandling_CheckBox_Checked"></CheckBox>
         </WrapPanel>
+        <!-- Minting fee -->
         <Label Content="Minting Fee" Grid.Row="10" Grid.Column="0" Foreground="#998826"></Label>
         <TextBox x:Name="MintingFee_TextBox" Text="1000" Grid.Row="11" Grid.Column="0" Foreground="#998826"></TextBox>
         <Button x:Name="MintingFeeSet_Button" Content="Set" Grid.Row="11" Grid.Column="1" 
@@ -163,6 +168,7 @@
                 </Style>
             </Button.Style>
         </Button>
+        <!-- Update -->
         <Label Content="Update" Grid.Row="12" Grid.Column="0" Foreground="#998826"></Label>
         <Button x:Name="Update_Button" Content="Update check pending..." Grid.Row="13" Click="Update_Button_Click">
             <Button.Resources>

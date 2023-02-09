@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Windows;
 
-
 namespace Minter_UI
 {
     /// <summary>
@@ -23,7 +22,7 @@ namespace Minter_UI
                 }
             //}
             #endif
-
+            // register event handler of uncaught exceptions in order to log tem in errors.log
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 Exception ex = (Exception)args.ExceptionObject;
@@ -35,6 +34,7 @@ namespace Minter_UI
                     writer.WriteLine("Stack trace: " + ex.StackTrace);
                 }
             };
+            // initialize the form
             InitializeComponent();
             // load collection information once
             CollectionInformation.ReloadAll();

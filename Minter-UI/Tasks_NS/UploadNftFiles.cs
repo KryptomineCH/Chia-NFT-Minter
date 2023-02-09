@@ -15,20 +15,39 @@ using CollectionInformation = Minter_UI.CollectionInformation_ns.CollectionInfor
 
 namespace Minter_UI.Tasks_NS
 {
+    /// <summary>
+    /// This clas contains the fire & forget task which uploads the NFT Files
+    /// </summary>
     internal class UploadNftFiles
     {
+        /// <summary>
+        /// variable which specifies if the uploading is currently running or not
+        /// </summary>
         internal static bool UploadingInProgress = false;
+        /// <summary>
+        /// lock is beeing used to update the UploadingInProgress variable in a threadsafe manner and to
+        /// block the task from running twice
+        /// </summary>
         private static object UploadingInProgressLock = new object();
+        /// <summary>
+        /// infinite loop which can be cancelled which uploads the NFT media
+        /// </summary>
+        /// <param name="cancle">cancellation token to stop the process</param>
+        /// <param name="uiView">the viewmodel which is beeing used to update the display status</param>
+        /// <param name="dispatcherObject">making sure the correct process updates the ui</param>
+        /// <returns></returns>
         internal static async Task UploadAndGenerateRpcs_Task(
             CancellationToken cancle, 
             MintingPreview_ViewModel uiView,
             DispatcherObject dispatcherObject)
         {
+            // if no nft.storage api key is set the media cant be uploaded
             if (NftStorageAccount.Client == null)
             {
                 MessageBox.Show("cannot upload pics because nft.storage account is not set!");
                 return;
             }
+            // make sure the task is only started once
             lock(UploadingInProgressLock)
             {
                 if (UploadingInProgress)
@@ -37,7 +56,9 @@ namespace Minter_UI.Tasks_NS
                 }
                 UploadingInProgress = true;
             }
+            // the default cryptomine royalty address (if the software is not licensed)
             string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
+            // infinite loop unless cancelled
             while(!cancle.IsCancellationRequested)
             {
                 // if there are no nfts to be offer, wait for more
@@ -147,6 +168,7 @@ namespace Minter_UI.Tasks_NS
                 }
             }
         CancleJump:;
+            // finish up
             lock (UploadingInProgressLock)
             {
                 UploadingInProgress = false;

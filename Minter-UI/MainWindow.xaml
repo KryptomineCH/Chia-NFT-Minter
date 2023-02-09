@@ -12,6 +12,7 @@
         mc:Ignorable="d"
         Title="KryptoMine NftMinter" Height="650" Width="1100" Icon="/Resources/Application_Icon.png" 
         Background="#201E11">
+    <!-- Styles -->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,31 +21,40 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+    <!-- Application Content -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
+        <!-- Tab control which contains all interaction Pages -->
         <TabControl Grid.Row="0">
+            <!-- Collection Information -->
             <TabItem Header="Collection Information" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <ui:CollectionInformation_Control Background="#111009"></ui:CollectionInformation_Control>
             </TabItem>
+            <!-- Metadata Editing -->
             <TabItem Header="Metadata" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <ui:Metadata_Control Background="#111009"></ui:Metadata_Control>
             </TabItem>
+            <!-- Minting -->
             <TabItem Header="Minting" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <ui:Minting_Control Background="#111009"></ui:Minting_Control>
             </TabItem>
+            <!-- Selling -->
             <TabItem Header="Selling" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <ui:Offering_Control Background="#111009"></ui:Offering_Control>
             </TabItem>
+            <!-- Settings -->
             <TabItem Header="Settings" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <settings:Settings_Control Background="#111009"></settings:Settings_Control>
             </TabItem>
+            <!-- Help -->
             <TabItem Header="Help" Background="#121212" Foreground="#e0cf6c" BorderBrush="#201E11">
                 <cef:ChromiumWebBrowser Address="https://github.com/KryptomineCH/Chia-NFT-Minter/wiki"/>
             </TabItem>
         </TabControl>
+        <!-- Fotter information -->
         <ui:Footer Grid.Row="1"></ui:Footer>
     </Grid>
 </Window>

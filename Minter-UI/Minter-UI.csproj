@@ -10,20 +10,15 @@
       <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
       <Platforms>AnyCPU;x64</Platforms>
 	  <Deterministic>false</Deterministic>
-	  <AssemblyVersion>0.2.2</AssemblyVersion>
-	  <FileVersion>0.2.2</FileVersion>
+	  <AssemblyVersion>1.6.2.1</AssemblyVersion>
+	  <FileVersion>1.6.2.1</FileVersion>
 	  <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
 	  <AnalysisLevel>latest-all</AnalysisLevel>
 	  <IncludeSymbols>True</IncludeSymbols>
 	  <ErrorReport>prompt</ErrorReport>
 	  <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	  <PublishTrimmed>false</PublishTrimmed>
-	  <PackageReleaseNotes>- added import buttons
-- reworked window design
-- multiple buxfixes and cleanups
-- reworked metadata editing
-- implemented collection filtering
-- updated nft.wtorage api key display settings</PackageReleaseNotes>
+	  <PackageReleaseNotes>fixed offer creation</PackageReleaseNotes>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -66,7 +61,8 @@
     <PackageReference Include="BitmapHelper_Net" Version="1.0.2" />
     <PackageReference Include="cef.redist.x64" Version="109.1.11" />
     <PackageReference Include="CefSharp.Wpf.NETCore" Version="109.1.110" />
-    <PackageReference Include="Chia-Client-API" Version="1.6.2.12" />
+    <PackageReference Include="Chia-Client-API" Version="1.6.2.14" />
+    <PackageReference Include="Dexie.Space.Net" Version="1.0.0" />
     <PackageReference Include="Multithreading_Library" Version="1.0.1" />
     <PackageReference Include="NFT.Storage.Net" Version="1.0.1.2" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
@@ -76,7 +72,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\..\OneDrive\Projects\Libraries\BitmapHelper_Net\BitmapHelper_Net\BitmapHelper_Net.csproj" />
-    <ProjectReference Include="..\..\Chia-Metadata\Chia-Metadata\Chia-Metadata.csproj" />
   </ItemGroup>
 
   <ItemGroup>

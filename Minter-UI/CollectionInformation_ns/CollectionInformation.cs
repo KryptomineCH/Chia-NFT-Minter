@@ -8,11 +8,30 @@ namespace Minter_UI.CollectionInformation_ns
     /// </summary>
     public static partial class CollectionInformation
     {
+        /// <summary>
+        /// Object that contains information about the collection
+        /// </summary>
         public static CollectionInformation_Object Information = new CollectionInformation_Object();
+        /// <summary>
+        /// Gets the key of a file from its `FileInfo` object
+        /// </summary>
+        /// <remarks>
+        /// key is the uneque identifier for dictionaries and hashsets. It is the filename without extension.
+        /// </remarks>
+        /// <param name="file">The `FileInfo` object of the file</param>
+        /// <returns>The key of the file</returns>
         public static string GetKeyFromFile(FileInfo file)
         {
             return GetKeyFromFile(file.Name);
         }
+        /// <summary>
+        /// Gets the key of a file from its file path
+        /// </summary>
+        /// <remarks>
+        /// key is the uneque identifier for dictionaries and hashsets. It is the filename without extension.
+        /// </remarks>
+        /// <param name="path">The file path of the file</param>
+        /// <returns>The key of the file</returns>
         public static string GetKeyFromFile(string path)
         {
             string key = Path.GetFileNameWithoutExtension(path);
@@ -22,6 +41,9 @@ namespace Minter_UI.CollectionInformation_ns
             }
             return key;
         }
+        /// <summary>
+        /// Reloads all the information about the collection
+        /// </summary>
         public static void ReloadAll()
         {
             lock (IsLoadingLock)
@@ -34,6 +56,9 @@ namespace Minter_UI.CollectionInformation_ns
             LoadTask.Wait();
             return;
         }
+        /// <summary>
+        /// Reloads all the information about the collection asynchronously
+        /// </summary>
         public static async Task ReloadAll_Async()
         {
             lock (IsLoadingLock)
@@ -53,11 +78,19 @@ namespace Minter_UI.CollectionInformation_ns
             IsLoading = false;
         }
         /// <summary>
-        /// is used in an attempt to defy access violation exceptions in a multithreaded environment
+        /// Indicates if the collection information is being loaded
         /// </summary>
         private static volatile bool IsLoading = false;
+
+        /// <summary>
+        /// Object used to lock the `IsLoading` property in a multithreaded environment
+        /// </summary>
         private static object IsLoadingLock = new object();
+
+        /// <summary>
+        /// Task for loading the collection information
+        /// </summary>
         public static Task? LoadTask { get; set; }
-        
+
     }
 }

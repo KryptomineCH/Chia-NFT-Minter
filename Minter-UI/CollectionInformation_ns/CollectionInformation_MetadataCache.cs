@@ -1,22 +1,28 @@
 ﻿using Chia_Metadata;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Caching;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Minter_UI.CollectionInformation_ns
 {
+    /// <summary>
+    /// Collectioninformation scans through the file collection and provides information about metadata, missing files and ready to mint nfts
+    /// </summary>
     public static partial class CollectionInformation
     {
         static CollectionInformation()
         {
             MetadataCache = new MemoryCache("MyCache");
         }
+        /// <summary>
+        /// this cache is very important to not always load metadata from files again
+        /// </summary>
         private static MemoryCache MetadataCache { get; set; }
+        /// <summary>
+        /// tries to load metadata from cache. If it is not in the cache, load from file
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         internal static bool GetMetadataFromCache(string key, out Metadata result)
         {
             result = new Metadata();
@@ -34,6 +40,12 @@ namespace Minter_UI.CollectionInformation_ns
             }
             return false;
         }
+        /// <summary>
+        /// tries to load metadata from cache. If it is not in the cache, load from file
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         internal static bool GetMetadataFromCache(FileInfo file, out Metadata result)
         {
             string key = GetKeyFromFile(file);

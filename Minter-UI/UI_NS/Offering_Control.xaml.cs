@@ -1,5 +1,4 @@
 ﻿using Minter_UI.CollectionInformation_ns;
-using Minter_UI.Settings_NS;
 using Minter_UI.Tasks_NS;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace Minter_UI.UI_NS
 {
@@ -26,9 +24,23 @@ namespace Minter_UI.UI_NS
             this.DataContext = _viewModel;
             InitializeComponent();
         }
+        /// <summary>
+        /// the viewmodel is beeiing hooked onto by the preview wrappanel and updated automatically with th observablecollection
+        /// </summary>
         internal MintingPreview_ViewModel _viewModel;
+        /// <summary>
+        /// this token is passed to the subprocess to cancle offering when the user requests it
+        /// </summary>
         private CancellationTokenSource CancleProcessing = new CancellationTokenSource();
+        /// <summary>
+        /// this bool is used to make sure the collection is only loaded once when this control comes into view and not every time
+        /// </summary>
         bool Initialized = false;
+        /// <summary>
+        /// this function loads all nfts when the control is displayed. it uses Initialized to make sure this only happens once
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             UserControl userControl = sender as UserControl;
@@ -38,6 +50,10 @@ namespace Minter_UI.UI_NS
                 Initialized = true;
             }
         }
+        /// <summary>
+        /// this function refreshes the collection directories and updated the displays accordingly
+        /// </summary>
+        /// <param name="reloadDirs"></param>
         private async void RefreshPreviews(bool reloadDirs = true)
         {
             await MintNftFiles.CheckPendingTransactions(CancellationToken.None).ConfigureAwait(false);
@@ -141,6 +157,10 @@ namespace Minter_UI.UI_NS
                 await UpdateButtonAfterStartingTasks();
             }
         }
+        /// <summary>
+        /// this task makes sure that the update button transferrs back to its initial state when the subprocess ends
+        /// </summary>
+        /// <returns></returns>
         private async Task UpdateButtonAfterStartingTasks()
         {
             while (Tasks_NS.MintNftFiles.MintingInProgress || Tasks_NS.UploadNftFiles.UploadingInProgress)

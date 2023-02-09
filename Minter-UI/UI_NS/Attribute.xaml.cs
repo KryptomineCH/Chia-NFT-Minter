@@ -2,7 +2,6 @@
 using Minter_UI.CollectionInformation_ns;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,21 +12,37 @@ namespace Minter_UI.UI_NS
     /// </summary>
     public partial class Attribute : UserControl
     {
+        /// <summary>
+        /// generates a new attribute control and tries to load attribute suggestions
+        /// </summary>
+        /// <param name="usedAttributes">an observable collection which contains the attributes which are in use</param>
+        /// <param name="attr">the attribute which should be loaded</param>
         public Attribute(SelectedAttributes? usedAttributes, MetadataAttribute? attr = null)
         {
+            // set event listener if the observable collection has been modified
             _usedAttributes = usedAttributes;
             if (_usedAttributes != null)
             {
                 _usedAttributes.AttributelistChanged += (s, e) => LoadAvailableAttributes();
             }
+            // init
             InitializeComponent();
+            // load attribute suggestions
             LoadAvailableAttributes();
+            // set attribute values from passed attribute
             if (attr != null)
             {
                 SetAttribute(attr);
             }
         }
+        /// <summary>
+        /// an observable collection which contains the attributes which are in use
+        /// </summary>
         SelectedAttributes? _usedAttributes = new SelectedAttributes();
+        /// <summary>
+        /// converts the user control content into a Metadata Attribute element from Chia_Metadata
+        /// </summary>
+        /// <returns></returns>
         public MetadataAttribute GetAttribute()
         {
             MetadataAttribute attribute = new MetadataAttribute(this.TraitType_ComboBox.Text, this.Value_ComboBox.Text);
@@ -43,6 +58,10 @@ namespace Minter_UI.UI_NS
             }
             return attribute;
         }
+        /// <summary>
+        /// sets the values of the control from a Chia_Metadata.MetadataAttribute
+        /// </summary>
+        /// <param name="attribute"></param>
         public void SetAttribute(MetadataAttribute attribute)
         {
             if (attribute == null) return;
@@ -64,14 +83,15 @@ namespace Minter_UI.UI_NS
             {
                 return;
             }
-            string customText = "";
+            // save te currently selected item so that the selection can be restored
             string selectedItem = "";
-            customText= TraitType_ComboBox.Text;
+            string customText = TraitType_ComboBox.Text;
             if (TraitType_ComboBox.SelectedItem != null)
             {
                 selectedItem = (string)TraitType_ComboBox.SelectedItem;
             }
            
+            // update combobox items source
             List<string> values = new List<string>();
             foreach(MetadataAttribute meta in CollectionInformation.Information.AllMetadataAttributes.Values)
             {
@@ -82,7 +102,7 @@ namespace Minter_UI.UI_NS
                 }
             }
             this.TraitType_ComboBox.ItemsSource = values;
-
+            // try to restore previous value
             TraitType_ComboBox.Text = customText;
             if (TraitType_ComboBox.Items.Contains(selectedItem))
             {
@@ -99,8 +119,12 @@ namespace Minter_UI.UI_NS
         {
             Delete();
         }
+        /// <summary>
+        /// removes this control from the parent and set everything to null in order to allor garbage collection because of a bug
+        /// </summary>
         public void Delete()
         {
+            // unregister event firt to avoid unintended process starts
             if (_usedAttributes != null)
             {
                 _usedAttributes.AttributelistChanged -= (s, e) => LoadAvailableAttributes();
@@ -145,7 +169,8 @@ namespace Minter_UI.UI_NS
             
         }
         /// <summary>
-        /// resets min and max vailue
+        /// resets min and max vailue <br/>
+        /// also updates the UsedAttributes observable collection
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -172,29 +197,66 @@ namespace Minter_UI.UI_NS
             }
             
         }
+        /// <summary>
+        /// requised to prevent event fires if the attribute did not change but the selection changed
+        /// </summary>
         private string _previousValue = "";
+        /// <summary>
+        /// fire changed event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TraitType_ComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             OnAttributeChanged(EventArgs.Empty);
         }
+        /// <summary>
+        /// fire changed event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Value_ComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             OnAttributeChanged(EventArgs.Empty);
         }
+        /// <summary>
+        /// fire changed event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MinValue_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             OnAttributeChanged(EventArgs.Empty);
         }
-
+        /// <summary>
+        /// fire changed event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MaxValue_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             OnAttributeChanged(EventArgs.Empty);
         }
-
+        /// <summary>
+        /// event handler for when the attribute fields changed <br/>
+        /// used for the filters
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public delegate void EventHandler(object sender, EventArgs e);
-
+        /// <summary>
+        /// event handler for when the attribute fields changed <br/>
+        /// used for the filters
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public event EventHandler AttributeChanged;
-
+        /// <summary>
+        /// unsubscribe the attribute changed event from the parent control
+        /// </summary>
+        /// <remarks>
+        /// This is required because the AttributeControl removes itself from the parent not vice versa
+        /// </remarks>
         public void UnsubscribeFromParentControl()
         {
             if (this.Parent is IParentControl parentControl)
@@ -202,11 +264,20 @@ namespace Minter_UI.UI_NS
                 parentControl.AttributeChanged -= ParentControl_AttributeChanged;
             }
         }
-
+        /// <summary>
+        /// this function is nessesary for some magic shit going on and code could be added to it.
+        /// However, dont remove it. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ParentControl_AttributeChanged(object sender, EventArgs e)
         {
             // Event handling code
         }
+        /// <summary>
+        /// raises the event
+        /// </summary>
+        /// <param name="e"></param>
         protected void OnAttributeChanged(EventArgs e)
         {
             if (AttributeChanged != null)
@@ -214,19 +285,37 @@ namespace Minter_UI.UI_NS
                 AttributeChanged(this, e);
             }
         }
-
-        
     }
+    /// <summary>
+    /// thir class is beeing used to keep track of the used attributes and to not suggest duplicates
+    /// </summary>
     public class SelectedAttributes
     {
+        /// <summary>
+        /// a dictionary with the attributes which have been selected and how often they have been selected
+        /// </summary>
         private  Dictionary<string, int> _selectedAttributes = new Dictionary<string, int>();
+        /// <summary>
+        /// event for when the collection has been modified. This is important tu update the sugestions of the other subscribed attributes
+        /// </summary>
         public event EventHandler AttributelistChanged;
-
+        /// <summary>
+        /// a simple check wether an attribute is included already or not
+        /// </summary>
+        /// <param name="attribute"></param>
+        /// <returns></returns>
         public  bool ContainsAttribute(string attribute)
         {
             return _selectedAttributes.ContainsKey(attribute);
         }
 
+        /// <summary>
+        /// adds an attribute to the dictionary of used attributes.
+        /// </summary>
+        /// <remarks>
+        /// keeps track of the attribute count and fires the changedevent
+        /// </remarks>
+        /// <param name="attribute"></param>
         public  void AddAttribute(string attribute)
         {
             if (_selectedAttributes.ContainsKey(attribute))
@@ -239,7 +328,13 @@ namespace Minter_UI.UI_NS
                 AttributelistChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
+        /// <summary>
+        /// romoves an attribute from the used list
+        /// </summary>
+        /// <remarks>
+        /// if an attribute is used more than once, its usage count is decreased instead.
+        /// </remarks>
+        /// <param name="attribute"></param>
         public  void RemoveAttribute(string attribute)
         {
             if (_selectedAttributes.ContainsKey(attribute))
@@ -253,7 +348,9 @@ namespace Minter_UI.UI_NS
             }
         }
     }
-    // Parent control interface
+    /// <summary>
+    /// parent control interface which specifies wether the parent should be informed about attribute changes or not (for example to update filters)
+    /// </summary>
     public interface IParentControl
     {
         event EventHandler AttributeChanged;

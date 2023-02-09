@@ -8,6 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="#201E11" Foreground="#998826">
     <UserControl.Resources>
+        <!-- Styles -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/TextBoxStyle_Dark.xaml"/>
@@ -24,8 +25,9 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
+        <!-- NFT Display -->
         <cef:ChromiumWebBrowser x:Name="logoImageDisplay" Grid.Column="0" Grid.Row="0" Background="Transparent"/>
-
+        <!-- Logo selection button-->
         <Button x:Name="LogoImageChange_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0"
                 Panel.ZIndex="2" Click="LogoImageChange_Button_Click"
                 Background="Transparent" BorderBrush="Transparent" Margin="0.5cm,0.5cm">
@@ -47,7 +49,9 @@
                 </Image.Style>
             </Image>
         </Button>
+        <!-- Header image display -->
         <cef:ChromiumWebBrowser x:Name="headerImageDisplay" Grid.Column="0" Grid.Row="1" Background="Transparent" />
+        <!--  Header image selection button -->
         <Button x:Name="BannerImageChange_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1"
                 Panel.ZIndex="2" Click="BannerImageChange_Button_Click" 
                 Background="Transparent" BorderBrush="Transparent" Margin="0.5cm,0.5cm">
@@ -69,6 +73,7 @@
                 </Image.Style>
             </Image>
         </Button>
+        <!-- Metadata stackpanel -->
         <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
             <Label Content="Collection Name" Foreground="#998826"></Label>
             <TextBox x:Name="CollectionName_TextBox"></TextBox>
@@ -84,6 +89,7 @@
                 <Label Content="Series Total" Grid.Column="1" Foreground="#998826"></Label>
                 <TextBox x:Name="SeriesTotal_TextBox" Text="10000" TextChanged="SeriesTotal_TextBox_TextChanged"></TextBox>
             </Grid>
+            <!-- collection attributes -->
             <Button x:Name="CollectionAttributes_AddButton" Content="Add Attribute"
                      BorderBrush="Transparent" Margin="0.1cm"
                     Click="CollectionAttributes_AddButton_Click">

@@ -4,11 +4,8 @@ using Minter_UI.Tasks_NS;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Linq;
-using static Minter_UI.UI_NS.Attribute;
 
 namespace Minter_UI.UI_NS
 {
@@ -21,29 +18,59 @@ namespace Minter_UI.UI_NS
         {
             InitializeComponent();
         }
-        // Declare the delegate (if using non-generic delegate).
+        /// <summary>
+        /// Declares the delegate for the FilteringCompleted event.
+        /// </summary>
         public delegate void FilteringCompletedEventHandler(object sender, EventArgs e);
-        // Declare the event using the delegate.
+        /// <summary>
+        /// Declares the FilteringCompleted event.using the delegate.
+        /// </summary>
         public event FilteringCompletedEventHandler FilteringCompleted;
-        // filter variables
+        /// <summary>
+        /// class which handles the status filtering and contains the nfts filtered by status *new, with metadata, uploaded,...( 
+        /// </summary>
         internal StatusFilter statusFilter = new StatusFilter();
+        /// <summary>
+        /// class which handles the name filtering and contains the nfts filtered by the nft name
+        /// </summary>
         internal NameFilter nameFilter = new NameFilter();
+        /// <summary>
+        /// class which handles the attribute filtering and contains the nfts filtered by the attributes
+        /// </summary>
+        /// <remarks>
+        /// nfts can only be filtered by attribute if they contain metadata.
+        /// This is the final step before displaying the filtered nfts in the ui
+        /// </remarks>
         internal AttributeFilter attributeFilter = new AttributeFilter();
 
-
-        //public event EventHandler AttributeChanged;
-
+        /// <summary>
+        /// Handles the click event of the Refresh button.<br/>
+        /// this will refresh the collection information and reapply all filters
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Refresh_Button_Click(object sender, RoutedEventArgs e)
         {
             CollectionInformation.ReloadAll();
             RefreshStatusFilters();
         }
-
+        /// <summary>
+        /// Handles the TextChanged event of the Namefilter TextBox.<br/>
+        /// this starts the name filter and will refresh all subsequent filter steps
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TextChangedEventArgs"/> instance containing the event data.</param>
         private void Namefilter_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             RefreshNameFilters();
         }
-
+        /// <summary>
+        /// Handles the Checked event of the All CheckBox.<br/>
+        /// The all checkbox can check/uncheck all subsequent status selection checkboxes<br/>
+        /// also re-executes all filters
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void All_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if ((bool)All_CheckBox.IsChecked)
@@ -64,7 +91,13 @@ namespace Minter_UI.UI_NS
             }
             RefreshStatusFilters();
         }
-
+        /// <summary>
+        /// Handles the Checked event of the ExistingMetadata CheckBox.<br/>
+        /// This checkbox toggles wether nfts with metadata should be included or excludedby the filter<br/>
+        /// also refreshes all filters
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ExistingMetadata_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if ((bool)ExistingMetadata_CheckBox.IsChecked)
@@ -83,7 +116,13 @@ namespace Minter_UI.UI_NS
             }
             RefreshStatusFilters();
         }
-
+        /// <summary>
+        /// Handles the Checked event of the Uploaded_CheckBox CheckBox.<br/>
+        /// This checkbox toggles wether nfts which are uploaded to NFT.Storage should be included or excludedby the filter<br/>
+        /// also refreshes all filters
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Uploaded_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if ((bool)Uploaded_CheckBox.IsChecked)
@@ -100,12 +139,24 @@ namespace Minter_UI.UI_NS
             }
             RefreshStatusFilters();
         }
-
+        /// <summary>
+        /// Handles the Checked event of the PendingMint_CheckBox CheckBox.<br/>
+        /// This checkbox toggles wether nfts which are currently minting should be included or excludedby the filter<br/>
+        /// also refreshes all filters
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void PendingMint_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             RefreshStatusFilters();
         }
-
+        /// <summary>
+        /// Handles the Checked event of the Minted_CheckBox CheckBox.<br/>
+        /// This checkbox toggles wether nfts which are minted should be included or excludedby the filter<br/>
+        /// also refreshes all filters
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Minted_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if ((bool)Minted_CheckBox.IsChecked)
@@ -118,13 +169,23 @@ namespace Minter_UI.UI_NS
             }
             RefreshStatusFilters();
         }
-
+        /// <summary>
+        /// Handles the Checked event of the Offered_CheckBox CheckBox.<br/>
+        /// This checkbox toggles wether nfts which are offered should be included or excludedby the filter<br/>
+        /// also refreshes all filters
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Offered_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             RefreshStatusFilters();
         }
-
-        SelectedAttributes selectedIncludeAttributes = new SelectedAttributes();
+        /// <summary>
+        /// This function gets called when the addbutton of the include attribbute filter gets pressed<br/>
+        /// It then adds a Metadata attribute to the include filter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void IncludedAttributes_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
         {
             Attribute childControl = new Attribute(usedAttributes: null);
@@ -132,10 +193,16 @@ namespace Minter_UI.UI_NS
             IncludedAttributes_WrapPanel.Children.Add(childControl);
 
         }
-        SelectedAttributes selectedExcludeAttributes = new SelectedAttributes();
-
-        public event System.EventHandler AttributeChanged;
-
+        /// <summary>
+        /// this event is beeing raised from the child elements in include/exclude filter. it triggers a refresh of the filters.
+        /// </summary>
+        public event EventHandler AttributeChanged;
+        /// <summary>
+        /// This function gets called when the addbutton of the exclude attribbute filter gets pressed<br/>
+        /// It then adds a Metadata attribute to the exclude filter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExcludedAttributes_TagTanel_AddButton_Click(object sender, RoutedEventArgs e)
         {
             Attribute childControl = new Attribute(usedAttributes: null);
@@ -143,27 +210,52 @@ namespace Minter_UI.UI_NS
             ExcludedAttributes_WrapPanel.Children.Add(childControl);
 
         }
-
+        /// <summary>
+        /// this function is called from the child elements from AttributeChanged and triggers the filter refresh
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ParentControl_AttributeChanged(object sender, EventArgs e)
         {
             RefreshAttributeFilters();
         }
-
+        /// <summary>
+        /// this cancel token is used when the filter changes but filtering is still on progress.<br/>
+        /// it stops the current filtering process so that the new Filters can be applied
+        /// </summary>
         CancellationTokenSource cancelStatusFiltering = new CancellationTokenSource();
+        /// <summary>
+        /// this variable is used to indicate that a filter process is currently running
+        /// </summary>
         bool IsStatusFiltering = false;
+        /// <summary>
+        /// this semaphore is beeing used to make sure only one filtering process is in the queue at any give time.
+        /// If a filter is processing and a new request is in the queue, waiting for the processing to stop, all further
+        /// requests will be blocked off. This is not an issue, as the filtering process pulls the newest filters on start.
+        /// It just needs to be started
+        /// </summary>
         SemaphoreSlim IsStatusFiltering_Lock = new SemaphoreSlim(1,1);
-        
+        /// <summary>
+        /// this function starts the filtering process and oulls the most current filters upon start.
+        /// when the filters change during filtering process, the current filtering process is beeing canceled in order to pull the new
+        /// Filters.
+        /// </summary>
         internal async void RefreshStatusFilters()
         {
+            // make sure only one filter process in processing and max 1 request to refresh the filters is in the queue
             if (!await IsStatusFiltering_Lock.WaitAsync(0).ConfigureAwait(false))
             {
                 if (cancelStatusFiltering.IsCancellationRequested)
                 {
+                    // there is already a task in the queue requesting filter refreshes. Block off further requests
                     return;
                 }
+                // cancle the current filter process and wait until the process is cancelled so that
+                // the filter can be reexecuted with new filter values
                 cancelStatusFiltering.Cancel();
                 await IsStatusFiltering_Lock.WaitAsync().ConfigureAwait(false);
             }
+            // pull filter values and start filtering
             try {
                 IsStatusFiltering = true;
                 var progress = new Progress<float>(p => Filter_ProgressBar.Value = p * 100);
@@ -182,6 +274,7 @@ namespace Minter_UI.UI_NS
                     RefreshNameFilters(continuationTask: true);
                 }
             }
+            // reset variables and wrap up this stage of the filter
             finally
             {
                 cancelStatusFiltering = new CancellationTokenSource();
@@ -189,21 +282,43 @@ namespace Minter_UI.UI_NS
                 IsStatusFiltering_Lock.Release();
             }
         }
-
+        /// <summary>
+        /// this cancel token is used when the filter changes but filtering is still on progress.<br/>
+        /// it stops the current filtering process so that the new Filters can be applied
+        /// </summary>
         CancellationTokenSource cancelNameFiltering = new CancellationTokenSource();
+        /// <summary>
+        /// this variable is used to indicate that a filter process is currently running
+        /// </summary>
         bool IsNameFiltering = false;
+        /// <summary>
+        /// this semaphore is beeing used to make sure only one filtering process is in the queue at any give time.
+        /// If a filter is processing and a new request is in the queue, waiting for the processing to stop, all further
+        /// requests will be blocked off. This is not an issue, as the filtering process pulls the newest filters on start.
+        /// It just needs to be started
+        /// </summary>
         SemaphoreSlim IsNameFiltering_Lock = new SemaphoreSlim(1,1);
+        /// <summary>
+        /// this function starts the filtering process and oulls the most current filters upon start.
+        /// when the filters change during filtering process, the current filtering process is beeing canceled in order to pull the new
+        /// Filters.
+        /// </summary>
         private async void RefreshNameFilters(bool continuationTask = false)
         {
+            // make sure only one filter process in processing and max 1 request to refresh the filters is in the queue
             if (!await IsNameFiltering_Lock.WaitAsync(0).ConfigureAwait(false))
             {
                 if (cancelNameFiltering.IsCancellationRequested || IsStatusFiltering)
                 {
+                    // there is already a task in the queue requesting filter refreshes. Block off further requests
                     return;
                 }
+                // cancle the current filter process and wait until the process is cancelled so that
+                // the filter can be reexecuted with new filter values
                 cancelNameFiltering.Cancel();
                 await IsNameFiltering_Lock.WaitAsync().ConfigureAwait(false);
             }
+            // pull filter values and start filtering
             try
             {
                 var progress = new Progress<float>(p => Filter_ProgressBar.Value = p * 100);
@@ -218,6 +333,7 @@ namespace Minter_UI.UI_NS
                     RefreshAttributeFilters(continuationTask: true);
                 }
             }
+            // reset variables and wrap up this stage of the filter
             finally
             {
                 cancelNameFiltering = new CancellationTokenSource();
@@ -225,19 +341,39 @@ namespace Minter_UI.UI_NS
                 IsNameFiltering_Lock.Release();
             }
         }
+        /// <summary>
+        /// this cancel token is used when the filter changes but filtering is still on progress.<br/>
+        /// it stops the current filtering process so that the new Filters can be applied
+        /// </summary>
         CancellationTokenSource cancelAttributeFiltering = new CancellationTokenSource();
+        /// <summary>
+        /// this semaphore is beeing used to make sure only one filtering process is in the queue at any give time.
+        /// If a filter is processing and a new request is in the queue, waiting for the processing to stop, all further
+        /// requests will be blocked off. This is not an issue, as the filtering process pulls the newest filters on start.
+        /// It just needs to be started
+        /// </summary>
         SemaphoreSlim IsAttributeFiltering_Lock = new SemaphoreSlim(1,1);
+        /// <summary>
+        /// this function starts the filtering process and oulls the most current filters upon start.
+        /// when the filters change during filtering process, the current filtering process is beeing canceled in order to pull the new
+        /// Filters.
+        /// </summary>
         private async void RefreshAttributeFilters(bool continuationTask = false)
         {
+            // make sure only one filter process in processing and max 1 request to refresh the filters is in the queue
             if (!await IsAttributeFiltering_Lock.WaitAsync(0).ConfigureAwait(false))
             {
                 if (cancelAttributeFiltering.IsCancellationRequested || IsStatusFiltering)
                 {
+                    // there is already a task in the queue requesting filter refreshes. Block off further requests
                     return;
                 }
+                // cancle the current filter process and wait until the process is cancelled so that
+                // the filter can be reexecuted with new filter values
                 cancelAttributeFiltering.Cancel();
                 await IsAttributeFiltering_Lock.WaitAsync().ConfigureAwait(false);
             }
+            // pull filter values and start filtering
             try
             {
                 // load dictionaries
@@ -266,6 +402,7 @@ namespace Minter_UI.UI_NS
                     FilteringCompleted(this, EventArgs.Empty);
                 }
             }
+            // reset variables and wrap up this stage of the filter
             finally
             {
                 cancelAttributeFiltering = new CancellationTokenSource();

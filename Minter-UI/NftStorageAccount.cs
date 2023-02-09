@@ -16,7 +16,7 @@ namespace Minter_UI
             TryLoadApiKey();
         }
         /// <summary>
-        /// the apii key, obtained from nft.storage
+        /// the api key, obtained from nft.storage
         /// </summary>
         internal static string? ApiKey {
             get
@@ -41,9 +41,23 @@ namespace Minter_UI
                 File.SetAttributes(_ApiKeyFile.FullName, FileAttributes.Hidden);
             }
         }
+        /// <summary>
+        /// the api key, obtained from nft.storage in encrypted form. used to provide some memory readout protection. <br/>
+        /// can be decrypted with the username
+        /// </summary>
         internal static string? _ApiKeyEncrypted { get; set; }
+        /// <summary>
+        /// the file where the encrypted api key is stored
+        /// </summary>
         private static FileInfo _ApiKeyFile = new FileInfo("api.id");
+        /// <summary>
+        /// the nft.storage client interface used to upload the media
+        /// </summary>
         public static NFT_Storage_API? Client;
+        /// <summary>
+        /// tries to load the encrypted api key file from disk
+        /// </summary>
+        /// <returns>true if NFT_Storage_API was sucessfully initialized</returns>
         public static bool TryLoadApiKey()
         {
             if (_ApiKeyEncrypted == null || _ApiKeyEncrypted == "")

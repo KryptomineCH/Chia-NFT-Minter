@@ -63,12 +63,14 @@ namespace Minter_UI.UI_NS
                     LogoImageFile = file;
                 }
             }
+            // if haeder image does not exist, place a placeholder
             if (HeaderImageFile == null)
             {
                 File.WriteAllBytes("banner.png", Properties.Resources.missing_collection_banner);
                 HeaderImageFile = new FileInfo("banner.png");
                 this.headerImageDisplay.Address = HeaderImageFile.FullName;
             }
+            // if logo image does not exist, place a placeholder
             if (LogoImageFile == null)
             {
                 File.WriteAllBytes("logo.png", Properties.Resources.missing_collection_logo);
@@ -183,11 +185,13 @@ namespace Minter_UI.UI_NS
                 }
 
             }
+            // check if nft.storage api key is set
             if (NftStorageAccount.Client == null )
             {
                 MessageBox.Show("STOP: please set the NFT.Storage api key in settings first!");
                 return;
             }
+            // update banner image if required
             if (bannerNeedsToBeRefreshed && HeaderImageFile != null)
             {
                 Task<NFT_File> uploadFile = Task.Run(() => NftStorageAccount.Client.Upload(HeaderImageFile));
@@ -209,6 +213,7 @@ namespace Minter_UI.UI_NS
                 }
                 
             }
+            // update logo image if required
             if (logoNeedsToBeRefreshed && LogoImageFile != null)
             {
                 Task<NFT_File> uploadFile = Task.Run(() => NftStorageAccount.Client.Upload(LogoImageFile));
@@ -279,7 +284,11 @@ namespace Minter_UI.UI_NS
             }
         }
         private bool LastIntParseTest = true;
-
+        /// <summary>
+        /// Opens a file browser dialog in order to let the user choose another logo image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LogoImageChange_Button_Click(object sender, RoutedEventArgs e)
         {
             // let user choose file
@@ -316,7 +325,11 @@ namespace Minter_UI.UI_NS
                 }
             }
         }
-
+        /// <summary>
+        /// Opens a file browser dialog in order to let the user choose another banner image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BannerImageChange_Button_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
