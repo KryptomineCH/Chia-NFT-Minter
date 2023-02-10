@@ -51,6 +51,10 @@ namespace Minter_UI.CollectionInformation_ns
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> OfferedFiles = new ConcurrentDictionary<string, FileInfo>();
         /// <summary>
+        /// This Dictionary contains all offer files which have been uploaded to a decentralized exchange
+        /// </summary>
+        public ConcurrentDictionary<string, FileInfo> PublishedOffers = new ConcurrentDictionary<string, FileInfo>();
+        /// <summary>
         /// contains all nft's where metadata is missing
         /// </summary>
         /// <remarks>this is an arbitrary collection which can be generated from NftFiles - MetadataFiles</remarks>
@@ -64,6 +68,10 @@ namespace Minter_UI.CollectionInformation_ns
         /// these nfts are minted but have not generated offer files yet
         /// </summary>
         public ConcurrentDictionary<string, FileInfo> ReadyToOffer = new ConcurrentDictionary<string, FileInfo>();
+        /// <summary>
+        /// these NFTs are the offered nfts
+        /// </summary>
+        public ConcurrentDictionary<string, FileInfo> ReadyToPublishOffer = new ConcurrentDictionary<string, FileInfo>();
         /// <summary>
         /// these are the nfts which have been uploaded to nftStorage and are ready for minting
         /// </summary>

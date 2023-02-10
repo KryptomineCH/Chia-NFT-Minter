@@ -17,12 +17,8 @@ namespace Minter_UI.CollectionInformation_ns
         /// <param name="newInfo">An object of type CollectionInformation_Object that will hold the information gathered from the directories.</param>
         private static void ReLoadDirectories(CollectionInformation_Object newInfo)
         {
-            // refresh directory Informations
-            Directories.Nfts.Refresh();
-            Directories.Rpcs.Refresh();
-            Directories.Metadata.Refresh();
-            Directories.Minted.Refresh();
-            Directories.Offered.Refresh();
+            // refresh directory Informations to include newly added files
+            Directories.RefreshDirectoryInformations();
             // load base directories
             /// nft base files (images, documents, ...)
             newInfo.NftFiles = LoadDirectory(dirInfo: Directories.Nfts);
@@ -37,7 +33,10 @@ namespace Minter_UI.CollectionInformation_ns
             newInfo.PendingTransactions = LoadDirectory(dirInfo: Directories.PendingTransactions, fileTypes: new[] { ".mint" }, mustBeContainedWithin: newInfo.NftFiles);
             /// finished nfts
             newInfo.MintedFiles = LoadDirectory(dirInfo: Directories.Minted, fileTypes: new[] { ".json", ".rpc",".nft" }, mustBeContainedWithin: newInfo.NftFiles);
+            /// generated offer files
             newInfo.OfferedFiles = LoadDirectory(dirInfo: Directories.Offered, fileTypes: new[] { ".offer",".json", ".rpc", ".nft" }, mustBeContainedWithin: newInfo.NftFiles);
+            /// uploaded offer Files
+            newInfo.PublishedOffers = LoadDirectory(dirInfo: Directories.Offered, fileTypes: new[] { ".offer", ".dexieoffer" }, mustBeContainedWithin: newInfo.NftFiles);
             // generate arbitrary information which can be calculated using the base directories.
             // eg: nft has metadata information, but no rpc and mint has not been validated -> ready to mint
             foreach (string key in newInfo.NftFiles.Keys)
@@ -65,8 +64,24 @@ namespace Minter_UI.CollectionInformation_ns
                 {
                     newInfo.ReadyToOffer[key] = newInfo.MintedFiles[key];
                 }
+                /// gather nfts which can be offered
+                else if (newInfo.OfferedFiles.ContainsKey(key))
+                {
+                    // nft has an offer file
+                    // this is a specific case because multiple exchanges might be supported in the future
+                    string[] exchangekeys = new[]
+                    {
+                        key+"_dexie"
+                    };
+                    foreach (string exchangekey in exchangekeys)
+                    {
+                        if (!newInfo.PublishedOffers.ContainsKey(exchangekey))
+                        {
+                            newInfo.ReadyToPublishOffer[key] = newInfo.OfferedFiles[key];
+                        }
+                    }
+                }
             }
-            { }
         }
         /// <summary>
         /// Loads a file list from directory

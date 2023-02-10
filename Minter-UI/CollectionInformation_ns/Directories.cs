@@ -14,6 +14,19 @@ namespace Minter_UI.CollectionInformation_ns
             HideFoldersAndFiles();
         }
         /// <summary>
+        /// this function is required because a directory information is only loaded once upon creation.<br/>
+        /// If the user adds more files to the Directory, the DirectoryInfo wont pick this information up without a refresh
+        /// </summary>
+        internal static void RefreshDirectoryInformations()
+        {
+            Nfts.Refresh();
+            Rpcs.Refresh();
+            Metadata.Refresh();
+            Minted.Refresh();
+            Offered.Refresh();
+            PublishedOffers.Refresh();
+        }
+        /// <summary>
         /// this directory stores the NFT files. Eg, the artwork, image, video or document
         /// </summary>
         public static DirectoryInfo Nfts = new DirectoryInfo("final");
@@ -38,6 +51,10 @@ namespace Minter_UI.CollectionInformation_ns
         /// </summary>
         public static DirectoryInfo Offered = new DirectoryInfo("offers");
         /// <summary>
+        /// The published_offers directory contains offer files which have been uploaded to a decentraliced exchange
+        /// </summary>
+        public static DirectoryInfo PublishedOffers = new DirectoryInfo("published_offers");
+        /// <summary>
         /// This directory contains the nfts which are currently in the minting process (sent to the blockchain)<br/>
         /// The minting files are stored there to validate at a later point that the Minting has been completed sucessfully
         /// </summary>
@@ -52,6 +69,7 @@ namespace Minter_UI.CollectionInformation_ns
             if (!Metadata.Exists) Metadata.Create();
             if (!Rpcs.Exists) Rpcs.Create();
             if (!Offered.Exists) Offered.Create();
+            if (!PublishedOffers.Exists) PublishedOffers.Create();
             if (!Minted.Exists) Minted.Create();
             if (!PendingTransactions.Exists)
             {
