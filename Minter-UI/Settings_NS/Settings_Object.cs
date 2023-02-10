@@ -48,5 +48,10 @@ namespace Minter_UI.Settings_NS
         /// this is used to determine whch folder the importer should open. is updatd automatically
         /// </summary>
         public string LastImportPath { get; set; }
+        // publishing offers
+        /// <summary>
+        /// this setting specifies if offers should be published to dexie
+        /// </summary>
+        public bool PublishOffersTo_DexieSpace { get; set; } = true;
     }
 }

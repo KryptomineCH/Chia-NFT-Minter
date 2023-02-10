@@ -23,6 +23,7 @@ namespace Minter_UI.UI_NS
             _viewModel.Items = new ObservableCollection<MintingItem>();
             this.DataContext = _viewModel;
             InitializeComponent();
+            PublishToDexie_CheckBox.IsChecked = Settings_NS.Settings.All.PublishOffersTo_DexieSpace;
         }
         /// <summary>
         /// the viewmodel is beeiing hooked onto by the preview wrappanel and updated automatically with th observablecollection
@@ -117,7 +118,7 @@ namespace Minter_UI.UI_NS
         /// <param name="e"></param>
         private async void Offer_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Tasks_NS.MintNftFiles.MintingInProgress || Tasks_NS.UploadNftFiles.UploadingInProgress)
+            if (Tasks_NS.CreateNftOffers.OfferingInProgress || Tasks_NS.PublishOffers.OfferingInProgress)
             {
                 Offer_Button.IsEnabled = false;
                 Offer_Button.Content = "Stopping";
@@ -141,7 +142,18 @@ namespace Minter_UI.UI_NS
                         CancleProcessing.Dispose();
                     }
                 };
-                _ = Tasks_NS.CreateNftOffers.OfferNfts_Task(
+                _ = CreateNftOffers.OfferNfts_Task(
+                    CancleProcessing.Token,
+                    _viewModel,
+                    this).ContinueWith(t => {
+                        if (t.IsFaulted)
+                        {
+                            // Handle exception here
+                            _ = MessageBox.Show($"An exception occurred: {t.Exception}");
+                        }
+                    }, TaskContinuationOptions.OnlyOnFaulted)
+                            .ConfigureAwait(false);
+                _ = PublishOffers.PublishOffers_Task(
                     CancleProcessing.Token,
                     _viewModel,
                     this).ContinueWith(t => {
@@ -171,6 +183,20 @@ namespace Minter_UI.UI_NS
             Offer_Button.Content = "Mint!";
             Offer_Button.Background = new SolidColorBrush(ColorHelper.ColorConverter.FromHex("#697a1f"));
             Offer_Button.IsEnabled = true;
+        }
+        /// <summary>
+        /// saves the upload to dexie setting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PublishToDexie_CheckBox_Clicked(object sender, RoutedEventArgs e)
+        {
+            bool uploadDexieOffers = (bool)PublishToDexie_CheckBox.IsChecked;
+            if(Settings_NS.Settings.All.PublishOffersTo_DexieSpace != uploadDexieOffers)
+            {
+                Settings_NS.Settings.All.PublishOffersTo_DexieSpace = uploadDexieOffers;
+                Settings_NS.Settings.Save();
+            }
         }
     }
 }

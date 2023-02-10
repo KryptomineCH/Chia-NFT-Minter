@@ -45,6 +45,7 @@
     <None Remove="Resources\Application_Icon.png" />
     <None Remove="Resources\ChangeImageIcon.png" />
     <None Remove="Resources\ChangeImageIcon_mouseover.png" />
+    <None Remove="Resources\dexie_medium.png" />
     <None Remove="Resources\import_Icon.png" />
     <None Remove="Resources\import_Icon_mouseover.png" />
   </ItemGroup>
@@ -59,10 +60,10 @@
 
   <ItemGroup>
     <PackageReference Include="BitmapHelper_Net" Version="1.0.2" />
-    <PackageReference Include="cef.redist.x64" Version="109.1.11" />
-    <PackageReference Include="CefSharp.Wpf.NETCore" Version="109.1.110" />
+    <PackageReference Include="cef.redist.x64" Version="110.0.25" />
+    <PackageReference Include="CefSharp.Wpf.NETCore" Version="110.0.250" />
     <PackageReference Include="Chia-Client-API" Version="1.6.2.14" />
-    <PackageReference Include="Dexie.Space.Net" Version="1.0.0" />
+    <PackageReference Include="Dexie.Space.Net" Version="1.0.4.5" />
     <PackageReference Include="Multithreading_Library" Version="1.0.1" />
     <PackageReference Include="NFT.Storage.Net" Version="1.0.1.2" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
@@ -77,6 +78,10 @@
   <ItemGroup>
     <Resource Include="Resources\Application_Icon.png" />
     <Resource Include="Resources\ChangeImageIcon_mouseover.png" />
+    <Resource Include="Resources\dexie_medium.png">
+      <PackagePath>Resources/dexie_medium.png</PackagePath>
+      <Pack>True</Pack>
+    </Resource>
     <Resource Include="Resources\import_Icon.png" />
     <Resource Include="Resources\import_Icon_mouseover.png" />
   </ItemGroup>
@@ -106,6 +111,18 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="chromiumembeddedframework.runtime.win-arm64" Version="110.0.25" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="chromiumembeddedframework.runtime.win-x64" Version="110.0.25" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="chromiumembeddedframework.runtime.win-x86" Version="110.0.25" />
   </ItemGroup>
 
 </Project>
