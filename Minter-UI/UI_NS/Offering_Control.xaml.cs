@@ -143,6 +143,8 @@ namespace Minter_UI.UI_NS
                         CancleProcessing.Dispose();
                     }
                 };
+                CreateNftOffers.OfferingInProgress = true;
+                PublishOffers.OfferingInProgress = true;
                 _ = CreateNftOffers.OfferNfts_Task(
                     CancleProcessing.Token,
                     _viewModel,
@@ -178,7 +180,7 @@ namespace Minter_UI.UI_NS
         {
             while (Tasks_NS.MintNftFiles.MintingInProgress || Tasks_NS.UploadNftFiles.UploadingInProgress)
             {
-                await Task.Delay(1000);
+                await Task.Delay(1000).ConfigureAwait(false);
             }
 
             Offer_Button.Content = "Create Offers!";
