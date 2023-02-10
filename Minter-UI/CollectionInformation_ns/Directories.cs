@@ -38,7 +38,8 @@ namespace Minter_UI.CollectionInformation_ns
         /// </summary>
         public static DirectoryInfo Offered = new DirectoryInfo("offers");
         /// <summary>
-        /// 
+        /// This directory contains the nfts which are currently in the minting process (sent to the blockchain)<br/>
+        /// The minting files are stored there to validate at a later point that the Minting has been completed sucessfully
         /// </summary>
         public static DirectoryInfo PendingTransactions = new DirectoryInfo("pending_transactions");
         /// <summary>
