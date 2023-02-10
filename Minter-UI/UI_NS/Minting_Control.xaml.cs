@@ -148,8 +148,6 @@ namespace Minter_UI.UI_NS
                         CancleProcessing.Dispose();
                     }
                 };
-                UploadNftFiles.UploadingInProgress = true;
-                Tasks_NS.MintNftFiles.MintingInProgress = true;
                 _ = Tasks_NS.UploadNftFiles.UploadAndGenerateRpcs_Task(
                     CancleProcessing.Token, 
                     _viewModel,

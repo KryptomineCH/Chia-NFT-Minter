@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Minter_UI.UI_NS
 {
@@ -143,8 +144,6 @@ namespace Minter_UI.UI_NS
                         CancleProcessing.Dispose();
                     }
                 };
-                CreateNftOffers.OfferingInProgress = true;
-                PublishOffers.OfferingInProgress = true;
                 _ = CreateNftOffers.OfferNfts_Task(
                     CancleProcessing.Token,
                     _viewModel,
@@ -169,23 +168,25 @@ namespace Minter_UI.UI_NS
                             .ConfigureAwait(false);
                 Offer_Button.Content = "Stop!";
                 Offer_Button.Background = Brushes.Red;
-                await UpdateButtonAfterStartingTasks();
+                await UpdateButtonAfterStartingTasks(this);
             }
         }
         /// <summary>
         /// this task makes sure that the update button transferrs back to its initial state when the subprocess ends
         /// </summary>
         /// <returns></returns>
-        private async Task UpdateButtonAfterStartingTasks()
+        private async Task UpdateButtonAfterStartingTasks(DispatcherObject dispatcherObject)
         {
-            while (Tasks_NS.MintNftFiles.MintingInProgress || Tasks_NS.UploadNftFiles.UploadingInProgress)
+            while (PublishOffers.OfferingInProgress || CreateNftOffers.OfferingInProgress)
             {
                 await Task.Delay(1000).ConfigureAwait(false);
             }
-
-            Offer_Button.Content = "Create Offers!";
-            Offer_Button.Background = new SolidColorBrush(ColorHelper.ColorConverter.FromHex("#697a1f"));
-            Offer_Button.IsEnabled = true;
+            dispatcherObject.Dispatcher.Invoke(new Action(() =>
+            {
+                Offer_Button.Content = "Create Offers!";
+                Offer_Button.Background = new SolidColorBrush(ColorHelper.ColorConverter.FromHex("#697a1f"));
+                Offer_Button.IsEnabled = true;
+            }));
         }
         /// <summary>
         /// saves the upload to dexie setting
