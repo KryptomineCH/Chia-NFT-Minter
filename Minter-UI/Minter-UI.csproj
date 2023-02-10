@@ -48,6 +48,7 @@
     <None Remove="Resources\dexie_medium.png" />
     <None Remove="Resources\import_Icon.png" />
     <None Remove="Resources\import_Icon_mouseover.png" />
+    <None Remove="Resources\spacescan_512.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,6 +75,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\..\OneDrive\Projects\Libraries\BitmapHelper_Net\BitmapHelper_Net\BitmapHelper_Net.csproj" />
+    <ProjectReference Include="..\..\Spacescan.IO.Net\Spacescan.IO.Net\Spacescan.IO.Net.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -85,6 +87,7 @@
     </Resource>
     <Resource Include="Resources\import_Icon.png" />
     <Resource Include="Resources\import_Icon_mouseover.png" />
+    <Resource Include="Resources\spacescan_512.png" />
   </ItemGroup>
 
   <ItemGroup>

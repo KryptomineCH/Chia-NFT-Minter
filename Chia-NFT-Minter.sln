@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dexie.Space.Net", "..\Dexie.Space.Net\Dexie.Space.Net\Dexie.Space.Net.csproj", "{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacescan.IO.Net", "..\Spacescan.IO.Net\Spacescan.IO.Net\Spacescan.IO.Net.csproj", "{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,22 @@ Global
 		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Release|x64.ActiveCfg = Release|x64
 		{F799A84E-2339-4955-8C58-88B786FA5B9F}.Release|x64.Build.0 = Release|x64
+		{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}.Debug|x64.Build.0 = Debug|Any CPU
+		{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}.Release|x64.ActiveCfg = Release|Any CPU
+		{79FA34B2-AEFD-43E4-BE86-63D2D84D4C69}.Release|x64.Build.0 = Release|Any CPU
+		{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}.Debug|x64.Build.0 = Debug|Any CPU
+		{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}.Release|x64.ActiveCfg = Release|Any CPU
+		{C0F1CB9E-CCBF-4C01-9BB8-1E18A8EA43CE}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

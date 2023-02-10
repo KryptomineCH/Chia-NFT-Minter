@@ -83,7 +83,7 @@ namespace Minter_UI.Tasks_NS
                         }
                         Spacescan.IO.Net.Offering_NS.Responses_NS.PostOffer_Response publishedOffer = await Spacescan.IO.Net.Offering_NS.Offers_Client.PostOffer_Async(offerText).ConfigureAwait(false);
                         FileInfo targetPath = new FileInfo(Path.Combine(Directories.PublishedOffers.FullName, nftToBeOffered_File.Key));
-                        publishedOffer.offer.Save(targetPath.FullName);
+                        publishedOffer.Save(targetPath.FullName);
                         CollectionInformation.Information.PublishedOffers[nftToBeOffered_File.Key] = targetPath;
                     }
                     else
