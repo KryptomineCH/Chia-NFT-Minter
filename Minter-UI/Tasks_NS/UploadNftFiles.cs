@@ -32,12 +32,12 @@ namespace Minter_UI.Tasks_NS
         /// <summary>
         /// infinite loop which can be cancelled which uploads the NFT media
         /// </summary>
-        /// <param name="cancle">cancellation token to stop the process</param>
+        /// <param name="cancel">cancellation token to stop the process</param>
         /// <param name="uiView">the viewmodel which is beeing used to update the display status</param>
         /// <param name="dispatcherObject">making sure the correct process updates the ui</param>
         /// <returns></returns>
         internal static async Task UploadAndGenerateRpcs_Task(
-            CancellationToken cancle, 
+            CancellationToken cancel, 
             MintingPreview_ViewModel uiView,
             DispatcherObject dispatcherObject)
         {
@@ -59,12 +59,20 @@ namespace Minter_UI.Tasks_NS
             // the default cryptomine royalty address (if the software is not licensed)
             string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
             // infinite loop unless cancelled
-            while(!cancle.IsCancellationRequested)
+            while(!cancel.IsCancellationRequested)
             {
                 // if there are no nfts to be offer, wait for more
                 if (CollectionInformation.Information.MissingRPCs.IsEmpty)
                 {
-                    await Task.Delay(2000, cancle).ConfigureAwait(false);
+                    try
+                    {
+                        await Task.Delay(2000, cancel).ConfigureAwait(false);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        // Log the exception or perform any necessary cleanup
+                        break;
+                    }
                     continue;
                 }
                 if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
@@ -96,7 +104,7 @@ namespace Minter_UI.Tasks_NS
                     FileInfo nft = CollectionInformation.Information.NftFiles[key];
                     Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nft.FullName));
                     await nftUploadTask.ConfigureAwait(false); ;
-                    if (cancle.IsCancellationRequested)
+                    if (cancel.IsCancellationRequested)
                     {
                         goto CancleJump;
                     }
@@ -106,7 +114,7 @@ namespace Minter_UI.Tasks_NS
                     Task<NFT_File> metaUploadTask =
                         Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.Information.MetadataFiles[key]));
                     await metaUploadTask.ConfigureAwait(false); ;
-                    if (cancle.IsCancellationRequested)
+                    if (cancel.IsCancellationRequested)
                     {
                         goto CancleJump;
                     }

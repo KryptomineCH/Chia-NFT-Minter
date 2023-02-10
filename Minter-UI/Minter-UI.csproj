@@ -10,8 +10,8 @@
       <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
       <Platforms>AnyCPU;x64</Platforms>
 	  <Deterministic>false</Deterministic>
-	  <AssemblyVersion>1.6.2.1</AssemblyVersion>
-	  <FileVersion>1.6.2.1</FileVersion>
+	  <AssemblyVersion>1.6.2.2</AssemblyVersion>
+	  <FileVersion>1.6.2.2</FileVersion>
 	  <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
 	  <AnalysisLevel>latest-all</AnalysisLevel>
 	  <IncludeSymbols>True</IncludeSymbols>
@@ -67,7 +67,7 @@
     <PackageReference Include="Dexie.Space.Net" Version="1.1.0" />
     <PackageReference Include="Multithreading_Library" Version="1.0.1" />
     <PackageReference Include="NFT.Storage.Net" Version="1.0.1.2" />
-    <PackageReference Include="Spacescan.IO.Net" Version="1.0.0" />
+    <PackageReference Include="Spacescan.IO.Net" Version="1.0.1" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
     <PackageReference Include="VirtualizingWrapPanel" Version="1.5.7" />
@@ -75,7 +75,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\..\OneDrive\Projects\Libraries\BitmapHelper_Net\BitmapHelper_Net\BitmapHelper_Net.csproj" />
-    <ProjectReference Include="..\..\Spacescan.IO.Net\Spacescan.IO.Net\Spacescan.IO.Net.csproj" />
   </ItemGroup>
 
   <ItemGroup>

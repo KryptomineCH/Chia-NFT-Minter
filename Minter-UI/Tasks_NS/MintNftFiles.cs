@@ -32,12 +32,12 @@ namespace Minter_UI.Tasks_NS
         /// <summary>
         /// the infinite fire and forget task which mints the nfts. can be stopped with the cancellation token
         /// </summary>
-        /// <param name="cancle">the token to stop the task</param>
+        /// <param name="cancel">the token to stop the task</param>
         /// <param name="uiView">the ui viewmodel which should be updated to display the status in the ui</param>
         /// <param name="dispatcherObject">the ui caller to execute the ui update on the correct process</param>
         /// <returns></returns>
         internal static async Task MintNfts_Task(
-            CancellationToken cancle, 
+            CancellationToken cancel, 
             MintingPreview_ViewModel uiView,
             DispatcherObject dispatcherObject)
         {
@@ -50,7 +50,7 @@ namespace Minter_UI.Tasks_NS
             try
             {
                 // remove old (stuck) transactions
-                CheckPendingTransactions(cancle);
+                CheckPendingTransactions(cancel);
                 // the default kryptomine royalty adress if the software is not licensed
                 string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
                 if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
@@ -63,12 +63,20 @@ namespace Minter_UI.Tasks_NS
                         $"1.9% Fees will go to KryptoMine");
                 }
                 // infinite loop minting
-                while (!cancle.IsCancellationRequested)
+                while (!cancel.IsCancellationRequested)
                 {
                     // if there are no nfts to be minted, wait for more
                     if (CollectionInformation.Information.ReadyToMint.IsEmpty)
                     {
-                        await Task.Delay(2000, cancle).ConfigureAwait(false);
+                        try
+                        {
+                            await Task.Delay(2000, cancel).ConfigureAwait(false);
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            // Log the exception or perform any necessary cleanup
+                            break;
+                        }
                         continue;
                     }
                     // get nft to be minted
@@ -83,23 +91,23 @@ namespace Minter_UI.Tasks_NS
                         Task mint = Task.Run(() => MintNft(
                             nftToBeMinted,
                             royaltyAdress,
-                            cancle,
+                            cancel,
                             uiView,
                             dispatcherObject
                             ));
                         await mint.ConfigureAwait(false);
-                        await Task.Delay(500, cancle).ConfigureAwait(false);
+                        await Task.Delay(500, cancel).ConfigureAwait(false);
                     }
                     else if (walletBalance.wallet_balance.unconfirmed_wallet_balance != 0)
                     {
                         // there seem to be transactions ongoing which block cash
-                        int ongoingTransactions = await CheckPendingTransactions(cancle).ConfigureAwait(false);
+                        int ongoingTransactions = await CheckPendingTransactions(cancel).ConfigureAwait(false);
                         if (ongoingTransactions == 0)
                         {
                             // no ongoing transactions, all transactions seem stuck!
                             await WalletApi.DeleteUnconfirmedTransactions_Async(1).ConfigureAwait(false);
                         }
-                        await Task.Delay(1000, cancle).ConfigureAwait(false);
+                        await Task.Delay(1000, cancel).ConfigureAwait(false);
                     }
                     else
                     {

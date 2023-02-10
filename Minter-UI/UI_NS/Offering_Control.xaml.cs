@@ -181,7 +181,7 @@ namespace Minter_UI.UI_NS
                 await Task.Delay(1000);
             }
 
-            Offer_Button.Content = "Mint!";
+            Offer_Button.Content = "Create Offers!";
             Offer_Button.Background = new SolidColorBrush(ColorHelper.ColorConverter.FromHex("#697a1f"));
             Offer_Button.IsEnabled = true;
         }

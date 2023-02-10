@@ -27,12 +27,12 @@ namespace Minter_UI.Tasks_NS
         /// <summary>
         /// The `OfferNfts_Task` method is used to offer NFTs for sale.
         /// </summary>
-        /// <param name="cancle">The `CancellationToken` used to cancel the task.</param>
+        /// <param name="cancel">The `CancellationToken` used to cancel the task.</param>
         /// <param name="uiView">The `MintingPreview_ViewModel` instance used for UI updates.</param>
         /// <param name="dispatcherObject">The `DispatcherObject` used for UI updates.</param>
         /// <returns>A `Task` that represents the asynchronous operation.</returns>
         internal static async Task PublishOffers_Task(
-            CancellationToken cancle,
+            CancellationToken cancel,
             MintingPreview_ViewModel uiView,
             DispatcherObject dispatcherObject)
         {
@@ -45,12 +45,20 @@ namespace Minter_UI.Tasks_NS
             try
             {
                 // repeat until the task is cancelled
-                while (!cancle.IsCancellationRequested)
+                while (!cancel.IsCancellationRequested)
                 {
                     // if there are no nfts to be offered, wait for more
                     if (CollectionInformation.Information.ReadyToPublishOffer.IsEmpty)
                     {
-                        await Task.Delay(2000, cancle).ConfigureAwait(false);
+                        try
+                        {
+                            await Task.Delay(2000, cancel).ConfigureAwait(false);
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            // Log the exception or perform any necessary cleanup
+                            break;
+                        }
                         continue;
                     }
                     // get nft to be offered
