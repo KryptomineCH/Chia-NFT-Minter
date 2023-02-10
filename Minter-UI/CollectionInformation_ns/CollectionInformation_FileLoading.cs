@@ -36,7 +36,7 @@ namespace Minter_UI.CollectionInformation_ns
             /// generated offer files
             newInfo.OfferedFiles = LoadDirectory(dirInfo: Directories.Offered, fileTypes: new[] { ".offer",".json", ".rpc", ".nft" }, mustBeContainedWithin: newInfo.NftFiles);
             /// uploaded offer Files
-            newInfo.PublishedOffers = LoadDirectory(dirInfo: Directories.Offered, fileTypes: new[] { ".offer", ".dexieoffer" }, mustBeContainedWithin: newInfo.NftFiles);
+            newInfo.PublishedOffers = LoadDirectory(dirInfo: Directories.PublishedOffers, fileTypes: new[] { ".offer", ".dexieoffer" }, mustBeContainedWithin: newInfo.NftFiles);
             // generate arbitrary information which can be calculated using the base directories.
             // eg: nft has metadata information, but no rpc and mint has not been validated -> ready to mint
             foreach (string key in newInfo.NftFiles.Keys)
@@ -71,13 +71,15 @@ namespace Minter_UI.CollectionInformation_ns
                     // this is a specific case because multiple exchanges might be supported in the future
                     string[] exchangekeys = new[]
                     {
-                        key+"_dexie"
+                        key+"_dexie",
+                        key+"_spacescan"
+
                     };
                     foreach (string exchangekey in exchangekeys)
                     {
                         if (!newInfo.PublishedOffers.ContainsKey(exchangekey))
                         {
-                            newInfo.ReadyToPublishOffer[key] = newInfo.OfferedFiles[key];
+                            newInfo.ReadyToPublishOffer[exchangekey] = newInfo.OfferedFiles[key];
                         }
                     }
                 }

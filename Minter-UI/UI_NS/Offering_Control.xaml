@@ -99,6 +99,13 @@
             </StackPanel>
             <!-- Offering settings -->
             <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <CheckBox x:Name="PublishToSpaceScan_CheckBox" Foreground="#e0cf6c" VerticalAlignment="Center" Click="PublishToSpaceScan_CheckBox_Clicked">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/Minter-UI;component/Resources/spacescan_512.png" Height="0.6cm"></Image>
+                        <Label Content="SpaceScan" Foreground="#e0cf6c"></Label>
+                    </StackPanel>
+                    
+                </CheckBox>
                 <CheckBox x:Name="PublishToDexie_CheckBox" Foreground="#e0cf6c" VerticalAlignment="Center" Click="PublishToDexie_CheckBox_Clicked">
                     <Image Source="pack://application:,,,/Minter-UI;component/Resources/dexie_medium.png" Height="0.6cm"></Image>
                 </CheckBox>

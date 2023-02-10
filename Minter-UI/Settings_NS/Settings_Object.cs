@@ -53,5 +53,9 @@ namespace Minter_UI.Settings_NS
         /// this setting specifies if offers should be published to dexie
         /// </summary>
         public bool PublishOffersTo_DexieSpace { get; set; } = true;
+        /// <summary>
+        /// this setting specifies if offers should be published to spacescan
+        /// </summary>
+        public bool PublishOffersTo_SpaceScan { get; set; } = true;
     }
 }

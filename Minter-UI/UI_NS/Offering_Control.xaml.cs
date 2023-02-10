@@ -24,6 +24,7 @@ namespace Minter_UI.UI_NS
             this.DataContext = _viewModel;
             InitializeComponent();
             PublishToDexie_CheckBox.IsChecked = Settings_NS.Settings.All.PublishOffersTo_DexieSpace;
+            PublishToSpaceScan_CheckBox.IsChecked = Settings_NS.Settings.All.PublishOffersTo_SpaceScan;
         }
         /// <summary>
         /// the viewmodel is beeiing hooked onto by the preview wrappanel and updated automatically with th observablecollection
@@ -195,6 +196,20 @@ namespace Minter_UI.UI_NS
             if(Settings_NS.Settings.All.PublishOffersTo_DexieSpace != uploadDexieOffers)
             {
                 Settings_NS.Settings.All.PublishOffersTo_DexieSpace = uploadDexieOffers;
+                Settings_NS.Settings.Save();
+            }
+        }
+        /// <summary>
+        /// saves the upload to spacescan setting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PublishToSpaceScan_CheckBox_Clicked(object sender, RoutedEventArgs e)
+        {
+            bool uploadSpacescanOffers = (bool)PublishToSpaceScan_CheckBox.IsChecked;
+            if (Settings_NS.Settings.All.PublishOffersTo_SpaceScan != uploadSpacescanOffers)
+            {
+                Settings_NS.Settings.All.PublishOffersTo_SpaceScan = uploadSpacescanOffers;
                 Settings_NS.Settings.Save();
             }
         }

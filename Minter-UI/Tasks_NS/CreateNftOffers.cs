@@ -92,6 +92,7 @@ namespace Minter_UI.Tasks_NS
                     offer.Export(offerFilePath.FullName);
                     /// add successful mint to collection information
                     CollectionInformation.Information.OfferedFiles[key] = offerFilePath;
+                    CollectionInformation.Information.ReadyToOffer[key] = offerFilePath;
                     // update ui
                     dispatcherObject.Dispatcher.Invoke(new Action(() =>
                     {

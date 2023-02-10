@@ -1,7 +1,4 @@
-﻿using Chia_Client_API.Wallet_NS.WalletAPI_NS;
-using CHIA_RPC.Objects_NS;
-using CHIA_RPC.Wallet_RPC_NS.Wallet_NS;
-using Minter_UI.CollectionInformation_ns;
+﻿using Minter_UI.CollectionInformation_ns;
 using Minter_UI.UI_NS;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +8,6 @@ using System.Windows.Threading;
 using System.Windows;
 using System;
 using System.Linq;
-using Minter_UI.Settings_NS;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -51,60 +47,49 @@ namespace Minter_UI.Tasks_NS
                 // repeat until the task is cancelled
                 while (!cancle.IsCancellationRequested)
                 {
-                    // if there are no nfts to be offer, wait for more
-                    if (CollectionInformation.Information.ReadyToOffer.IsEmpty)
+                    // if there are no nfts to be offered, wait for more
+                    if (CollectionInformation.Information.ReadyToPublishOffer.IsEmpty)
                     {
                         await Task.Delay(2000, cancle).ConfigureAwait(false);
                         continue;
                     }
                     // get nft to be offered
-                    KeyValuePair<string, FileInfo> nftToBeOffered_File = CollectionInformation.Information.ReadyToOffer.First();
-                    _ = CollectionInformation.Information.ReadyToOffer.Remove(nftToBeOffered_File.Key, out _);
-                    // if the file is not an NFT file, continue
-                    if (!nftToBeOffered_File.Value.Name.EndsWith(".nft"))
+                    KeyValuePair<string, FileInfo> nftToBeOffered_File = CollectionInformation.Information.ReadyToPublishOffer.First();
+                    _ = CollectionInformation.Information.ReadyToPublishOffer.Remove(nftToBeOffered_File.Key, out _);
+                    // if the file is not an offer file, continue
+                    if (!nftToBeOffered_File.Value.Name.EndsWith(".offer"))
                     {
                         continue;
                     }
-                    Nft nftToBeOffered = Nft.Load(nftToBeOffered_File.Value.FullName);
-                    // calculate chia offer price
-                    long mojosPrice = (long)(Settings.All.OfferingPrice * 1000000000000);
-                    // create offer content
-                    Offer_RPC offer_rpc = new Offer_RPC();
-                    offer_rpc.offer.Add("1", mojosPrice);
-                    offer_rpc.offer.Add(nftToBeOffered.launcher_id, -1);
-                    OfferFile offer = await WalletApi.CreateOfferForIds(offer_rpc).ConfigureAwait(false);
-                    // save offer file
-                    string nftName = Path.GetFileNameWithoutExtension(nftToBeOffered_File.Value.Name);
-                    string key = CollectionInformation.GetKeyFromFile(nftToBeOffered_File.Value);
-                    // update ui
-                    dispatcherObject.Dispatcher.Invoke(new Action(() =>
+                    string exchange = nftToBeOffered_File.Key.Split("_").Last();
+                    string offerText = File.ReadAllText(nftToBeOffered_File.Value.FullName);
+                    if (exchange == "dexie")
                     {
-                        foreach (MintingItem item in uiView.Items)
+                        if (!Settings_NS.Settings.All.PublishOffersTo_DexieSpace)
                         {
-                            if (item.Key == key)
-                            {
-                                item.IsUploading = true;
-                                break;
-                            }
+                            continue;
                         }
-                    }));
-                    FileInfo offerFilePath = new FileInfo(Path.Combine(Directories.Offered.FullName, nftName + ".offer"));
-                    offer.Export(offerFilePath.FullName);
-                    /// add successful mint to collection information
-                    CollectionInformation.Information.OfferedFiles[key] = offerFilePath;
-                    // update ui
-                    dispatcherObject.Dispatcher.Invoke(new Action(() =>
+                        Dexie.Space.Net.Offers_NS.Response_NS.PostOffer_Response publish =  await Dexie.Space.Net.Offers_NS.Offers_Client.PostOffer_Async(offerText).ConfigureAwait(false);
+                        Dexie.Space.Net.Offers_NS.Response_NS.GetOffer_Response publishedOffer = await Dexie.Space.Net.Offers_NS.Offers_Client.GetOffer_Async(publish.id).ConfigureAwait(false);
+                        FileInfo targetPath = new FileInfo(Path.Combine(Directories.PublishedOffers.FullName, nftToBeOffered_File.Key));
+                        publishedOffer.offer.Save(targetPath.FullName);
+                        CollectionInformation.Information.PublishedOffers[nftToBeOffered_File.Key] = targetPath;
+                    }
+                    else if(exchange == "spacescan")
                     {
-                        foreach (MintingItem item in uiView.Items)
+                        if (!Settings_NS.Settings.All.PublishOffersTo_SpaceScan)
                         {
-                            if (item.Key == key)
-                            {
-                                item.IsUploading = false;
-                                item.IsUploaded = true;
-                                break;
-                            }
+                            continue;
                         }
-                    }));
+                        Spacescan.IO.Net.Offering_NS.Responses_NS.PostOffer_Response publishedOffer = await Spacescan.IO.Net.Offering_NS.Offers_Client.PostOffer_Async(offerText).ConfigureAwait(false);
+                        FileInfo targetPath = new FileInfo(Path.Combine(Directories.PublishedOffers.FullName, nftToBeOffered_File.Key));
+                        publishedOffer.offer.Save(targetPath.FullName);
+                        CollectionInformation.Information.PublishedOffers[nftToBeOffered_File.Key] = targetPath;
+                    }
+                    else
+                    {
+                        throw new Exception($"Exchange {exchange} is not recognized!");
+                    }
                 }
             }
             catch (Exception ex)
