@@ -33,7 +33,7 @@ namespace Minter_UI.CollectionInformation_ns
                 if (PreviewGenerationRunning) return;
                 PreviewGenerationRunning = true;
             }
-            Bitmap bitmap = new Bitmap(1000,1000);
+            //Bitmap bitmap = new Bitmap(1000,1000);
             Bitmap preview = new Bitmap(250,250);
             ImageCodecInfo jpegCodec = ImageCodecInfo.GetImageEncoders().First(c => c.FormatID == ImageFormat.Jpeg.Guid);
             EncoderParameters encoderParams = new EncoderParameters(1);
@@ -56,8 +56,9 @@ namespace Minter_UI.CollectionInformation_ns
                             continue;
                         }
                         // load bitmap
-                        using (bitmap = new Bitmap(info.FullName))
-                        {
+
+                        Bitmap bitmap = new Bitmap(info.FullName);
+                        
                             // rescale bitmap
                             using (preview = BitmapHelper_Net.BitmapConverter.ResizeLongEdge(ref bitmap, 250))
                             {
@@ -80,7 +81,7 @@ namespace Minter_UI.CollectionInformation_ns
                                     }
                                 }
                             }
-                        }
+                        bitmap.Dispose();
                     }
                     else {
                         newInfo.NftPreviewFiles[key] = previewFile;
@@ -89,7 +90,7 @@ namespace Minter_UI.CollectionInformation_ns
             }
             // wrap up
             preview.Dispose();
-            bitmap.Dispose();
+            //bitmap.Dispose();
             PreviewGenerationRunning = false;
         }
     }
