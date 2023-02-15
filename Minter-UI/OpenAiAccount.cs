@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Minter_UI
 {
@@ -107,15 +108,31 @@ namespace Minter_UI
             };
 
             var json = JsonSerializer.Serialize(requestData);
+
             request.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                var responseJson = await response.Content.ReadAsStringAsync();
+                var responseData = JsonSerializer.Deserialize<OpenAITextCompletionApiResponse>(responseJson);
 
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var responseData = JsonSerializer.Deserialize<OpenAITextCompletionApiResponse>(responseJson);
+                return responseData.choices[0].text.Trim();
+            }
+            catch (Exception ex)
+            {
+                if ((int)response.StatusCode == 429)
+                {
+                    MessageBox.Show("OpenAi returned response: too many requests!"+Environment.NewLine+"Do you have enough Balance?");
+                }
+                else
+                {
+                    MessageBox.Show($"OpenAi returned response: {ex.Message}!");
+                }
+            }
 
-            return responseData.choices[0].text.Trim();
+            return null;
         }
     }
     public class OpenAITextCompletionApiResponse
