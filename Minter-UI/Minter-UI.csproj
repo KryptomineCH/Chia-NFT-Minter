@@ -10,8 +10,8 @@
       <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
       <Platforms>AnyCPU;x64</Platforms>
 	  <Deterministic>false</Deterministic>
-	  <AssemblyVersion>1.6.2.2</AssemblyVersion>
-	  <FileVersion>1.6.2.2</FileVersion>
+	  <AssemblyVersion>1.6.2.4</AssemblyVersion>
+	  <FileVersion>1.6.2.4</FileVersion>
 	  <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
 	  <AnalysisLevel>latest-all</AnalysisLevel>
 	  <IncludeSymbols>True</IncludeSymbols>
@@ -43,9 +43,11 @@
 
   <ItemGroup>
     <None Remove="Resources\Application_Icon.png" />
+    <None Remove="Resources\banner_empty.png" />
     <None Remove="Resources\ChangeImageIcon.png" />
     <None Remove="Resources\ChangeImageIcon_mouseover.png" />
     <None Remove="Resources\dexie_medium.png" />
+    <None Remove="Resources\icon_empty.png" />
     <None Remove="Resources\import_Icon.png" />
     <None Remove="Resources\import_Icon_mouseover.png" />
     <None Remove="Resources\spacescan_512.png" />
@@ -56,6 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\banner_empty.png" />
     <Resource Include="Resources\ChangeImageIcon.png" />
   </ItemGroup>
 
@@ -87,6 +90,7 @@
       <PackagePath>Resources/dexie_medium.png</PackagePath>
       <Pack>True</Pack>
     </Resource>
+    <Resource Include="Resources\icon_empty.png" />
     <Resource Include="Resources\import_Icon.png" />
     <Resource Include="Resources\import_Icon_mouseover.png" />
     <Resource Include="Resources\spacescan_512.png" />

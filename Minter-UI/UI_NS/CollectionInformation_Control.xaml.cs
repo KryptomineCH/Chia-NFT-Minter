@@ -66,14 +66,14 @@ namespace Minter_UI.UI_NS
             // if haeder image does not exist, place a placeholder
             if (HeaderImageFile == null)
             {
-                File.WriteAllBytes("banner.png", Properties.Resources.missing_collection_banner);
+                Properties.Resources.banner_empty.Save("banner.png");
                 HeaderImageFile = new FileInfo("banner.png");
                 this.headerImageDisplay.Address = HeaderImageFile.FullName;
             }
             // if logo image does not exist, place a placeholder
             if (LogoImageFile == null)
             {
-                File.WriteAllBytes("logo.png", Properties.Resources.missing_collection_logo);
+                Properties.Resources.icon_empty.Save("logo.png");
                 LogoImageFile = new FileInfo("logo.png");
                 this.logoImageDisplay.Address = LogoImageFile.FullName;
             }

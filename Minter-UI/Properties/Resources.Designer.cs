@@ -71,6 +71,16 @@ namespace Minter_UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap banner_empty {
+            get {
+                object obj = ResourceManager.GetObject("banner_empty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Chiaminter_License_NFT {
@@ -81,22 +91,12 @@ namespace Minter_UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static byte[] missing_collection_banner {
+        internal static System.Drawing.Bitmap icon_empty {
             get {
-                object obj = ResourceManager.GetObject("missing_collection_banner", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] missing_collection_logo {
-            get {
-                object obj = ResourceManager.GetObject("missing_collection_logo", resourceCulture);
-                return ((byte[])(obj));
+                object obj = ResourceManager.GetObject("icon_empty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
