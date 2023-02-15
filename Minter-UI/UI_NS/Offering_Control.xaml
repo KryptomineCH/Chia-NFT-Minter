@@ -57,6 +57,7 @@
                         IsMinting="{Binding IsMinting}"  
                         IsUploading="{Binding IsUploading}" 
                         IsUploaded="{Binding IsUploaded}"
+                        IsEnabled="False"
                         Width="5cm"
                         Height="5cm"/>
                 </DataTemplate>
