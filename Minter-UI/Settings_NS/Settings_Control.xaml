@@ -38,6 +38,7 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <!-- nft storage api key -->
         <Label Content="NFT.Storage Api Key" Grid.Row="0" Grid.Column="0" Foreground="#998826"></Label>
@@ -69,10 +70,40 @@
                 </Style>
             </Button.Style>
         </Button>
+        <!-- OpenAI Api Key -->
+        <Label Content="Open AI Api Key" Grid.Row="2" Grid.Column="0" Foreground="#998826"></Label>
+        <TextBox x:Name="OpenAIApiKey_TextBox" Grid.Row="3" Grid.Column="0"></TextBox>
+        <Button x:Name="OpenAIApiKeySet_Button" Content="Set" Grid.Row="3" Grid.Column="1" 
+                Click="OpenAIApiKeySet_Button_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Button.Resources>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#697a1f"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Green"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <!-- Custom web Adress -->
-        <Label Content="nft collection custom web base address" Grid.Row="2" Grid.Column="0" Foreground="#998826"></Label>
-        <TextBox x:Name="NftCustomLink_TextBox" Grid.Row="3" Grid.Column="0"></TextBox>
-        <Button x:Name="NftCustomLinkSet_Button" Content="Set" Grid.Row="3" Grid.Column="1" 
+        <Label Content="nft collection custom web base address" Grid.Row="4" Grid.Column="0" Foreground="#998826"></Label>
+        <TextBox x:Name="NftCustomLink_TextBox" Grid.Row="5" Grid.Column="0"></TextBox>
+        <Button x:Name="NftCustomLinkSet_Button" Content="Set" Grid.Row="5" Grid.Column="1" 
                 Click="NftCustomLinkSet_Button_Click">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">

@@ -92,6 +92,65 @@
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="4"/>
+                                <Setter Property="Padding" Value="0.1cm"/>
+                            </Style>
+                        </Button.Resources>
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="#5d995d"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Green"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="GenerateDescription_Button" Content="Generate" Margin="0.1cm,0,0,0" Visibility="Collapsed"
+                    BorderBrush="Black"
+                    Click="GenerateDescriptionButton_Click">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="4"/>
+                                <Setter Property="Padding" Value="0.1cm"/>
+                            </Style>
+                        </Button.Resources>
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="#5d995d"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Green"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="GenerateAllDescriptions_Button" Content="Generate All" Margin="0.1cm,0,0,0" Visibility="Collapsed"
+                    BorderBrush="Black"
+                    Click="GenerateAllDescriptionsButton_Click">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="4"/>
+                                <Setter Property="Padding" Value="0.1cm"/>
                             </Style>
                         </Button.Resources>
                         <Button.Style>
@@ -122,7 +181,7 @@
                 </WrapPanel>
             </StackPanel>
             <!-- save button -->
-            <Button x:Name="Save_Button" Content="Save" Grid.Row="1" Grid.Column="0"  Click="Save_Button_Click" Margin="0.1cm,0,0,0.1cm">
+            <Button x:Name="Save_Button" Content="Save" Grid.Row="2" Grid.Column="0"  Click="Save_Button_Click" Margin="0.1cm,0,0,0.1cm">
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="4"/>
@@ -149,7 +208,7 @@
                 </Button.Style>
             </Button>
             <!-- Save and next button -->
-            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Row="1" Grid.Column="1"  Click="SaveAndNext_Button_Click" Margin="0.1cm,0,0,0.1cm">
+            <Button x:Name="SaveAndNext_Button" Content="Save and Next" Grid.Row="2" Grid.Column="1"  Click="SaveAndNext_Button_Click" Margin="0.1cm,0,0,0.1cm">
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="4"/>

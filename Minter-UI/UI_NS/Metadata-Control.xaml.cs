@@ -1,4 +1,5 @@
 ﻿using Chia_Metadata;
+using CHIA_RPC.Wallet_RPC_NS.NFT;
 using Microsoft.Win32;
 using Minter_UI.CollectionInformation_ns;
 using Minter_UI.Tasks_NS;
@@ -7,9 +8,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Metadata = Chia_Metadata.Metadata;
 
 namespace Minter_UI.UI_NS
 {
@@ -52,6 +55,10 @@ namespace Minter_UI.UI_NS
             {
                 Filters.RefreshStatusFilters();
                 Initialized = true;
+            }
+            if (OpenAiAccount.ApiKey != null)
+            {
+                GenerateDescription_Button.Visibility= Visibility.Visible;
             }
         }
         /// <summary>
@@ -321,6 +328,65 @@ namespace Minter_UI.UI_NS
                         });
                     });
             }
+        }
+        private FileInfo CollectionInformationFile = new FileInfo(
+            Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
+        private async void GenerateDescriptionButton_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder prompt = new StringBuilder();
+            // name and collection
+            prompt.Append("please generate a short story for an nft with the name: ");
+            prompt.Append(NftName_TextBox.Text);
+            // collection name
+            CollectionInformationFile.Refresh();
+            if (CollectionInformationFile.Exists)
+            {
+                prompt.Append(Environment.NewLine);
+                Metadata CollectionMetadata = IO.Load(CollectionInformationFile.FullName);
+                prompt.Append("The NFT is in the collection: ");
+                prompt.Append(CollectionMetadata.name);
+            }
+            // sensitive information
+            if ((bool)SensitiveContent_Checkbox.IsChecked)
+            {
+                prompt.Append(Environment.NewLine);
+                prompt.Append("The NFT contains sensitive information");
+            }
+            // attributes
+            
+            List<string> attributes = new List<string>();
+            for (int i = 1; i < this.Attributes_StackPanel.Children.Count; i++)
+            {
+                MetadataAttribute attribute = ((Attribute)this.Attributes_StackPanel.Children[i]).GetAttribute();
+                if (attribute.trait_type != "TraitType")
+                {
+                    string trait = $"{attribute.trait_type}:{attribute.value.ToString()}";
+                    attributes.Add(trait);
+                }
+            }
+            if (attributes.Count > 0)
+            {
+                prompt.Append(Environment.NewLine);
+                prompt.Append("The Nft contains the following Attributes: \"");
+                prompt.Append(string.Join(',', attributes));
+            }
+            // user description
+            if (Description_TextBox.Text != "")
+            {
+                prompt.Append(Environment.NewLine);
+                prompt.Append("The user specified the following prompt: ");
+                prompt.Append(Description_TextBox.Text);
+            }
+            string result = await OpenAiAccount.CompleteTextAsync(prompt.ToString().Trim()).ConfigureAwait(false);
+            await Dispatcher.InvokeAsync(() =>
+            {
+                Description_TextBox.Text = result;
+            });
+        }
+
+        private void GenerateAllDescriptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -105,6 +105,8 @@ namespace Minter_UI.UI_NS
             else
             { // provide kryptomine default values
                 this.Description_TextBox.Text = "this is a sample description";
+                DirectoryInfo currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+                this.CollectionName_TextBox.Text = currentDirectory.Name;
                 this.CollectionAttributes_StackPanel.Children.Add(new CollAttribute(new CollectionAttribute("website", "https://kryptomine.ch/products/products.html")));
                 this.CollectionAttributes_StackPanel.Children.Add(new CollAttribute(new CollectionAttribute("twitter", "@KryptomineCH")));
                 this.CollectionAttributes_StackPanel.Children.Add(new CollAttribute(new CollectionAttribute("discord", "https://discord.gg/J7z3hVHT8a")));

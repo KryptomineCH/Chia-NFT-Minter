@@ -25,7 +25,12 @@ namespace Minter_UI.CollectionInformation_ns
             Minted.Refresh();
             Offered.Refresh();
             PublishedOffers.Refresh();
+            AiModels.Refresh();
         }
+        /// <summary>
+        /// this directory contains training data for ai models
+        /// </summary>
+        public static DirectoryInfo AiModels = new DirectoryInfo("ai_models");
         /// <summary>
         /// this directory stores the NFT files. Eg, the artwork, image, video or document
         /// </summary>
