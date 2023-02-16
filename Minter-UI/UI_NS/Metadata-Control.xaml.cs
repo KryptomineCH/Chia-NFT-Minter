@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Metadata = Chia_Metadata.Metadata;
 
 namespace Minter_UI.UI_NS
@@ -333,6 +334,13 @@ namespace Minter_UI.UI_NS
             Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
         private async void GenerateDescriptionButton_Click(object sender, RoutedEventArgs e)
         {
+            Brush background = null;
+            await Dispatcher.InvokeAsync(() =>
+            {
+                GenerateDescription_Button.IsEnabled = false;
+                background = GenerateDescription_Button.Background;
+                GenerateDescription_Button.Background = Brushes.Turquoise;
+            });
             StringBuilder prompt = new StringBuilder();
             // name and collection
             prompt.Append("please generate a short story for an nft with the name: ");
@@ -381,6 +389,8 @@ namespace Minter_UI.UI_NS
             await Dispatcher.InvokeAsync(() =>
             {
                 Description_TextBox.Text = result;
+                GenerateDescription_Button.IsEnabled = true;
+                GenerateDescription_Button.Background = background;
             });
         }
 
