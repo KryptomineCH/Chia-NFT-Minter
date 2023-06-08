@@ -211,7 +211,13 @@ namespace Minter_UI.UI_NS
                 return;
             }
             // load collection information
-            Metadata metadata = IO.Load(Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
+            FileInfo collectionInfo = new FileInfo(Path.Combine(Directories.Metadata.FullName, "CollectionInfo.json"));
+            if (!collectionInfo.Exists)
+            {
+                MessageBox.Show($"STOP: You need to save the Collection information on the start page first!");
+                return;
+            }
+            Metadata metadata = IO.Load(collectionInfo.FullName);
             // get / load series number
             if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
             {
