@@ -33,7 +33,8 @@ namespace Minter_UI.Settings_NS
             {
                 this.NftStorageApiKey_TextBox.Text = NftStorageAccount.ApiKey;
                 this.OpenAIApiKey_TextBox.Text = OpenAiAccount.ApiKey;
-                this.NftCustomLink_TextBox.Text = Settings.All.CustomServerURL;
+                if (!string.IsNullOrEmpty( Settings.All.CustomServerURL))
+                    this.NftCustomLink_TextBox.Text = Settings.All.CustomServerURL;
                 this.LicenseLink_TextBox.Text = Settings.All.LicenseURL;
                 this.LicenseLink2_TextBox.Text = Settings.All.LicenseURL_Backup;
                 this.CaseSensitiveFilehandling_CheckBox.IsChecked = Settings.All.CaseSensitiveFileHandling;

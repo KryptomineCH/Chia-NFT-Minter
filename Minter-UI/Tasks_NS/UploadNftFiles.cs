@@ -134,11 +134,11 @@ namespace Minter_UI.Tasks_NS
                         }
                         /// add license url (is static)
                         List<string> licenseLinks = new List<string>();
-                        if (Settings.All != null && Settings.All.LicenseURL != null)
+                        if (Settings.All != null && !string.IsNullOrEmpty(Settings.All.LicenseURL))
                         {
                             licenseLinks.Add(Settings.All.LicenseURL);
                         }
-                        if (Settings.All != null && Settings.All.LicenseURL_Backup != null)
+                        if (Settings.All != null && !string.IsNullOrEmpty(Settings.All.LicenseURL_Backup))
                         {
                             licenseLinks.Add(Settings.All.LicenseURL_Backup);
                         }
