@@ -35,7 +35,22 @@ namespace Minter_UI.Tasks_NS
                         {
                             writer.WriteLine($"Dev Message: {devMessage}");
                         }
-                        writer.WriteLine("Stack trace: {logException.StackTrace}");
+                        writer.WriteLine($"Stack trace: {logException.StackTrace}");
+                        Exception? innerEx = logException.InnerException;
+                        while(innerEx != null)
+                        {
+                            writer.WriteLine("#----------------- inner exception -----------------#");
+                            if (unhandled)
+                            {
+                                writer.WriteLine($"Unhandled exception: {logException.Message}");
+                            }
+                            else
+                            {
+                                writer.WriteLine($"Exception: {logException.Message}");
+                            }
+                            writer.WriteLine($"Stack trace: {logException.StackTrace}");
+                            innerEx = innerEx.InnerException;
+                        }
                         writer.WriteLine();
                     }
                 }
