@@ -1,5 +1,4 @@
 ﻿using Chia_Metadata;
-using CHIA_RPC.Wallet_RPC_NS.NFT;
 using Microsoft.Win32;
 using Minter_UI.CollectionInformation_ns;
 using Minter_UI.Tasks_NS;

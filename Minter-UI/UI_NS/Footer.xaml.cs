@@ -1,11 +1,10 @@
-﻿using Chia_Client_API.Wallet_NS.WalletAPI_NS;
-using CHIA_RPC.General;
+﻿using CHIA_RPC.General_NS;
 using CHIA_RPC.Objects_NS;
-using CHIA_RPC.Wallet_RPC_NS.DID_NS;
-using CHIA_RPC.Wallet_RPC_NS.KeyManagement;
-using CHIA_RPC.Wallet_RPC_NS.NFT;
-using CHIA_RPC.Wallet_RPC_NS.Wallet_NS;
-using CHIA_RPC.Wallet_RPC_NS.WalletManagement_NS;
+using CHIA_RPC.Wallet_NS.DID_NS;
+using CHIA_RPC.Wallet_NS.KeyManagement;
+using CHIA_RPC.Wallet_NS.NFT_NS;
+using CHIA_RPC.Wallet_NS.Wallet_NS;
+using CHIA_RPC.Wallet_NS.WalletManagement_NS;
 using Minter_UI.Settings_NS;
 using System;
 using System.Collections.Generic;
@@ -49,11 +48,11 @@ namespace Minter_UI.UI_NS
         {
             // fill wallets combobox
             WalletFingerprints.Clear();
-            GetPublicKeys_Response wallets = await WalletApi.GetPublicKeys_Async();
+            GetPublicKeys_Response wallets = await GlobalVar.WalletApi.GetPublicKeys_Async();
             WalletFingerprints = wallets.public_key_fingerprints.ToList();
             this.WalletSelector_ComboBox.ItemsSource = WalletFingerprints;
             // get currently logged in wallet
-            LogIn_Response loggedInWallet = await WalletApi.GetLoggedInFingerprint_Async();
+            FingerPrint_Response loggedInWallet = await GlobalVar.WalletApi.GetLoggedInFingerprint_Async();
             // select currently logged in wallet
             if (Settings.All == null || Settings.All.PrimaryWallet == null || Settings.All.PrimaryWallet == ulong.MaxValue)
             {
@@ -87,7 +86,7 @@ namespace Minter_UI.UI_NS
         private async Task Login()
         {
             ulong selectedWallet = (ulong)WalletSelector_ComboBox.SelectedItem;
-            GlobalVar.CurrentlyLoggedInWallet.Value = await WalletApi.GetLoggedInFingerprint_Async();
+            GlobalVar.CurrentlyLoggedInWallet.Value = await GlobalVar.WalletApi.GetLoggedInFingerprint_Async();
             if (GlobalVar.CurrentlyLoggedInWallet.Value.fingerprint != selectedWallet && this.WalletSelector_ComboBox.IsEnabled)
             {
                 // reset first sync indicator
@@ -97,7 +96,7 @@ namespace Minter_UI.UI_NS
                 StatusLabel.Content = "Logging in";
                 Settings.All.PrimaryWallet = selectedWallet;
                 Settings.Save();
-                GlobalVar.CurrentlyLoggedInWallet.Value = await WalletApi.LogIn_Async(new FingerPrint_RPC { fingerprint = selectedWallet });
+                GlobalVar.CurrentlyLoggedInWallet.Value = await GlobalVar.WalletApi.LogIn_Async(new FingerPrint_RPC { fingerprint = selectedWallet });
                 GlobalVar.FullSync = false;
                 this.WalletSelector_ComboBox.IsEnabled = true;
                 GetNextAddress_RPC rpc = new GetNextAddress_RPC()
@@ -105,7 +104,7 @@ namespace Minter_UI.UI_NS
                     new_address = false,
                     wallet_id = 1
                 };
-                GetNextAddress_Response adress = await WalletApi.GetNextAddress_Async(rpc);
+                GetNextAddress_Response adress = await GlobalVar.WalletApi.GetNextAddress_Async(rpc);
                 GlobalVar.PrimaryWalletAdress = adress.address;
                 await GetNftWallets();
             }
@@ -118,7 +117,7 @@ namespace Minter_UI.UI_NS
         private async Task GetNftWallets(bool fullSync = false)
         {
             // get all associated Wallets
-            GetWallets_Response subWallets = await WalletApi.GetWallets_Async();
+            GetWallets_Response subWallets = await GlobalVar.WalletApi.GetWallets_Async();
             // refresh cache
             NftWallets.Clear();
             Wallets_info? selectedWallet = null;
@@ -169,7 +168,7 @@ namespace Minter_UI.UI_NS
                 try
                 {
                     // check which if the logged in wallet changed
-                    GlobalVar.CurrentlyLoggedInWallet.Value = await WalletApi.GetLoggedInFingerprint_Async();
+                    GlobalVar.CurrentlyLoggedInWallet.Value = await GlobalVar.WalletApi.GetLoggedInFingerprint_Async();
                     if (WalletSelector_ComboBox.SelectedItem == null ||
                         GlobalVar.CurrentlyLoggedInWallet.Value.fingerprint != (ulong)WalletSelector_ComboBox.SelectedItem)
                     {
@@ -178,7 +177,7 @@ namespace Minter_UI.UI_NS
                         
                     }
                     // obtain sync status and write it to globalvar
-                    GlobalVar.SyncStatus.Value = await WalletApi.GetSyncStatus_Async();
+                    GlobalVar.SyncStatus.Value = await GlobalVar.WalletApi.GetSyncStatus_Async();
                     // update SyncStatus Label in UI
                     if (GlobalVar.SyncStatus.Value.success)
                     {
@@ -187,7 +186,7 @@ namespace Minter_UI.UI_NS
                             new_address = false,
                             wallet_id = 1
                         };
-                        GetNextAddress_Response adress = await WalletApi.GetNextAddress_Async(rpc);
+                        GetNextAddress_Response adress = await GlobalVar.WalletApi.GetNextAddress_Async(rpc);
                         GlobalVar.PrimaryWalletAdress = adress.address;
                         if (GlobalVar.SyncStatus.Value.synced)
                         {
@@ -228,7 +227,7 @@ namespace Minter_UI.UI_NS
         {
             if (GlobalVar.Licensed) return;
             // get all associated Wallets
-            GetWallets_Response subWallets = await WalletApi.GetWallets_Async();
+            GetWallets_Response subWallets = await GlobalVar.WalletApi.GetWallets_Async();
             // refresh cache
             NftWallets.Clear();
             List<Task<NftGetNfts_Response>> allNftTasks = new List<Task<NftGetNfts_Response>>();
@@ -237,7 +236,7 @@ namespace Minter_UI.UI_NS
                 if (info.type == WalletType.nft_wallet)
                 {
                     WalletID_RPC id = new WalletID_RPC { wallet_id = info.id };
-                    allNftTasks.Add(WalletApi.NftGetNfts_Async(id));
+                    allNftTasks.Add(GlobalVar.WalletApi.NftGetNfts_Async(id));
                 }
             }
             await Task.WhenAll(allNftTasks.ToArray());
@@ -308,7 +307,7 @@ namespace Minter_UI.UI_NS
             Settings.All.DidWallet = (string)NftWalletSelector_ComboBox.SelectedItem;
             Settings.Save();
             // get wallet id
-            GetWallets_Response subWallets = WalletApi.GetWallets_Sync();
+            GetWallets_Response subWallets = GlobalVar.WalletApi.GetWallets_Sync();
             foreach (Wallets_info info in subWallets.wallets)
             {
                 if (info.type == WalletType.did_wallet)
@@ -316,8 +315,8 @@ namespace Minter_UI.UI_NS
                     NftWallets.Add(info.name);
                     if (Settings.All.DidWallet == info.name)
                     {
-                        DidGetDid_Response didWallet = WalletApi.DidGetDid_Sync(new WalletID_RPC { wallet_id = info.id });
-                        WalletID_Response id = WalletApi.NftGetByDID_Sync(new DidID_RPC() { did_id = didWallet.my_did} );
+                        DidGetDid_Response didWallet = GlobalVar.WalletApi.DidGetDid_Sync(new WalletID_RPC { wallet_id = info.id });
+                        WalletID_Response id = GlobalVar.WalletApi.NftGetByDID_Sync(new DidID_RPC() { did_id = didWallet.my_did} );
                         GlobalVar.NftWallet_ID = id.wallet_id;
                     }
                 }

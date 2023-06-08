@@ -1,5 +1,4 @@
-﻿using CHIA_RPC.Wallet_RPC_NS.NFT;
-using Minter_UI.Settings_NS;
+﻿using Minter_UI.Settings_NS;
 using NFT.Storage.Net;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +11,7 @@ using Minter_UI.UI_NS;
 using System.Windows.Threading;
 using System;
 using CollectionInformation = Minter_UI.CollectionInformation_ns.CollectionInformation;
+using CHIA_RPC.Wallet_NS.NFT_NS;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -86,8 +86,8 @@ namespace Minter_UI.Tasks_NS
                 string key = CollectionInformation.GetKeyFromFile(nftToBeUploaded.Value);
                 // check if this nft has metadata and is not yet uploaded
                 if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
-                {
-                    // upload files
+                { // upload files
+                    /// do not upload files which are uploaded already
                     dispatcherObject.Dispatcher.Invoke(new Action(() =>
                     {
                         foreach (MintingItem item in uiView.Items)
@@ -99,7 +99,7 @@ namespace Minter_UI.Tasks_NS
                             }
                         }
                     }));
-                    /// upload nft file
+                    /// upload nft (image) file
                     List<string> nftlinkList = new List<string>();
                     FileInfo nft = CollectionInformation.Information.NftFiles[key];
                     Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nft.FullName));
@@ -120,7 +120,7 @@ namespace Minter_UI.Tasks_NS
                     }
                     metalinkList.Add(metaUploadTask.Result.URL);
                     // build link lists for rpc
-                    if (Settings.All != null && Settings.All.CustomServerURL != null)
+                    if (Settings.All != null && !string.IsNullOrEmpty(Settings.All.CustomServerURL))
                     {
                         /// prepare custom url (~prefix)
                         string customLink = Settings.All.CustomServerURL;
@@ -153,7 +153,7 @@ namespace Minter_UI.Tasks_NS
                         rpc.fee = Settings.All.MintingFee;
                     }
                     /// save rpc
-                    rpc.Save(Path.Combine(Directories.Rpcs.FullName, (nftName + ".rpc")));
+                    rpc.SaveRpcToFile(Path.Combine(Directories.Rpcs.FullName, (nftName + ".rpc")));
                     /// manage collection information
                     CollectionInformation.Information.MissingRPCs.Remove(nftToBeUploaded.Key, out _);
                     CollectionInformation.Information.ReadyToMint[nftToBeUploaded.Key] = nftToBeUploaded.Value;

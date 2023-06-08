@@ -1,18 +1,17 @@
-﻿using CHIA_RPC.Wallet_RPC_NS.NFT;
-using Minter_UI.Settings_NS;
+﻿using Minter_UI.Settings_NS;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Chia_Client_API.Wallet_NS.WalletAPI_NS;
-using CHIA_RPC.General;
-using CHIA_RPC.Wallet_RPC_NS.Wallet_NS;
 using System.Windows;
 using Minter_UI.CollectionInformation_ns;
 using Minter_UI.UI_NS;
 using System.Windows.Threading;
+using CHIA_RPC.Wallet_NS.Wallet_NS;
+using CHIA_RPC.General_NS;
+using CHIA_RPC.Wallet_NS.NFT_NS;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -83,7 +82,7 @@ namespace Minter_UI.Tasks_NS
                     KeyValuePair<string, FileInfo> nftToBeMinted = CollectionInformation.Information.ReadyToMint.First();
                     _ = CollectionInformation.Information.ReadyToMint.Remove(nftToBeMinted.Key, out _);
                     // balance check
-                    GetWalletBalance_Response walletBalance = await WalletApi.GetWalletBalance_Async(new WalletID_RPC() { wallet_id = 1 })
+                    GetWalletBalance_Response walletBalance = await GlobalVar.WalletApi.GetWalletBalance_Async(new WalletID_RPC() { wallet_id = 1 })
                         .ConfigureAwait(false);
                     if (walletBalance.wallet_balance.spendable_balance > Settings.All.MintingFee + 1)
                     {
@@ -105,7 +104,7 @@ namespace Minter_UI.Tasks_NS
                         if (ongoingTransactions == 0)
                         {
                             // no ongoing transactions, all transactions seem stuck!
-                            await WalletApi.DeleteUnconfirmedTransactions_Async(1).ConfigureAwait(false);
+                            await GlobalVar.WalletApi.DeleteUnconfirmedTransactions_Async(1).ConfigureAwait(false);
                         }
                         await Task.Delay(1000, cancel).ConfigureAwait(false);
                     }
@@ -157,9 +156,9 @@ namespace Minter_UI.Tasks_NS
             {
                 if (cancle.IsCancellationRequested) return -1;
                 // load spend bundle
-                NftMintNFT_Response spendBundle = NftMintNFT_Response.Load(file.FullName);
+                NftMintNFT_Response spendBundle = NftMintNFT_Response.LoadResponseFromFile(file.FullName);
                 // check if nft was minted
-                NftGetInfo_Response nft = await WalletApi.VerifyMint(spendBundle).ConfigureAwait(false);
+                NftGetInfo_Response nft = await GlobalVar.WalletApi.VerifyMint(spendBundle).ConfigureAwait(false);
                 if (nft.success)
                 {
                     // nft was minted sucessfully
@@ -167,7 +166,7 @@ namespace Minter_UI.Tasks_NS
                     string nftName = Path.GetFileNameWithoutExtension(file.Name);
                     string key = CollectionInformation.GetKeyFromFile(file);
                     FileInfo nftFilePath = new FileInfo(Path.Combine(Directories.Minted.FullName, nftName+".nft"));
-                    nft.nft_info.Save(nftFilePath.FullName);
+                    nft.nft_info.SaveObjectToFile(nftFilePath.FullName);
                     /// add successful mint to collection information
                     CollectionInformation.Information.MintedFiles[key] = nftFilePath;
                     /// delete pending transaction
@@ -214,7 +213,7 @@ namespace Minter_UI.Tasks_NS
             string key = CollectionInformation.GetKeyFromFile(nftToBeMinted.Value);
             // update rpc
             string rpcSourcePath = Path.Combine(Directories.Rpcs.FullName, nftName+ ".rpc");
-            NftMintNFT_RPC rpc = NftMintNFT_RPC.Load(rpcSourcePath);
+            NftMintNFT_RPC rpc = NftMintNFT_RPC.LoadRpcFromFile(rpcSourcePath);
             rpc.wallet_id = GlobalVar.NftWallet_ID;
             rpc.royalty_address = royaltyAdress;
             rpc.fee = Settings.All.MintingFee;
@@ -230,17 +229,17 @@ namespace Minter_UI.Tasks_NS
                     }
                 }
             }));
-            NftMintNFT_Response response = await WalletApi.NftMintNft_Async(rpc).ConfigureAwait(false);
+            NftMintNFT_Response response = await GlobalVar.WalletApi.NftMintNft_Async(rpc).ConfigureAwait(false);
             /// save spend bundle to validate transaction completeness
             string transactionPath = Path.Combine(Directories.PendingTransactions.FullName, nftName+".mint");
-            response.Save(transactionPath);
+            response.SaveResponseToFile(transactionPath);
             // wait for mint to complete
-            NftGetInfo_Response nftInfo = await WalletApi.NftAwaitMintComplete_Async(response, cancel,refreshInterwallSeconds:30).ConfigureAwait(false);
+            NftGetInfo_Response nftInfo = await GlobalVar.WalletApi.NftAwaitMintComplete_Async(response, cancel,refreshInterwallSeconds:30).ConfigureAwait(false);
             /// validate mint
             if (nftInfo.success)
             { /// mint was successful
                 FileInfo nftFilePath = new FileInfo(Path.Combine(Directories.Minted.FullName, nftName+".nft"));
-                nftInfo.nft_info.Save(nftFilePath.FullName);
+                nftInfo.nft_info.SaveObjectToFile(nftFilePath.FullName);
                 /// add successful mint to collection information
                 CollectionInformation.Information.MintedFiles[key] = nftFilePath;
                 /// delete pending transaction

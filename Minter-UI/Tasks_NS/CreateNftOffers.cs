@@ -1,6 +1,4 @@
-﻿using Chia_Client_API.Wallet_NS.WalletAPI_NS;
-using CHIA_RPC.Wallet_RPC_NS.Wallet_NS;
-using Minter_UI.CollectionInformation_ns;
+﻿using Minter_UI.CollectionInformation_ns;
 using Minter_UI.UI_NS;
 using System;
 using System.Collections.Generic;
@@ -12,6 +10,7 @@ using System.Windows.Threading;
 using System.Windows;
 using CHIA_RPC.Objects_NS;
 using Minter_UI.Settings_NS;
+using CHIA_RPC.Wallet_NS.Offer_NS;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -73,14 +72,14 @@ namespace Minter_UI.Tasks_NS
                     {
                         continue;
                     }
-                    Nft nftToBeOffered = Nft.Load(nftToBeOffered_File.Value.FullName);
+                    Nft nftToBeOffered = Nft.LoadObjectFromFile(nftToBeOffered_File.Value.FullName);
                     // calculate chia offer price
                     long mojosPrice = (long)(Settings.All.OfferingPrice * 1000000000000);
                     // create offer content
                     Offer_RPC offer_rpc = new Offer_RPC();
                     offer_rpc.offer.Add("1", mojosPrice);
                     offer_rpc.offer.Add(nftToBeOffered.launcher_id, -1);
-                    OfferFile offer = await WalletApi.CreateOfferForIds(offer_rpc).ConfigureAwait(false);
+                    OfferFile offer = await GlobalVar.WalletApi.CreateOfferForIds(offer_rpc).ConfigureAwait(false);
                     // save offer file
                     string nftName = Path.GetFileNameWithoutExtension(nftToBeOffered_File.Value.Name);
                     string key = CollectionInformation.GetKeyFromFile(nftToBeOffered_File.Value);
