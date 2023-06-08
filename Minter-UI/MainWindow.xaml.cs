@@ -28,7 +28,7 @@ namespace Minter_UI
             {
                 Exception ex = (Exception)args.ExceptionObject;
                 // Log the exception details
-                LogException.Log(ex);
+                LogException.LogAsync(ex);
             };
             // initialize the form
             InitializeComponent();

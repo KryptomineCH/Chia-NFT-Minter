@@ -12,6 +12,7 @@ using System.Windows.Threading;
 using CHIA_RPC.Wallet_NS.Wallet_NS;
 using CHIA_RPC.General_NS;
 using CHIA_RPC.Wallet_NS.NFT_NS;
+using System.Diagnostics;
 
 namespace Minter_UI.Tasks_NS
 {
@@ -126,7 +127,7 @@ namespace Minter_UI.Tasks_NS
             }
             catch (Exception ex)
             {
-                LogException.Log(ex, unhandled: false);
+                LogException.LogAsync(ex, unhandled: false);
                 MessageBox.Show($"There has been an error while minting!" +
                             $"{Environment.NewLine}" +
                             $"{Environment.NewLine}" + 

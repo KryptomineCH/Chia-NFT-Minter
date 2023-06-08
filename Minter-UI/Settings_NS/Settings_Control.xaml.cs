@@ -1,5 +1,6 @@
 ﻿using Minter_UI.Tasks_NS;
 using System;
+using System.CodeDom;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -39,6 +40,7 @@ namespace Minter_UI.Settings_NS
                 this.LicenseLink2_TextBox.Text = Settings.All.LicenseURL_Backup;
                 this.CaseSensitiveFilehandling_CheckBox.IsChecked = Settings.All.CaseSensitiveFileHandling;
                 this.MintingFee_TextBox.Text = Settings.All.MintingFee.ToString();
+                this.AutoUploadErrors_Checkbox.IsChecked = Settings.All.AutoUploadAnonymousErrorReport;
             }
             // check update
             UpdateCheck();
@@ -256,6 +258,12 @@ namespace Minter_UI.Settings_NS
         private void UpdateProgress(object sender, ProgressChangedEventArgs e)
         {
             Update_Progressbar.Value = e.ProgressPercentage;
+        }
+
+        private void AutoUploadErrors_Checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            Settings.All.AutoUploadAnonymousErrorReport = this.AutoUploadErrors_Checkbox.IsChecked;
+            Settings.Save();
         }
     }
 }

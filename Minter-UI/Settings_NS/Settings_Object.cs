@@ -7,6 +7,11 @@ namespace Minter_UI.Settings_NS
     /// </summary>
     internal class Settings_Object
     {
+        // General
+        /// <summary>
+        /// this setting specifies if a stack trace should be uploaded automatically
+        /// </summary>
+        public bool? AutoUploadAnonymousErrorReport { get; set; }
         // Metadata
         /// <summary>
         /// you can use your own webserver by providing the files in the same folder structure than from the tool.

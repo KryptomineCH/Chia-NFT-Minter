@@ -1,0 +1,4 @@
+Exception: test upload
+Time: 6/8/2023 5:16:18 PM
+Client Version: 1.8.1.0
+Stack trace:    at Minter_UI.Tasks_NS.MintNftFiles.MintNfts_Task(CancellationToken cancel, MintingPreview_ViewModel uiView, DispatcherObject dispatcherObject) in C:\Users\julia\OneDrive - KryptoMine\Research and Development\Product-Design\Chia_NFT_Toolkit\Chia-NFT-Minter\Minter-UI\Tasks_NS\MintNftFiles.cs:line 52

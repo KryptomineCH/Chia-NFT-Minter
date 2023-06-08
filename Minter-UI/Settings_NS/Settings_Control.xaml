@@ -228,5 +228,7 @@
             </Button.Style>
         </Button>
         <ProgressBar x:Name="Update_Progressbar" Grid.Row="14" Background="Black"></ProgressBar>
+        <CheckBox x:Name="AutoUploadErrors_Checkbox" Content="Automatically send anonymous error reports. (read errors.log file to see whats beeing reported)" Grid.Row="15"
+                  Foreground="#998826" Click="AutoUploadErrors_Checkbox_Checked"></CheckBox>
     </Grid>
 </UserControl>

@@ -185,7 +185,7 @@ namespace Minter_UI.Tasks_NS
             }
             catch (Exception ex)
             {
-                LogException.Log(ex, unhandled: false);
+                LogException.LogAsync(ex, unhandled: false);
                 MessageBox.Show($"There has been an error while uploading!" +
                             $"{Environment.NewLine}" +
                             $"{Environment.NewLine}" +
