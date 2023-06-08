@@ -1,4 +1,5 @@
 ﻿using Minter_UI.CollectionInformation_ns;
+using Minter_UI.Tasks_NS;
 using System;
 using System.IO;
 using System.Windows;
@@ -27,12 +28,7 @@ namespace Minter_UI
             {
                 Exception ex = (Exception)args.ExceptionObject;
                 // Log the exception details
-                string filePath = @"errors.log";
-                using (StreamWriter writer = new StreamWriter(filePath, true))
-                {
-                    writer.WriteLine("Unhandled exception: " + ex.Message);
-                    writer.WriteLine("Stack trace: " + ex.StackTrace);
-                }
+                LogException.Log(ex);
             };
             // initialize the form
             InitializeComponent();
