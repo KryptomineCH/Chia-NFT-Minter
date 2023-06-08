@@ -10,8 +10,8 @@
       <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
       <Platforms>AnyCPU;x64</Platforms>
 	  <Deterministic>false</Deterministic>
-	  <AssemblyVersion>1.6.2.5</AssemblyVersion>
-	  <FileVersion>1.6.2.5</FileVersion>
+	  <AssemblyVersion>1.8.1</AssemblyVersion>
+	  <FileVersion>1.8.1</FileVersion>
 	  <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
 	  <AnalysisLevel>latest-all</AnalysisLevel>
 	  <IncludeSymbols>True</IncludeSymbols>
