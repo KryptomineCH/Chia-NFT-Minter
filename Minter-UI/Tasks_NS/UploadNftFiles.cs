@@ -58,128 +58,145 @@ namespace Minter_UI.Tasks_NS
             }
             // the default cryptomine royalty address (if the software is not licensed)
             string royaltyAdress = "xch10fjlp8nv5ru5pfl4wad9gqpk9350anggum6vqemuhmwlmy54pnlskcq2aj";
-            // infinite loop unless cancelled
-            while(!cancel.IsCancellationRequested)
+            try
             {
-                // if there are no nfts to be offer, wait for more
-                if (CollectionInformation.Information.MissingRPCs.IsEmpty)
+                // infinite loop unless cancelled
+                while (!cancel.IsCancellationRequested)
                 {
-                    try
+                    // if there are no nfts to be offer, wait for more
+                    if (CollectionInformation.Information.MissingRPCs.IsEmpty)
                     {
-                        await Task.Delay(2000, cancel).ConfigureAwait(false);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        // Log the exception or perform any necessary cleanup
-                        break;
-                    }
-                    continue;
-                }
-                if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
-                {
-                    royaltyAdress = GlobalVar.PrimaryWalletAdress;
-                }
-                KeyValuePair<string, FileInfo> nftToBeUploaded = CollectionInformation.Information.MissingRPCs.First();
-                // get nft name and identifier key
-                string nftFullName = nftToBeUploaded.Value.FullName;
-                string nftName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.Name);
-                string key = CollectionInformation.GetKeyFromFile(nftToBeUploaded.Value);
-                // check if this nft has metadata and is not yet uploaded
-                if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
-                { // upload files
-                    /// do not upload files which are uploaded already
-                    dispatcherObject.Dispatcher.Invoke(new Action(() =>
-                    {
-                        foreach (MintingItem item in uiView.Items)
+                        try
                         {
-                            if (item.Key == key)
-                            {
-                                item.IsUploading = true;
-                                break;
-                            }
+                            await Task.Delay(2000, cancel).ConfigureAwait(false);
                         }
-                    }));
-                    /// upload nft (image) file
-                    List<string> nftlinkList = new List<string>();
-                    FileInfo nft = CollectionInformation.Information.NftFiles[key];
-                    Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nft.FullName));
-                    await nftUploadTask.ConfigureAwait(false); ;
-                    if (cancel.IsCancellationRequested)
-                    {
-                        goto CancleJump;
-                    }
-                    nftlinkList.Add(nftUploadTask.Result.URL);
-                    /// upload metadata
-                    List<string> metalinkList = new List<string>();
-                    Task<NFT_File> metaUploadTask =
-                        Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.Information.MetadataFiles[key]));
-                    await metaUploadTask.ConfigureAwait(false); ;
-                    if (cancel.IsCancellationRequested)
-                    {
-                        goto CancleJump;
-                    }
-                    metalinkList.Add(metaUploadTask.Result.URL);
-                    // build link lists for rpc
-                    if (Settings.All != null && !string.IsNullOrEmpty(Settings.All.CustomServerURL))
-                    {
-                        /// prepare custom url (~prefix)
-                        string customLink = Settings.All.CustomServerURL;
-                        if (!customLink.EndsWith("/")) customLink += "/";
-                        /// finalize custom uri
-                        nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nft.Name);
-                        metalinkList.Add(
-                            customLink + Directories.Metadata.Name + "/" + CollectionInformation.Information.MetadataFiles[key].Name);
-                    }
-                    /// add license url (is static)
-                    List<string> licenseLinks = new List<string>();
-                    if (Settings.All != null && Settings.All.LicenseURL != null)
-                    {
-                        licenseLinks.Add(Settings.All.LicenseURL);
-                    }
-                    if (Settings.All != null && Settings.All.LicenseURL_Backup != null)
-                    {
-                        licenseLinks.Add(Settings.All.LicenseURL_Backup);
-                    }
-                    // create rpc
-                    NftMintNFT_RPC rpc = new NftMintNFT_RPC(
-                        walletID: GlobalVar.NftWallet_ID,
-                        nftLinks: nftlinkList.ToArray(),
-                        metadataLinks: metalinkList.ToArray(),
-                        licenseLinks: licenseLinks.ToArray(),
-                        royaltyAddress: royaltyAdress
-                        );
-                    if (Settings.All != null)
-                    {
-                        rpc.fee = Settings.All.MintingFee;
-                    }
-                    /// save rpc
-                    rpc.SaveRpcToFile(Path.Combine(Directories.Rpcs.FullName, (nftName + ".rpc")));
-                    /// manage collection information
-                    CollectionInformation.Information.MissingRPCs.Remove(nftToBeUploaded.Key, out _);
-                    CollectionInformation.Information.ReadyToMint[nftToBeUploaded.Key] = nftToBeUploaded.Value;
-                    dispatcherObject.Dispatcher.Invoke(new Action(() =>
-                    {
-                        foreach (MintingItem item in uiView.Items)
+                        catch (TaskCanceledException)
                         {
-                            if (item.Key == key)
-                            {
-                                item.IsUploading = false;
-                                item.IsUploaded = true;
-                                break;
-                            }
+                            // Log the exception or perform any necessary cleanup
+                            break;
                         }
-                    }));
+                        continue;
+                    }
+                    if (GlobalVar.Licensed && GlobalVar.PrimaryWalletAdress != null)
+                    {
+                        royaltyAdress = GlobalVar.PrimaryWalletAdress;
+                    }
+                    KeyValuePair<string, FileInfo> nftToBeUploaded = CollectionInformation.Information.MissingRPCs.First();
+                    // get nft name and identifier key
+                    string nftFullName = nftToBeUploaded.Value.FullName;
+                    string nftName = Path.GetFileNameWithoutExtension(nftToBeUploaded.Value.Name);
+                    string key = CollectionInformation.GetKeyFromFile(nftToBeUploaded.Value);
+                    // check if this nft has metadata and is not yet uploaded
+                    if (CollectionInformation.Information.MetadataFiles.ContainsKey(key))
+                    { // upload files
+                        /// do not upload files which are uploaded already
+                        dispatcherObject.Dispatcher.Invoke(new Action(() =>
+                        {
+                            foreach (MintingItem item in uiView.Items)
+                            {
+                                if (item.Key == key)
+                                {
+                                    item.IsUploading = true;
+                                    break;
+                                }
+                            }
+                        }));
+                        /// upload nft (image) file
+                        List<string> nftlinkList = new List<string>();
+                        FileInfo nft = CollectionInformation.Information.NftFiles[key];
+                        Task<NFT_File> nftUploadTask = Task.Run(() => NftStorageAccount.Client.Upload(nft.FullName));
+                        await nftUploadTask.ConfigureAwait(false); ;
+                        if (cancel.IsCancellationRequested)
+                        {
+                            goto CancleJump;
+                        }
+                        nftlinkList.Add(nftUploadTask.Result.URL);
+                        /// upload metadata
+                        List<string> metalinkList = new List<string>();
+                        Task<NFT_File> metaUploadTask =
+                            Task.Run(() => NftStorageAccount.Client.Upload(CollectionInformation.Information.MetadataFiles[key]));
+                        await metaUploadTask.ConfigureAwait(false); ;
+                        if (cancel.IsCancellationRequested)
+                        {
+                            goto CancleJump;
+                        }
+                        metalinkList.Add(metaUploadTask.Result.URL);
+                        // build link lists for rpc
+                        if (Settings.All != null && !string.IsNullOrEmpty(Settings.All.CustomServerURL))
+                        {
+                            /// prepare custom url (~prefix)
+                            string customLink = Settings.All.CustomServerURL;
+                            if (!customLink.EndsWith("/")) customLink += "/";
+                            /// finalize custom uri
+                            nftlinkList.Add(customLink + Directories.Nfts.Name + "/" + nft.Name);
+                            metalinkList.Add(
+                                customLink + Directories.Metadata.Name + "/" + CollectionInformation.Information.MetadataFiles[key].Name);
+                        }
+                        /// add license url (is static)
+                        List<string> licenseLinks = new List<string>();
+                        if (Settings.All != null && Settings.All.LicenseURL != null)
+                        {
+                            licenseLinks.Add(Settings.All.LicenseURL);
+                        }
+                        if (Settings.All != null && Settings.All.LicenseURL_Backup != null)
+                        {
+                            licenseLinks.Add(Settings.All.LicenseURL_Backup);
+                        }
+                        // create rpc
+                        NftMintNFT_RPC rpc = new NftMintNFT_RPC(
+                            walletID: GlobalVar.NftWallet_ID,
+                            nftLinks: nftlinkList.ToArray(),
+                            metadataLinks: metalinkList.ToArray(),
+                            licenseLinks: licenseLinks.ToArray(),
+                            royaltyAddress: royaltyAdress
+                            );
+                        if (Settings.All != null)
+                        {
+                            rpc.fee = Settings.All.MintingFee;
+                        }
+                        /// save rpc
+                        rpc.SaveRpcToFile(Path.Combine(Directories.Rpcs.FullName, (nftName + ".rpc")));
+                        /// manage collection information
+                        CollectionInformation.Information.MissingRPCs.Remove(nftToBeUploaded.Key, out _);
+                        CollectionInformation.Information.ReadyToMint[nftToBeUploaded.Key] = nftToBeUploaded.Value;
+                        dispatcherObject.Dispatcher.Invoke(new Action(() =>
+                        {
+                            foreach (MintingItem item in uiView.Items)
+                            {
+                                if (item.Key == key)
+                                {
+                                    item.IsUploading = false;
+                                    item.IsUploaded = true;
+                                    break;
+                                }
+                            }
+                        }));
+                    }
+                    else
+                    { // no metadata found!
+                        await Task.Delay(1000);
+                    }
                 }
-                else
-                { // no metadata found!
-                    await Task.Delay(1000);
-                }
+            CancleJump:;
             }
-        CancleJump:;
-            // finish up
-            lock (UploadingInProgressLock)
+            catch (TaskCanceledException ex)
             {
-                UploadingInProgress = false;
+                /* expected behaviour */
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There has been an error while uploading!" +
+                            $"{Environment.NewLine}" +
+                            $"{Environment.NewLine}" +
+                            ex.ToString());
+            }
+            finally
+            {
+                // Wrap up the uploading process
+                lock (UploadingInProgressLock)
+                {
+                    UploadingInProgress = false;
+                }
             }
         }
     }
