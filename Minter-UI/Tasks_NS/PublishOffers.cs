@@ -100,6 +100,10 @@ namespace Minter_UI.Tasks_NS
                     }
                 }
             }
+            catch (TaskCanceledException ex)
+            {
+                /* expected behaviour */
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"There has been an error while offering!" +
