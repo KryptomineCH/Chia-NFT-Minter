@@ -120,6 +120,10 @@ namespace Minter_UI.Tasks_NS
                 }
             CancleJump:;
             }
+            catch(TaskCanceledException)
+            {
+                /* expected behaviour */
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"There has been an error while minting!" +
